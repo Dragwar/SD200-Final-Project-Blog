@@ -278,6 +278,7 @@
     <Content Include="TemplateContent\img\user.svg" />
     <Content Include="TemplateContent\index.html" />
     <Content Include="TemplateContent\js\front.js" />
+    <Content Include="TemplateContent\js\MyJavaScript.js" />
     <Content Include="TemplateContent\license.txt" />
     <Content Include="TemplateContent\post.html" />
     <Content Include="TemplateContent\readme.txt" />

@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace SD200_Final_Project_Blog
 {
@@ -25,6 +24,21 @@ namespace SD200_Final_Project_Blog
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+
+            // MY BUNDLES
+            bundles.Add(new ScriptBundle(@"~/TemplateContent/js").Include(
+                @"~/TemplateContent/vendor/@fancyapps/fancybox/jquery.fancybox.min.js",
+                @"~/TemplateContent/vendor/jquery.cookie/jquery.cookie.js",
+                @"~/TemplateContent/js/front.js",
+                @"~/TemplateContent/js/MyJavaScript.js"));
+
+            bundles.Add(new StyleBundle(@"~/TemplateContent/css").Include(
+                @"~/TemplateContent/vendor/font-awesome/css/font-awesome.min.css",
+                @"~/TemplateContent/css/fontastic.css",
+                @"~/TemplateContent/vendor/@fancyapps/fancybox/jquery.fancybox.min.css",
+                @"~/TemplateContent/css/style.default.css",
+                @"~/TemplateContent/css/custom.css"));
         }
     }
 }

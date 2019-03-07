@@ -1,7 +1,6 @@
 ﻿
 
 
-
 <!DOCTYPE html>
 <html>
 
@@ -14,23 +13,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-    <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="@Url.Content(@"~/TemplateContent/vendor/font-awesome/css/font-awesome.min.css")">
-
-    <!-- Custom icon font-->
-    <link rel="stylesheet" href="@Url.Content(@"~/TemplateContent/css/fontastic.css")">
-
-    <!-- Google fonts - Open Sans-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-
-    <!-- Fancybox-->
-    <link rel="stylesheet" href="@Url.Content(@"~/TemplateContent/vendor/@fancyapps/fancybox/jquery.fancybox.min.css")">
-
-    <!-- theme stylesheet-->
-    <link rel="stylesheet" href="@Url.Content(@"~/TemplateContent/css/style.default.css")" id="theme-stylesheet">
-
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="@Url.Content(@"~/TemplateContent/css/custom.css")">
+    <!-- Template Styles -->
+    @Styles.Render(@"~/TemplateContent/css")
 
     <!-- Favicon-->
     <link rel="shortcut icon" href="@Url.Content(@"~/TemplateContent/img/favicon.ico")">
@@ -89,25 +73,6 @@
     </header>
 
 
-    @* Determine what page nav link should be active *@
-    <script>
-        const indexNavLink = document.querySelector(".IndexPage");
-        const blogNavLink = document.querySelector(".BlogPage");
-        const postNavLink = document.querySelector(".PostPage");
-        const currentPage = "@ViewBag.CurrentControllerMethodName";
-
-        switch (currentPage) {
-            case "Index":
-                indexNavLink.classList.toggle("active");
-                break;
-            case "Blog":
-                blogNavLink.classList.toggle("active");
-                break;
-            case "Post":
-                postNavLink.classList.toggle("active");
-                break;
-        }
-    </script>
 
 
 
@@ -186,10 +151,14 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
 
-    <!-- JavaScript files -->
-    <script src="@Url.Content(@"~/TemplateContent/vendor/@fancyapps/fancybox/jquery.fancybox.min.js")"></script>
-    <script src="@Url.Content(@"~/TemplateContent/vendor/jquery.cookie/jquery.cookie.js")"></script>
-    <script src="@Url.Content(@"~/TemplateContent/js/front.js")"></script>
+    <!-- Template JavaScript -->
+    @Scripts.Render(@"~/TemplateContent/js")
+
+
+    @* Determine what page nav link should be active *@
+    <script>
+        makeCurrentPageHeaderNavLinkBold("@ViewBag.CurrentControllerMethodName");
+    </script>
 
     @RenderSection("scripts", required: false)
 </body>
