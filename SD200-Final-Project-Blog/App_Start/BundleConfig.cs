@@ -37,7 +37,7 @@ namespace SD200_Final_Project_Blog
                 @"~/TemplateContent/vendor/font-awesome/css/font-awesome.min.css",
                 @"~/TemplateContent/css/fontastic.css",
                 @"~/TemplateContent/vendor/@fancyapps/fancybox/jquery.fancybox.min.css",
-                @"~/TemplateContent/css/style.default.css",
+                @"~/TemplateContent/css/style.blue.css",
                 @"~/TemplateContent/css/custom.css"));
         }
     }
