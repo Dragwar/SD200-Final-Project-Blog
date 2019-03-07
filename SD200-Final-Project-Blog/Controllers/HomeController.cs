@@ -10,19 +10,33 @@ namespace SD200_Final_Project_Blog.Controllers
     {
         public ActionResult Index()
         {
+            /// <summary>
+            ///     Just for finding which header nav to bold
+            /// </summary>
+            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.Index);
+
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Blog()
         {
-            ViewBag.Message = "Your application description page.";
+            /// <summary>
+            ///     Just for finding which header nav to bold
+            /// </summary>
+            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.Blog);
 
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Post()
         {
-            ViewBag.Message = "Your contact page.";
+            /// <summary>
+            ///     Just for finding which header nav to bold
+            /// </summary>
+            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.Post);
 
             return View();
         }

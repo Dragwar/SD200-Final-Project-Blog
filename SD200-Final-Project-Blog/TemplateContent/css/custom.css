@@ -4,12 +4,12 @@ body {
     padding: 0px;
 }
 
-ul.social-menu * {
-    font-size: 25px;
-}
-
 body > div.container.body-content {
     margin: 0px;
     padding: 0px;
     max-width: 100%;
+}
+
+body > div > footer > div.container > div > div > div.contact-details > ul * {
+    font-size: 25px;
 }
