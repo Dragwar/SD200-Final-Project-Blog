@@ -60,9 +60,12 @@
                             @Html.ActionLink("Blog", "Blog", new { controller = "Home" }, new { @class = "nav-link BlogPage" })
                         </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Random Post", "Post", new { controller = "Home" }, new { @class = "nav-link PostPage" })
-                        </li>
+                        @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Create Post", "CreatePost", new { controller = "Home" }, new { @class = "nav-link PostPage" })
+                            </li>
+                        }
                     </ul>
                     @Html.Partial("_LoginPartial")
                 </div>
