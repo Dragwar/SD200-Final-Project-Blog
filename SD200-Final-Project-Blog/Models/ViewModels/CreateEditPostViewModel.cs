@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace SD200_Final_Project_Blog.Models.ViewModels
 {
@@ -13,6 +14,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public string Title { get; set; }
 
         [Required]
+        [AllowHtml]
         public string Body { get; set; }
 
 
