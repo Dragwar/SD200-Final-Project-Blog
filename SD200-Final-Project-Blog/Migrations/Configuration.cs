@@ -42,7 +42,7 @@ namespace SD200_Final_Project_Blog.Migrations
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     Published = true,
-                    Body = $@"<h1>Test Post {i}</h1>\n",
+                    Body = $@"<h1>(Temporary) Test Post {i} Body</h1>\n",
                 };
 
                 // Add new movie to database if the name of the movie doesn't match any in the database
@@ -97,7 +97,7 @@ namespace SD200_Final_Project_Blog.Migrations
             /// <summary>
             ///    Adding admin role if it doesn't exist. 
             /// </summary>
-            if (!context.Roles.Any(role => role.Name == userRole))
+            if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !context.Roles.Any(role => role.Name == userRole))
             {
                 IdentityRole adminRole = new IdentityRole(userRole);
                 roleManager.Create(adminRole);
@@ -112,7 +112,7 @@ namespace SD200_Final_Project_Blog.Migrations
             ///    already exists on the database before adding one.
             ///    If user with the same id exists then the user will become an Admin
             /// </summary>
-            if (!context.Users.Any(user => user.UserName == userName))
+            if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !context.Users.Any(user => user.UserName == userName))
             {
                 newUser = new ApplicationUser()
                 {
@@ -134,7 +134,7 @@ namespace SD200_Final_Project_Blog.Migrations
             }
 
             // Make sure the user is on the admin role
-            if (!userManager.IsInRole(newUser.Id, userRole))
+            if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !userManager.IsInRole(newUser.Id, userRole))
             {
                 userManager.AddToRole(newUser.Id, userRole);
             }
@@ -156,7 +156,7 @@ namespace SD200_Final_Project_Blog.Migrations
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     Published = true,
-                    Body = $@"<h1>Test Post {i}</h1>\n",
+                    Body = $@"<h1>Test Post {i} Body</h1>\n",
                 };
 
                 // Add new movie to database if the name of the movie doesn't match any in the database

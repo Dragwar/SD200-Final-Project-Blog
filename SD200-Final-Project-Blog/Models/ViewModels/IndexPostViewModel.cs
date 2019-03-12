@@ -13,6 +13,8 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
 
+        public string PostAuthorName { get; set; }
+
         private string GetPlainTextFromHtml(string htmlString)
         {
             string htmlTagPattern = "<.*?>";
@@ -32,7 +34,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
             }
             else if (postDay == 0 && postTime.Hours >= 1)
             {
-                return $"{postTime.Hours} {(postTime.Hours == 1 ? "hour" : "hours" )} ago";
+                return $"{postTime.Hours} {(postTime.Hours == 1 ? "hour" : "hours")} ago";
             }
             else if (postTime.Hours == 0 && postTime.Minutes >= 1)
             {

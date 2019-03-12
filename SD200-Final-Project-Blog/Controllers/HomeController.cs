@@ -37,6 +37,7 @@ namespace SD200_Final_Project_Blog.Controllers
                     .Select(post => new IndexPostViewModel
                     {
                         Id = post.Id,
+                        PostAuthorName = post.User.UserName,
                         Title = post.Title,
                         Body = post.Body,
                         DateCreated = post.DateCreated,
