@@ -1,4 +1,5 @@
-﻿using SD200_Final_Project_Blog.Models;
+﻿using Microsoft.AspNet.Identity;
+using SD200_Final_Project_Blog.Models;
 using SD200_Final_Project_Blog.Models.Domain;
 using SD200_Final_Project_Blog.Models.ViewModels;
 using System;
@@ -33,7 +34,6 @@ namespace SD200_Final_Project_Blog.Controllers
             if (DbContext.Posts.Any())
             {
                 model = DbContext.Posts
-                    //.Where(post => post.UserId == userId)
                     .Select(post => new IndexPostViewModel
                     {
                         Id = post.Id,
@@ -67,15 +67,65 @@ namespace SD200_Final_Project_Blog.Controllers
             return View();
         }
 
-        public ActionResult Post()
+        [HttpGet]
+        public ActionResult Post(Guid? id)
         {
+            if (!id.HasValue)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
             /// <summary>
             ///     Just for finding which header nav to bold
             /// </summary>
             /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
             ViewBag.CurrentControllerMethodName = nameof(HomeController.Post);
 
-            return View();
+            Post foundPost = null;
+            PostViewModel model = null;
+
+            if (DbContext.Posts.Any())
+            {
+                foundPost = DbContext.Posts
+                    .FirstOrDefault(post => post.Id == id);
+                if (foundPost != null)
+                {
+                    List<IndexPostViewModel> allPosts = DbContext.Posts
+                        .Select(post => new IndexPostViewModel()
+                        {
+                            Id = post.Id,
+                            Title = post.Title,
+                            PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
+                            Body = post.Body,
+                            DateCreated = post.DateCreated,
+                            DateUpdated = post.DateUpdated,
+                            Published = post.Published,
+                        }).ToList();
+
+                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
+                    allPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+
+                    model = new PostViewModel()
+                    {
+                        Id = foundPost.Id,
+                        PostAuthorName = foundPost.User == null ? "" : foundPost.User.UserName,
+                        Title = foundPost.Title,
+                        Body = foundPost.Body,
+                        DateCreated = foundPost.DateCreated,
+                        DateUpdated = foundPost.DateUpdated,
+                        Published = foundPost.Published,
+                        LatestPosts = allPosts.Take(3).ToList(),
+                    };
+
+                }
+            }
+
+            if (foundPost == null || model == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -96,16 +146,14 @@ namespace SD200_Final_Project_Blog.Controllers
 
         private ActionResult SavePost(Guid? id, CreateEditPostViewModel model)
         {
+            string currentUserId = User.Identity.GetUserId();
+
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            // Get current user id
-            //string userId = User.Identity.GetUserId();
-
             if (DbContext.Posts.Any(post => (
-                //post.UserId == userId && 
                 post.Title == model.Title && (!id.HasValue || post.Id != id.Value)
             )))
             {
@@ -121,6 +169,10 @@ namespace SD200_Final_Project_Blog.Controllers
                 myPost = new Post()
                 {
                     Id = Guid.NewGuid(),
+                    UserId = currentUserId,
+
+                    // Should break if user doesn't exist (because only admin users can create posts)
+                    User = DbContext.Users.First(user => user.Id == currentUserId),
                     DateCreated = DateTime.Now,
                 };
                 DbContext.Posts.Add(myPost);

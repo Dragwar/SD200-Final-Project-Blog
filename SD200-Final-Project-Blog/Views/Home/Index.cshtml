@@ -10,7 +10,7 @@
 </style>
 
 <!-- Hero Section-->
-<section style="background: url(@Url.Content(@"~/TemplateContent/img/hero.jpg")); background-size: cover; background-position: center center" class="hero">
+<section style="background: url(@Url.Content(@"~/TemplateContent/img/hero.jpg")); background-size: cover; background-position: center;" class="hero">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
@@ -93,7 +93,7 @@
                                     </header>
 
                                     <div class="index-post-body">
-                                        @post.GetMiniBody(25)
+                                        @(post.GetMiniBody(50) + " . . .")
                                     </div>
 
                                     <footer class="post-footer d-flex align-items-center">
@@ -118,6 +118,7 @@
 
                         <div class="col-lg-5" style="padding: 0px;">
                             <a href="@Url.Action("Post", new { Id = post.Id })">
+                                @* UPDATE IMAGE *@
                                 <img class="img-fluid" src="@Url.Content(@"~/TemplateContent/img/featured-pic-1.jpeg")" alt="...">
                             </a>
                         </div>
@@ -128,6 +129,7 @@
                     <div class="row d-flex align-items-stretch">
                         <div class="col-lg-5" style="padding: 0px;">
                             <a href="@Url.Action("Post", new { Id = post.Id })">
+                                @* UPDATE IMAGE *@
                                 <img class="img-fluid" src="@Url.Content(@"~/TemplateContent/img/featured-pic-2.jpeg")" alt="...">
                             </a>
                         </div>
@@ -154,7 +156,7 @@
                                         </header>
 
                                         <div class="index-post-body">
-                                            @post.GetMiniBody(25)
+                                            @(post.GetMiniBody(50) + " . . .")
                                         </div>
 
                                         <footer class="post-footer d-flex align-items-center">
@@ -227,6 +229,7 @@
 
                             @* UPDATE THIS LINK *@
                             <a href="@Url.Action("Post", new { Id = post.Id })">
+                                @* UPDATE IMAGE *@
                                 <img src="@Url.Content(@"~/TemplateContent/img/blog-1.jpg")" alt="..." class="img-fluid">
                             </a>
                         </div>
