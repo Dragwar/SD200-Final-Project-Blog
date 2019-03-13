@@ -36,16 +36,8 @@ namespace SD200_Final_Project_Blog.Migrations
 
         private List<ApplicationUser> PopulateUsersAndRolesAndSave(SD200_Final_Project_Blog.Models.ApplicationDbContext context)
         {
-            /// <variable name="roleManager">
-            ///     RoleManager, used to manage roles
-            /// </variable>
             RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-
-            /// <variable name="userManager">
-            ///     UserManager, used to manage users
-            /// </variable>
             UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
 
             List<ApplicationUser> initialUsers = new List<ApplicationUser>();
 
@@ -78,7 +70,7 @@ namespace SD200_Final_Project_Blog.Migrations
             )
         {
             /// <summary>
-            ///    Adding admin role if it doesn't exist. 
+            ///    Adding new role if it doesn't exist. 
             /// </summary>
             if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !context.Roles.Any(role => role.Name == userRole))
             {
@@ -86,16 +78,15 @@ namespace SD200_Final_Project_Blog.Migrations
                 roleManager.Create(newRole);
             }
 
-            // Creating the adminUser
+            // Creating the newUser
             ApplicationUser newUser;
 
 
             /// <summary>
-            ///    Adding the default admin user and checks to see if the default admin user
-            ///    already exists on the database before adding one.
-            ///    If user with the same id exists then the user will become an Admin
+            ///     new User will be made if userName doesn't exist on the DB
+            ///     and if no role was passed in the user won't be added to a role
             /// </summary>
-            if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !context.Users.Any(user => user.UserName == userName))
+            if (!context.Users.Any(user => user.UserName == userName))
             {
                 newUser = new ApplicationUser()
                 {
@@ -116,7 +107,7 @@ namespace SD200_Final_Project_Blog.Migrations
                 newUser = context.Users.First(user => user.UserName == userName);
             }
 
-            // Make sure the user is on the admin role
+            // Make sure the user is on the passed in role
             if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !userManager.IsInRole(newUser.Id, userRole))
             {
                 userManager.AddToRole(newUser.Id, userRole);
@@ -133,7 +124,7 @@ namespace SD200_Final_Project_Blog.Migrations
                 Post newPost = new Post()
                 {
                     Id = Guid.NewGuid(),
-                    Title = $"{initialUsers[i].UserName}'s Post about something",
+                    Title = $"{initialUsers[i].UserName}'s Post",
                     User = initialUsers[i],
                     UserId = initialUsers[i].Id,
                     DateCreated = DateTime.Now,
