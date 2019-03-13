@@ -29,9 +29,6 @@ namespace SD200_Final_Project_Blog.Controllers
             /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
             ViewBag.CurrentControllerMethodName = nameof(HomeController.Index);
 
-            // Get current user id
-            //string userId = User.Identity.GetUserId();
-
             List<IndexPostViewModel> model;
 
             if (DbContext.Posts.Any())
@@ -91,8 +88,8 @@ namespace SD200_Final_Project_Blog.Controllers
 
             if (DbContext.Posts.Any())
             {
-                foundPost = DbContext.Posts
-                    .FirstOrDefault(post => post.Id == id);
+                foundPost = DbContext.Posts.FirstOrDefault(post => post.Id == id);
+
                 if (foundPost != null)
                 {
                     List<IndexPostViewModel> allPosts = DbContext.Posts
@@ -170,7 +167,6 @@ namespace SD200_Final_Project_Blog.Controllers
 
             CreateEditPostViewModel model = new CreateEditPostViewModel
             {
-
                 Title = foundPost.Title,
                 Body = foundPost.Body,
                 Published = foundPost.Published,
@@ -195,9 +191,7 @@ namespace SD200_Final_Project_Blog.Controllers
                 return View();
             }
 
-            if (DbContext.Posts.Any(post => (
-                post.Title == model.Title && (!id.HasValue || post.Id != id.Value)
-            )))
+            if (DbContext.Posts.Any(post => post.Title == model.Title && (!id.HasValue || post.Id != id.Value)))
             {
                 ModelState.AddModelError(nameof(CreateEditPostViewModel.Title), "Post title should be unique");
 
@@ -229,10 +223,16 @@ namespace SD200_Final_Project_Blog.Controllers
                     Id = Guid.NewGuid(),
                     UserId = currentUserId,
 
-                    // Should break if user doesn't exist (because only admin users can create posts)
-                    User = DbContext.Users.First(user => user.Id == currentUserId),
+                    // Should redirect to index if user doesn't exist (because only admin users can create posts)
+                    User = DbContext.Users.FirstOrDefault(user => user.Id == currentUserId),
                     DateCreated = DateTime.Now,
                 };
+
+                if (myPost.User == null)
+                {
+                    return RedirectToAction(nameof(HomeController.Index));
+                }
+
                 DbContext.Posts.Add(myPost);
             }
             else
@@ -281,7 +281,12 @@ namespace SD200_Final_Project_Blog.Controllers
                 return RedirectToAction(nameof(HomeController.Index));
             }
 
-            Post foundPost = DbContext.Posts.First(post => post.Id == id);
+            Post foundPost = DbContext.Posts.FirstOrDefault(post => post.Id == id);
+
+            if (foundPost == null)
+            {
+                RedirectToAction(nameof(HomeController.Index));
+            }
 
             DbContext.Posts.Remove(foundPost);
             DbContext.SaveChanges();

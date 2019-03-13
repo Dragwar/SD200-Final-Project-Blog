@@ -82,8 +82,8 @@ namespace SD200_Final_Project_Blog.Migrations
             /// </summary>
             if (!string.IsNullOrEmpty(userRole) && !string.IsNullOrWhiteSpace(userRole) && !context.Roles.Any(role => role.Name == userRole))
             {
-                IdentityRole adminRole = new IdentityRole(userRole);
-                roleManager.Create(adminRole);
+                IdentityRole newRole = new IdentityRole(userRole);
+                roleManager.Create(newRole);
             }
 
             // Creating the adminUser
