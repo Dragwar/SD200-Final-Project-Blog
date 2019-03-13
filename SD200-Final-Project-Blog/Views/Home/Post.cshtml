@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = Model.Title;
     string postAuthorName = string.IsNullOrEmpty(Model.PostAuthorName) || string.IsNullOrWhiteSpace(Model.PostAuthorName) ? "Anonymous User" : Model.PostAuthorName;
+    string currentPostImageLink = string.IsNullOrEmpty(Model.HeroImageUrl) || string.IsNullOrWhiteSpace(Model.HeroImageUrl) ? "" : Url.Content($@"{Model.HeroImageUrl}");
 }
 <style>
     form .category button {
@@ -71,7 +72,7 @@
                         <!-- Post Body -->
                         <div class="post-body">
                             <p>
-                                <img src="@Url.Content(@"~/TemplateContent/img/featured-pic-3.jpeg")" alt="..." class="img-fluid">
+                                <img src="@currentPostImageLink" alt="..." class="img-fluid">
                             </p>
 
                             <div>
@@ -266,12 +267,13 @@
                 <div class="blog-posts">
                     @foreach (IndexPostViewModel newerPost in Model.LatestPosts)
                     {
+                        string postImageLink = string.IsNullOrEmpty(newerPost.HeroImageUrl) || string.IsNullOrWhiteSpace(newerPost.HeroImageUrl) ? "" : Url.Content($@"{newerPost.HeroImageUrl}");
                         @* UPDATE THIS LINK *@
                         <a href="@Url.Action("Post", new { Id = newerPost.Id })">
                             <div class="item d-flex align-items-center">
                                 <div class="image">
                                     @* UPDATE IMAGE *@
-                                    <img src="@Url.Content(@"~/TemplateContent/img/small-thumbnail-1.jpg")" alt="..." class="img-fluid">
+                                    <img src="@postImageLink" alt="..." class="img-fluid">
                                 </div>
 
                                 <div class="title">

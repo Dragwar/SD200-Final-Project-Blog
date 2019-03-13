@@ -432,6 +432,11 @@
     <Content Include="TemplateContent\vendor\jquery\jquery.min.js" />
     <Content Include="TemplateContent\vendor\jquery\jquery.slim.js" />
     <Content Include="TemplateContent\vendor\jquery\jquery.slim.min.js" />
+    <Content Include="UserUploads\PostHeroImages\blog-post-1.jpeg" />
+    <Content Include="UserUploads\PostHeroImages\blog-post-2.jpeg" />
+    <Content Include="UserUploads\PostHeroImages\blog-post-3.jpeg" />
+    <Content Include="UserUploads\PostHeroImages\blog-post-4.jpeg" />
+    <Content Include="UserUploads\PostHeroImages\divider-bg.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

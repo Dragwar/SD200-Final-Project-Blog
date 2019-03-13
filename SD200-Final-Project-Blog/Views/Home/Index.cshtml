@@ -68,6 +68,7 @@
             foreach (IndexPostViewModel post in Model.Take(4))
             {
                 string postName = string.IsNullOrEmpty(post.PostAuthorName) && string.IsNullOrEmpty(post.PostAuthorName) ? "Anonymous User" : post.PostAuthorName;
+                string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
                 if (counter % 2 == 0)
                 {
                     <div class="row d-flex align-items-stretch">
@@ -118,8 +119,7 @@
 
                         <div class="col-lg-5" style="padding: 0px;">
                             <a href="@Url.Action("Post", new { Id = post.Id })">
-                                @* UPDATE IMAGE *@
-                                <img class="img-fluid" src="@Url.Content(@"~/TemplateContent/img/featured-pic-1.jpeg")" alt="...">
+                                <img class="img-fluid" src="@postLink" alt="...">
                             </a>
                         </div>
                     </div>
@@ -129,8 +129,7 @@
                     <div class="row d-flex align-items-stretch">
                         <div class="col-lg-5" style="padding: 0px;">
                             <a href="@Url.Action("Post", new { Id = post.Id })">
-                                @* UPDATE IMAGE *@
-                                <img class="img-fluid" src="@Url.Content(@"~/TemplateContent/img/featured-pic-2.jpeg")" alt="...">
+                                <img class="img-fluid" src="@postLink" alt="...">
                             </a>
                         </div>
 
@@ -187,7 +186,10 @@
     </div>
 </section>
 
+
 <!-- Divider Section-->
+<!--
+<section style="backg<!-- Divider Section-->
 <!--
 <section style="background: url(@Url.Content(@"~/TemplateContent/img/divider-bg.jpg"));" background-size: cover; background-position: center bottom" class="divider">
     <div class="container">
@@ -222,15 +224,15 @@
             }
             else
             {
-                foreach (IndexPostViewModel post in Model.Take(4))
+                foreach (IndexPostViewModel post in Model.Take(6))
                 {
+                    string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
                     <div class="post col-md-4" style="margin-bottom: 15px;">
                         <div class="post-thumbnail">
 
                             @* UPDATE THIS LINK *@
                             <a href="@Url.Action("Post", new { Id = post.Id })">
-                                @* UPDATE IMAGE *@
-                                <img src="@Url.Content(@"~/TemplateContent/img/blog-1.jpg")" alt="..." class="img-fluid">
+                                <img class="img-fluid" src="@postLink" alt="...">
                             </a>
                         </div>
 
@@ -256,7 +258,7 @@
                             </a>
 
                             <p class="text-muted">
-                                @post.GetMiniBody(15)
+                                @post.GetMiniBody(25)
                                 @Html.ActionLink(" . . . Read More", "Post", "Home", new { Id = post.Id }, new { })
                             </p>
                         </div>

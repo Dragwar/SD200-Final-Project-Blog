@@ -32,23 +32,6 @@ namespace SD200_Final_Project_Blog.Migrations
             PopulateDefaultPostsAndSave(context, initialUsers);
 
 
-            #region TEMP POSTS PLEASE DELETE LATER
-            for (int i = 0; i < 5; i++)
-            {
-                Post post1 = new Post()
-                {
-                    Id = Guid.NewGuid(),
-                    Title = $"test post {i}",
-                    DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now,
-                    Published = true,
-                    Body = $@"<h1>(Temporary) Test Post {i} Body</h1>\n",
-                };
-
-                // Add new movie to database if the name of the movie doesn't match any in the database
-                context.Posts.AddOrUpdate(post => post.Title, post1);
-            }
-            #endregion
         }
 
         private List<ApplicationUser> PopulateUsersAndRolesAndSave(SD200_Final_Project_Blog.Models.ApplicationDbContext context)
@@ -156,6 +139,7 @@ namespace SD200_Final_Project_Blog.Migrations
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     Published = true,
+                    HeroImageUrl = $@"\UserUploads\PostHeroImages\blog-post-{1 + i}.jpeg",
                     Body = $@"<h1>Test Post {i} Body</h1>\n",
                 };
 

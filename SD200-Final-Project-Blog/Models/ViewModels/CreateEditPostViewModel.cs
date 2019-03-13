@@ -17,6 +17,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         [AllowHtml]
         public string Body { get; set; }
 
+        public HttpPostedFileBase HeroImage { get; set; }
 
         public bool Published { get; set; }
     }

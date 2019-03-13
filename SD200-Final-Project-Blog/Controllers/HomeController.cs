@@ -4,6 +4,7 @@ using SD200_Final_Project_Blog.Models.Domain;
 using SD200_Final_Project_Blog.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -12,6 +13,8 @@ namespace SD200_Final_Project_Blog.Controllers
     public class HomeController : Controller
     {
         private ApplicationDbContext DbContext { get; set; }
+        public static readonly List<string> AllowedFileExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
+        private const string UserImageUploadFolderRelativePath = @"~/UserUploads/PostHeroImages/";
 
         public HomeController()
         {
@@ -43,6 +46,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         DateCreated = post.DateCreated,
                         DateUpdated = post.DateUpdated,
                         Published = post.Published,
+                        HeroImageUrl = post.HeroImageUrl,
                     }).ToList();
 
                 // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
@@ -100,6 +104,7 @@ namespace SD200_Final_Project_Blog.Controllers
                             DateCreated = post.DateCreated,
                             DateUpdated = post.DateUpdated,
                             Published = post.Published,
+                            HeroImageUrl = post.HeroImageUrl,
                         }).ToList();
 
                     // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
@@ -114,6 +119,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         DateCreated = foundPost.DateCreated,
                         DateUpdated = foundPost.DateUpdated,
                         Published = foundPost.Published,
+                        HeroImageUrl = foundPost.HeroImageUrl,
 
                         // Get three latest posts (without the current post)
                         LatestPosts = allPosts.Where(post => post.Id != foundPost.Id).Take(3).ToList(),
@@ -197,6 +203,22 @@ namespace SD200_Final_Project_Blog.Controllers
                 return View();
             }
 
+
+            string fileExtension;
+            string serverMapPath = Server.MapPath(UserImageUploadFolderRelativePath);
+
+            // Validating file upload
+            if (model.HeroImage != null)
+            {
+                fileExtension = Path.GetExtension(model.HeroImage.FileName);
+
+                if (!AllowedFileExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("", "File extension is not allowed.");
+                    return View();
+                }
+            }
+
             Post myPost;
 
             if (!id.HasValue)
@@ -225,6 +247,24 @@ namespace SD200_Final_Project_Blog.Controllers
             myPost.Title = model.Title;
             myPost.Body = model.Body;
             myPost.DateUpdated = DateTime.Now;
+
+
+            // Handling file upload
+            if (model.HeroImage != null)
+            {
+                if (!Directory.Exists(serverMapPath))
+                {
+                    Directory.CreateDirectory(serverMapPath);
+                }
+
+                string fileName = model.HeroImage.FileName;
+                string fullPathWithName = serverMapPath + fileName;
+
+                model.HeroImage.SaveAs(fullPathWithName);
+
+                myPost.HeroImageUrl = UserImageUploadFolderRelativePath + fileName;
+            }
+
 
             DbContext.SaveChanges();
 

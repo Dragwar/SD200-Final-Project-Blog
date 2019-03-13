@@ -20,7 +20,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public bool Published { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
-
+        public string HeroImageUrl { get; set; }
         public string PostAuthorName { get; set; }
 
 
