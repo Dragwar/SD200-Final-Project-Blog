@@ -16,3 +16,8 @@
             break;
     }
 }
+const arrayOfBlockQuotes = document.body.getElementsByTagName("blockquote");
+for (let blockquote of arrayOfBlockQuotes) {
+    console.log(blockquote);
+    blockquote.classList.add("blockquote");
+}

@@ -6,6 +6,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/tinymce")
 }
 
 <div style="padding: 25px 15px;">
@@ -30,7 +31,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Body, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Body, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.TextAreaFor(model => model.Body, new { @class = "form-control", id = "Body", name = "Body", placeholder = "Post (Body)" })
                     @Html.ValidationMessageFor(model => model.Body, "", new { @class = "text-danger" })
                 </div>
             </div>

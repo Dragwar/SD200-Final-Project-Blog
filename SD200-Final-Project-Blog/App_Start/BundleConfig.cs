@@ -39,6 +39,11 @@ namespace SD200_Final_Project_Blog
                 @"~/TemplateContent/vendor/@fancyapps/fancybox/jquery.fancybox.min.css",
                 @"~/TemplateContent/css/style.blue.css",
                 @"~/TemplateContent/css/custom.css"));
+
+            bundles.Add(new ScriptBundle("~/tinymce").Include(
+                     "~/Scripts/tinymce/tinymce.min.js",
+                     "~/Scripts/tinymce/jquery.tinymce.min.js",
+                     "~/Scripts/myScripts/tinyMCE.js"));
         }
     }
 }
