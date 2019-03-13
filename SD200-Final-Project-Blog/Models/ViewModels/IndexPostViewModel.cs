@@ -29,7 +29,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
             TimeSpan postTime = DateTime.Now.TimeOfDay - DateCreated.TimeOfDay;
             if (postDay >= 1)
             {
-                return $"{postDay} {(postTime.Hours == 1 ? "day" : "days")} ago";
+                return $"{postDay} {(postTime.Days == 0 ? "day" : "days")} ago";
             }
             else if (postDay == 0 && postTime.Hours >= 1)
             {

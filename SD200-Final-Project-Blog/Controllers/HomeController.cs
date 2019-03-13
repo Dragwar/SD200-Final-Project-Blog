@@ -60,16 +60,17 @@ namespace SD200_Final_Project_Blog.Controllers
             return View(model);
         }
 
-        public ActionResult Blog()
-        {
-            /// <summary>
-            ///     Just for finding which header nav to bold
-            /// </summary>
-            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
-            ViewBag.CurrentControllerMethodName = nameof(HomeController.Blog);
+        // JUST USING INDEX PAGE TO SHOW ALL POSTS FOR NOW
+        //public ActionResult Blog()
+        //{
+        //    /// <summary>
+        //    ///     Just for finding which header nav to bold
+        //    /// </summary>
+        //    /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+        //    ViewBag.CurrentControllerMethodName = nameof(HomeController.Blog);
 
-            return View();
-        }
+        //    return View();
+        //}
 
         [HttpGet]
         public ActionResult Post(Guid? id)

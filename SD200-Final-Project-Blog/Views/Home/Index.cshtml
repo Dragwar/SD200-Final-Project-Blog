@@ -10,12 +10,15 @@
 </style>
 
 <!-- Hero Section-->
-<section style="background: url(@Url.Content(@"~/TemplateContent/img/hero.jpg")); background-size: cover; background-position: center;" class="hero">
+<section style="background: url(@Url.Content(@"~/TemplateContent/img/hero-bg.jpg")); background-size: cover; background-position: center;" class="hero">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
-                <h1>Bootstrap 4 Blog - A free template by Bootstrap Temple</h1>
-                <a href="#" class="hero-link">Discover More</a>@* UPDATE THIS LINK *@
+                <h1>Everett Grassler's Blog</h1>
+                <p>
+                    <a href=".latest-posts" class="hero-link link-scroll">Discover More</a>@* UPDATE THIS LINK *@
+                </p>
+                <a href=".featured-posts" class="hero-link link-scroll">See All Posts</a>@* UPDATE THIS LINK *@
             </div>
         </div>
         <a href=".intro" class="continue link-scroll"><i class="fa fa-long-arrow-down"></i> Scroll Down</a>
@@ -30,13 +33,94 @@
             <div class="col-lg-8">
                 <h2 class="h3">Some great intro here</h2>
                 <p class="text-big">
-                    Place a nice <strong>introduction</strong> here <strong>to catch reader's attention</strong>.
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrude consectetur adipisicing elit, sed do eiusmod tempor incididunt.
+                    All posts have meaningful content... I promise
                 </p>
             </div>
         </div>
     </div>
 </section>
+
+
+<!-- Latest Posts -->
+<section class="latest-posts">
+    <div class="container">
+
+        <header>
+            <h2>Latest from the blog</h2>
+            <p class="text-big">Have a look.</p>
+        </header>
+
+
+
+        <!-- Latest Posts Start -->
+        <div class="row">
+
+            @if (!Model.Any())
+            {
+                <p>Sorry no posts where found</p>
+            }
+            else
+            {
+                foreach (IndexPostViewModel post in Model.Take(6))
+                {
+                    string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
+                    <div class="post col-md-4" style="margin-bottom: 15px;">
+                        <div class="post-thumbnail">
+
+                            @* UPDATE THIS LINK *@
+                            <a href="@Url.Action("Post", new { Id = post.Id })">
+                                <img class="img-fluid" src="@postLink" alt="...">
+                            </a>
+                        </div>
+
+                        <div class="post-details">
+                            <div class="post-meta d-flex justify-content-between">
+                                <div class="date">@post.GetPostDateAndTime()</div>
+
+                                @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                                {
+                                    <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
+                                        <div class="category">
+                                            <a class="text-info" href="@Url.Action("EditPost", new { Id = post.Id })">Edit</a>
+                                            <button class="text-danger">Delete</button>
+                                        </div>
+                                    </form>
+                                }
+
+                            </div>
+
+                            @* UPDATE THIS LINK *@
+                            <a href="@Url.Action("Post", new { Id = post.Id })">
+                                <h3 class="h4">@post.Title</h3>
+                            </a>
+
+                            <p class="text-muted">
+                                @post.GetMiniBody(25)
+                                @Html.ActionLink(" . . . Read More", "Post", "Home", new { Id = post.Id }, new { })
+                            </p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+
+<!-- Divider Section-->
+<section style="background: url(@Url.Content(@"~/TemplateContent/img/hero.jpg")); background-size: cover; background-position: center; margin-bottom: 75px;" class="divider">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <h2>
+                    All Posts below
+                </h2>
+                <a href=".hero" class="hero-link link-scroll">Back to the Top</a>@* UPDATE THIS LINK *@
+            </div>
+        </div>
+    </div>
+</section>
+
 
 
 <!-- Posts -->
@@ -65,7 +149,7 @@
             </style>
 
             int counter = 0;
-            foreach (IndexPostViewModel post in Model.Take(4))
+            foreach (IndexPostViewModel post in Model/*.Take(4)*/)//I just for now I'll be adding the blog page that will display all instead of this main page
             {
                 string postName = string.IsNullOrEmpty(post.PostAuthorName) && string.IsNullOrEmpty(post.PostAuthorName) ? "Anonymous User" : post.PostAuthorName;
                 string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
@@ -187,87 +271,10 @@
 </section>
 
 
-<!-- Divider Section-->
-<!--
-<section style="backg<!-- Divider Section-->
-<!--
-<section style="background: url(@Url.Content(@"~/TemplateContent/img/divider-bg.jpg"));" background-size: cover; background-position: center bottom" class="divider">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-7">
-                <h2>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                </h2>
-                <a href="#" class="hero-link">View More</a>@* UPDATE THIS LINK *@
-            </div>
-        </div>
-    </div>
-</section>
--->
-<!-- Latest Posts -->
-<section class="latest-posts">
-    <div class="container">
-
-        <header>
-            <h2>Latest from the blog</h2>
-            <p class="text-big">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        </header>
 
 
 
-        <!-- Latest Posts Start -->
-        <div class="row">
 
-            @if (!Model.Any())
-            {
-                <p>Sorry no posts where found</p>
-            }
-            else
-            {
-                foreach (IndexPostViewModel post in Model.Take(6))
-                {
-                    string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
-                    <div class="post col-md-4" style="margin-bottom: 15px;">
-                        <div class="post-thumbnail">
-
-                            @* UPDATE THIS LINK *@
-                            <a href="@Url.Action("Post", new { Id = post.Id })">
-                                <img class="img-fluid" src="@postLink" alt="...">
-                            </a>
-                        </div>
-
-                        <div class="post-details">
-                            <div class="post-meta d-flex justify-content-between">
-                                <div class="date">@post.GetPostDateAndTime()</div>
-
-                                @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
-                                {
-                                    <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
-                                        <div class="category">
-                                            <a class="text-info" href="@Url.Action("EditPost", new { Id = post.Id })">Edit</a>
-                                            <button class="text-danger">Delete</button>
-                                        </div>
-                                    </form>
-                                }
-
-                            </div>
-
-                            @* UPDATE THIS LINK *@
-                            <a href="@Url.Action("Post", new { Id = post.Id })">
-                                <h3 class="h4">@post.Title</h3>
-                            </a>
-
-                            <p class="text-muted">
-                                @post.GetMiniBody(25)
-                                @Html.ActionLink(" . . . Read More", "Post", "Home", new { Id = post.Id }, new { })
-                            </p>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-    </div>
-</section>
 
 
 

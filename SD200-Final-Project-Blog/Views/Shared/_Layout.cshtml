@@ -56,9 +56,10 @@
                             @Html.ActionLink("Home", "Index", new { controller = "Home" }, new { @class = "nav-link IndexPage" })
                         </li>
 
-                        <li class="nav-item">
+                        @* JUST USING INDEX PAGE TO DISPLAY ALL POSTS FOR NOW *@
+                        @*<li class="nav-item">
                             @Html.ActionLink("Blog", "Blog", new { controller = "Home" }, new { @class = "nav-link BlogPage" })
-                        </li>
+                        </li>*@
 
                         @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
                         {
