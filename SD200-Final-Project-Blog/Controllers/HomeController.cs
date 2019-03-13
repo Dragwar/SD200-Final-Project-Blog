@@ -142,7 +142,40 @@ namespace SD200_Final_Project_Blog.Controllers
             return SavePost(null, createModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = nameof(UserRolesEnum.Admin))]
+        public ActionResult EditPost(Guid? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
 
+            Post foundPost = DbContext.Posts.FirstOrDefault(post => post.Id == id.Value);
+
+            if (foundPost == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+
+            CreateEditPostViewModel model = new CreateEditPostViewModel
+            {
+
+                Title = foundPost.Title,
+                Body = foundPost.Body,
+                Published = foundPost.Published,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = nameof(UserRolesEnum.Admin))]
+        public ActionResult EditPost(Guid id, CreateEditPostViewModel createModel)
+        {
+            return SavePost(id, createModel);
+        }
 
         private ActionResult SavePost(Guid? id, CreateEditPostViewModel model)
         {

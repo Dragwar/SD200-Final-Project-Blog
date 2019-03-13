@@ -1,12 +1,16 @@
-﻿@model CreateEditPostViewModel
+﻿@model SD200_Final_Project_Blog.Models.ViewModels.CreateEditPostViewModel
 
 @{
-    ViewBag.Title = "Create Post";
+    ViewBag.Title = $"Edit {Model.Title} Post";
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<h2>EditPost</h2>
+
+
 
 <div style="padding: 25px 15px;">
     <h2>CreatePost</h2>
@@ -47,13 +51,13 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-outline-success" />
+                    <input type="submit" value="Save Changes" class="btn btn-outline-success" />
                 </div>
             </div>
         </div>
     }
 
     <div>
-        @Html.ActionLink("Discard Draft", "Index", new { }, new { @class = "btn btn-outline-info" })
+        @Html.ActionLink("Discard Changes", "Index", new { }, new { @class = "btn btn-outline-info" })
     </div>
 </div>
