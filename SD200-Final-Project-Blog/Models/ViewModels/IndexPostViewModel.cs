@@ -20,7 +20,6 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
             string htmlTagPattern = "<.*?>";
             htmlString = Regex.Replace(htmlString, htmlTagPattern, "");
             htmlString = Regex.Replace(htmlString, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
-            htmlString = htmlString.Replace(" ", "");
             return htmlString;
         }
 

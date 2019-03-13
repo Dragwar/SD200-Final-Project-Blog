@@ -114,7 +114,9 @@ namespace SD200_Final_Project_Blog.Controllers
                         DateCreated = foundPost.DateCreated,
                         DateUpdated = foundPost.DateUpdated,
                         Published = foundPost.Published,
-                        LatestPosts = allPosts.Take(3).ToList(),
+
+                        // Get three latest posts (without the current post)
+                        LatestPosts = allPosts.Where(post => post.Id != foundPost.Id).Take(3).ToList(),
                     };
 
                 }
