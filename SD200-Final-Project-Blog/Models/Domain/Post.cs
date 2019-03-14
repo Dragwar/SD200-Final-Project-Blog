@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace SD200_Final_Project_Blog.Models.Domain
 {
@@ -15,5 +17,18 @@ namespace SD200_Final_Project_Blog.Models.Domain
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public string HeroImageUrl { get; set; }
+
+        //public string GenerateSlug()
+        //{
+        //    NumberFormatInfo formatInfo = NumberFormatInfo.CurrentInfo;
+        //    //formatInfo.
+        //    string slug = Title;
+        //    string symbols = @"[^\w\.@-]";
+        //    //symbols += 
+        //    slug =
+        //    slug = Regex.Replace(slug, symbols, "");
+        //    slug = Regex.Replace(slug, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
+        //    return slug;
+        //}
     }
 }

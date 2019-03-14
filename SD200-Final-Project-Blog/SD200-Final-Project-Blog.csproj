@@ -432,11 +432,16 @@
     <Content Include="TemplateContent\vendor\jquery\jquery.min.js" />
     <Content Include="TemplateContent\vendor\jquery\jquery.slim.js" />
     <Content Include="TemplateContent\vendor\jquery\jquery.slim.min.js" />
+    <Content Include="UserUploads\PostHeroImages\blog-2.jpg" />
+    <Content Include="UserUploads\PostHeroImages\blog-3.jpg" />
     <Content Include="UserUploads\PostHeroImages\blog-post-1.jpeg" />
     <Content Include="UserUploads\PostHeroImages\blog-post-2.jpeg" />
     <Content Include="UserUploads\PostHeroImages\blog-post-3.jpeg" />
     <Content Include="UserUploads\PostHeroImages\blog-post-4.jpeg" />
     <Content Include="UserUploads\PostHeroImages\divider-bg.jpg" />
+    <Content Include="UserUploads\PostHeroImages\gallery-3.jpg" />
+    <Content Include="UserUploads\PostHeroImages\gallery-4.jpg" />
+    <Content Include="UserUploads\PostHeroImages\template-mac.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

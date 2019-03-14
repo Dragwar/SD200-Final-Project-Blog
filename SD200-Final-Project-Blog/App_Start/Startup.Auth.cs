@@ -58,11 +58,11 @@ namespace SD200_Final_Project_Blog
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "533205864441-q72os76vlshtfdbcl1rnvqmkjmivnv2c.apps.googleusercontent.com",
+                ClientSecret = "9chDWIi0oY_YNzIENc_Jct4U"
+            });
         }
     }
 }
