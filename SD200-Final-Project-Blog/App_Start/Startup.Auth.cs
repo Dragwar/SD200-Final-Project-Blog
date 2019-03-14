@@ -46,9 +46,9 @@ namespace SD200_Final_Project_Blog
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             // Uncomment the following lines to enable logging in with third party login providers
-            //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
+            app.UseMicrosoftAccountAuthentication(
+                clientId: "694fa301-96b3-4224-8161-07cac3e7b7eb",
+                clientSecret: "(:F^Le-}{[}:)=qC*#&3(N=*F&QU$;r]}r]v6[z1(+]z#DUl/");
 
             //app.UseTwitterAuthentication(
             //   consumerKey: "",
