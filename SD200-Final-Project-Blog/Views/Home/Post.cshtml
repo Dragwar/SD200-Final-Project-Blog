@@ -33,12 +33,15 @@
 
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
-                            <form action="@Url.Action("DeletePost", new { Id = Model.Id })" method="post">
-                                <div class="category">
-                                    <a class="text-info" href="@Url.Action("EditPost", new { Id = Model.Id })">Edit</a>
-                                    <button class="text-danger">Delete</button>
-                                </div>
-                            </form>
+                            @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                            {
+                                <form action="@Url.Action("DeletePost", new { Id = Model.Id })" method="post">
+                                    <div class="category">
+                                        <a class="text-info" href="@Url.Action("EditPost", new { Id = Model.Id })">Edit</a>
+                                        <button class="text-danger">Delete</button>
+                                    </div>
+                                </form>
+                            }
                         </div>
 
                         <h1>
@@ -278,7 +281,7 @@
 
                                 <div class="title">
                                     <strong>@newerPost.Title</strong>
-                                 
+
                                     <div class="d-flex align-items-center">
                                         <div class="date"><i class="icon-clock"></i> @newerPost.GetPostTimeFromNow()</div>
                                         @*<div class="views"><i class="icon-eye"></i> 500</div>*@
