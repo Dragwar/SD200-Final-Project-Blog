@@ -51,6 +51,12 @@ namespace SD200_Final_Project_Blog.Controllers
 
                 // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
                 model.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+
+                if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
+                {
+                    model = model.Where(post => post.Published).ToList();
+                }
+
             }
             else
             {
