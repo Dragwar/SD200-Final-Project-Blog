@@ -9,6 +9,10 @@
     @Scripts.Render("~/tinymce")
 }
 
+@section Styles {
+    @Styles.Render("~/createEditPost")
+}
+
 <div style="padding: 25px 15px;">
     <h2>@ViewBag.Title</h2>
 
@@ -35,7 +39,10 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.HeroImage, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    <input type="file" name="@(nameof(Model.HeroImage))" />
+                    <label class="custom-file-upload">
+                        <input class="custom-file-input" style="display: none;" type="file" name="@(nameof(Model.HeroImage))" />
+                        <span>Upload A Hero Image</span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.HeroImage, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -52,13 +59,13 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save Changes" class="btn btn-outline-success" />
+                    <input type="submit" value="Save Changes" class="btn btn-outline-primary" />
                 </div>
             </div>
         </div>
     </form>
 
     <div>
-        @Html.ActionLink("Discard Changes", "Index", new { }, new { @class = "btn btn-outline-info" })
+        @Html.ActionLink("Discard Changes", "Index", new { }, new { @class = "btn btn-outline-danger" })
     </div>
 </div>

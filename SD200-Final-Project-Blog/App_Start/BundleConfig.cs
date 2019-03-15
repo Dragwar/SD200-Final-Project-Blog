@@ -41,9 +41,16 @@ namespace SD200_Final_Project_Blog
                 @"~/TemplateContent/css/custom.css"));
 
             bundles.Add(new ScriptBundle("~/tinymce").Include(
-                     "~/Scripts/tinymce/tinymce.min.js",
-                     "~/Scripts/tinymce/jquery.tinymce.min.js",
-                     "~/Scripts/myScripts/tinyMCE.js"));
+                @"~/Scripts/tinymce/tinymce.min.js",
+                @"~/Scripts/tinymce/jquery.tinymce.min.js",
+                @"~/Scripts/myScripts/tinyMCE.js",
+                @"~/Scripts/myScripts/styleFileBtn.js"));
+
+            bundles.Add(new StyleBundle(@"~/createEditPost").Include(
+                @"~/Content/myStyles/createEditPost.css"));
+
+            bundles.Add(new StyleBundle(@"~/index").Include(
+                @"~/Content/myStyles/index.css"));
         }
     }
 }
