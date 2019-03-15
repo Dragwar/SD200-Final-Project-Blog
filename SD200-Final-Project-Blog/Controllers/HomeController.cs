@@ -15,6 +15,8 @@ namespace SD200_Final_Project_Blog.Controllers
         private ApplicationDbContext DbContext { get; set; }
         public static readonly List<string> AllowedFileExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
         private const string UserImageUploadFolderRelativePath = @"~/UserUploads/PostHeroImages/";
+        public static readonly HashSet<char> MyUnwantedSymbols = new HashSet<char>()
+        {'!', '*', '\'', '"', '`', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '|', '\\', '?', '%', '#', '[', ']', '{', '}'};
 
         public HomeController()
         {
@@ -218,19 +220,34 @@ namespace SD200_Final_Project_Blog.Controllers
 
             if (!id.HasValue)
             {
+                // make slug
+                string slug = model.Title.GenerateSlug(MyUnwantedSymbols);
+
                 myPost = new Post()
                 {
                     Id = Guid.NewGuid(),
+                    Slug = slug,
                     UserId = currentUserId,
 
                     // Should redirect to index if user doesn't exist (because only admin users can create posts)
                     User = DbContext.Users.FirstOrDefault(user => user.Id == currentUserId),
-                    DateCreated = DateTime.Now,
                 };
 
+                // if user isn't logged in and some how tries to create a post
                 if (myPost.User == null)
                 {
                     return RedirectToAction(nameof(HomeController.Index));
+                }
+
+
+                // check if slug is already taken
+                bool slugAlreadyTaken = DbContext.Posts.Any(post => post.Slug == slug);
+
+                if (slugAlreadyTaken)
+                {
+                    // generate a unique slug by appending part of the post's Guid
+                    slug += $"-{new string(myPost.Id.ToString().Skip(9).Take(4).ToArray())}";
+                    myPost.Slug = slug;
                 }
 
                 DbContext.Posts.Add(myPost);

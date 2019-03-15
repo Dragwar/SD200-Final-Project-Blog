@@ -181,6 +181,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Domain\Post.cs" />
+    <Compile Include="MyHelpers\StringHelper.cs" />
     <Compile Include="Models\Domain\UserRolesEnum.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
