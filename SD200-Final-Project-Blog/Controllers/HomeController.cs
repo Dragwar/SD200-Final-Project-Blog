@@ -52,6 +52,7 @@ namespace SD200_Final_Project_Blog.Controllers
                 // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
                 model.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
+                // Filter out unpublished posts when user isn't admin
                 if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
                 {
                     model = model.Where(post => post.Published).ToList();
@@ -117,6 +118,12 @@ namespace SD200_Final_Project_Blog.Controllers
 
                     // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
                     allPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+
+                    // Filter out unpublished posts when user isn't admin
+                    if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
+                    {
+                        allPosts = allPosts.Where(post => post.Published).ToList();
+                    }
 
                     model = new PostViewModel()
                     {
