@@ -63,13 +63,14 @@
             {
                 foreach (IndexPostViewModel post in Model.Take(6))
                 {
-                    string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
+                    string heroImageUrl = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
                     <div class="post col-md-4" style="margin-bottom: 15px;">
                         <div class="post-thumbnail">
 
                             @* UPDATE THIS LINK *@
-                            <a href="@Url.Action("Post", new { Id = post.Id })">
-                                <img class="img-fluid" src="@postLink" alt="...">
+                            @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                            <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                <img class="img-fluid" src="@heroImageUrl" alt="...">
                             </a>
                         </div>
 
@@ -90,13 +91,15 @@
                             </div>
 
                             @* UPDATE THIS LINK *@
-                            <a href="@Url.Action("Post", new { Id = post.Id })">
+                            @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                            <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
                                 <h3 class="h4">@post.Title</h3>
                             </a>
 
                             <p class="text-muted">
                                 @post.GetMiniBody(25)
-                                @Html.ActionLink(" . . . Read More", "Post", "Home", new { Id = post.Id }, new { })
+                                @(Html.ActionLink(" . . . Read More", "PostBySlug", "Home", new { slug = post.Slug }, new { }))       
+                                @*@Html.ActionLink(" . . . Read More", "Post", "Home", new { Id = post.Id }, new { })*@
                             </p>
                         </div>
                     </div>
@@ -172,13 +175,14 @@
                                         }
 
                                         @* UPDATE THIS LINK *@
-                                        <a href="@Url.Action("Post", new { Id = post.Id })">
+                                        @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                        <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
                                             <h2 class="h4">@post.Title</h2>
                                         </a>
                                     </header>
 
                                     <div class="index-post-body">
-                                        @(post.GetMiniBody(50) + " . . .")
+                                        @(post.GetMiniBody(150) + " . . .")
                                     </div>
 
                                     <footer class="post-footer d-flex align-items-center">
@@ -202,7 +206,8 @@
                         </div>
 
                         <div class="col-lg-5" style="padding: 0px;">
-                            <a href="@Url.Action("Post", new { Id = post.Id })">
+                            @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                            <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
                                 <img class="img-fluid" src="@postLink" alt="...">
                             </a>
                         </div>
@@ -212,7 +217,8 @@
                 {
                     <div class="row d-flex align-items-stretch">
                         <div class="col-lg-5" style="padding: 0px;">
-                            <a href="@Url.Action("Post", new { Id = post.Id })">
+                            @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                            <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
                                 <img class="img-fluid" src="@postLink" alt="...">
                             </a>
                         </div>
@@ -233,13 +239,14 @@
                                                 </form>
                                             }
 
-                                            <a href="@Url.Action("Post", new { Id = post.Id })">
+                                            @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                            <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
                                                 <h2 class="h4">@post.Title</h2>
                                             </a>
                                         </header>
 
                                         <div class="index-post-body">
-                                            @(post.GetMiniBody(50) + " . . .")
+                                            @(post.GetMiniBody(150) + " . . .")
                                         </div>
 
                                         <footer class="post-footer d-flex align-items-center">

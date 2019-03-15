@@ -272,7 +272,8 @@
                     {
                         string postImageLink = string.IsNullOrEmpty(newerPost.HeroImageUrl) || string.IsNullOrWhiteSpace(newerPost.HeroImageUrl) ? "" : Url.Content($@"{newerPost.HeroImageUrl}");
                         @* UPDATE THIS LINK *@
-                        <a href="@Url.Action("Post", new { Id = newerPost.Id })">
+                        @*<a href="@Url.Action("Post", new { Id = newerPost.Id })">*@
+                        <a href="@Url.Action("PostBySlug", new { slug = newerPost.Slug })">
                             <div class="item d-flex align-items-center">
                                 <div class="image">
                                     @* UPDATE IMAGE *@

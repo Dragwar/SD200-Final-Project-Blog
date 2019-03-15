@@ -16,7 +16,7 @@ namespace SD200_Final_Project_Blog.Controllers
         public static readonly List<string> AllowedFileExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
         private const string UserImageUploadFolderRelativePath = @"~/UserUploads/PostHeroImages/";
         public static readonly HashSet<char> MyUnwantedSymbols = new HashSet<char>()
-        {'!', '*', '\'', '"', '`', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '|', '\\', '?', '%', '#', '[', ']', '{', '}'};
+        {'.', '!', '*', '\'', '"', '`', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '|', '\\', '?', '%', '#', '[', ']', '{', '}'};
 
         public HomeController()
         {
@@ -41,6 +41,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         Id = post.Id,
                         PostAuthorName = post.User.UserName,
                         Title = post.Title,
+                        Slug = post.Slug,
                         Body = post.Body,
                         DateCreated = post.DateCreated,
                         DateUpdated = post.DateUpdated,
@@ -99,6 +100,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         {
                             Id = post.Id,
                             Title = post.Title,
+                            Slug = post.Slug,
                             PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
                             Body = post.Body,
                             DateCreated = post.DateCreated,
@@ -134,6 +136,73 @@ namespace SD200_Final_Project_Blog.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("Blog/{slug}")]
+        public ActionResult PostBySlug(string slug)
+        {
+            if (string.IsNullOrEmpty(slug) || string.IsNullOrWhiteSpace(slug))
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            /// <summary>
+            ///     Just for finding which header nav to bold
+            /// </summary>
+            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.Post);
+
+            Post foundPost = null;
+            PostViewModel model = null;
+
+            if (DbContext.Posts.Any())
+            {
+                foundPost = DbContext.Posts.FirstOrDefault(post => post.Slug == slug);
+
+                if (foundPost != null)
+                {
+                    List<IndexPostViewModel> allPosts = DbContext.Posts
+                        .Select(post => new IndexPostViewModel()
+                        {
+                            Id = post.Id,
+                            Title = post.Title,
+                            Slug = post.Slug,
+                            PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
+                            Body = post.Body,
+                            DateCreated = post.DateCreated,
+                            DateUpdated = post.DateUpdated,
+                            Published = post.Published,
+                            HeroImageUrl = post.HeroImageUrl,
+                        }).ToList();
+
+                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
+                    allPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+
+                    model = new PostViewModel()
+                    {
+                        Id = foundPost.Id,
+                        PostAuthorName = foundPost.User == null ? "" : foundPost.User.UserName,
+                        Title = foundPost.Title,
+                        Body = foundPost.Body,
+                        DateCreated = foundPost.DateCreated,
+                        DateUpdated = foundPost.DateUpdated,
+                        Published = foundPost.Published,
+                        HeroImageUrl = foundPost.HeroImageUrl,
+
+                        // Get three latest posts (without the current post)
+                        LatestPosts = allPosts.Where(post => post.Id != foundPost.Id).Take(3).ToList(),
+                    };
+
+                }
+            }
+
+            if (foundPost == null || model == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            return View(nameof(HomeController.Post), model);
         }
 
         [HttpGet]
