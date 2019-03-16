@@ -58,15 +58,19 @@
                             @Html.ActionLink("Home", "Index", new { controller = "Home" }, new { @class = "nav-link IndexPage" })
                         </li>
 
+                        <li class="nav-item">
+                            @Html.ActionLink("Search Posts", "SearchPosts", new { controller = "Home" }, new { @class = "nav-link SearchPage" })
+                        </li>
+
                         @* JUST USING INDEX PAGE TO DISPLAY ALL POSTS FOR NOW *@
                         @*<li class="nav-item">
-                            @Html.ActionLink("Blog", "Blog", new { controller = "Home" }, new { @class = "nav-link BlogPage" })
-                        </li>*@
+                                @Html.ActionLink("Blog", "Blog", new { controller = "Home" }, new { @class = "nav-link BlogPage" })
+                            </li>*@
 
                         @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
                         {
                             <li class="nav-item">
-                                @Html.ActionLink("Create Post", "CreatePost", new { controller = "Home" }, new { @class = "nav-link PostPage" })
+                                @Html.ActionLink("Create Post", "CreatePost", new { controller = "Home" }, new { @class = "nav-link CreatePostPage" })
                             </li>
                         }
                     </ul>
@@ -95,6 +99,7 @@
                     <div class="col-md-4">
 
                         <div class="logo">
+                            <a href=".hero" class="continue link-scroll"><i class="fa fa-long-arrow-up"></i> Go To The Top</a>
                             <h6 class="text-white">EG's Blog</h6>
                         </div>
 

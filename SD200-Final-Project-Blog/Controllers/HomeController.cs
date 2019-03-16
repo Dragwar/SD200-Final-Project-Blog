@@ -228,6 +228,7 @@ namespace SD200_Final_Project_Blog.Controllers
         [Authorize(Roles = nameof(UserRolesEnum.Admin))]
         public ActionResult CreatePost()
         {
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.CreatePost);
             return View();
         }
 
@@ -397,6 +398,64 @@ namespace SD200_Final_Project_Blog.Controllers
             DbContext.Posts.Remove(foundPost);
             DbContext.SaveChanges();
             return RedirectToAction(nameof(HomeController.Index));
+        }
+
+        [HttpGet]
+        public ActionResult SearchPosts()
+        {
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.SearchPosts);
+
+            List<IndexPostViewModel> emptyModel = new List<IndexPostViewModel>();
+
+            return View(emptyModel);
+        }
+
+        [HttpPost]
+        public ActionResult SearchPosts(string userSearch)
+        {
+            if (string.IsNullOrEmpty(userSearch) || string.IsNullOrWhiteSpace(userSearch))
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            ViewBag.CurrentControllerMethodName = nameof(HomeController.SearchPosts);
+
+            string query = userSearch.ToLower().Trim();
+
+            List<IndexPostViewModel> model = DbContext.Posts
+                .Where(post => (
+                    post.Title.ToLower().Contains(query) ||
+                    post.Slug.ToLower().Contains(query) ||
+                    post.Body.ToLower().Contains(query)
+                )).Select(post => new IndexPostViewModel()
+                {
+                    Id = post.Id,
+                    Title = post.Title,
+                    Slug = post.Slug,
+                    Body = post.Body,
+                    DateCreated = post.DateCreated,
+                    DateUpdated = post.DateUpdated,
+                    PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
+                    Published = post.Published,
+                    HeroImageUrl = post.HeroImageUrl,
+                }).ToList();
+
+            ViewBag.userSearch = userSearch;
+
+            // If no posts were found
+            if (!model.Any())
+            {
+                ModelState.AddModelError("", $@"No results found for ""{userSearch}""");
+                return View(model);
+            }
+
+            // Filter out unpublished posts when user isn't admin
+            if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
+            {
+                model = model.Where(post => post.Published).ToList();
+            }
+
+            return View(model);
         }
     }
 }

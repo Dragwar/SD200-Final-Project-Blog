@@ -1,0 +1,175 @@
+﻿@model List<IndexPostViewModel>
+
+@{
+    ViewBag.Title = "Search Results";
+    string getSearch = string.IsNullOrEmpty(ViewBag.userSearch) || string.IsNullOrWhiteSpace(ViewBag.userSearch) ? "" : $@"for ""{ViewBag.userSearch}""";
+}
+
+@section Styles {
+    @Styles.Render("~/index")
+}
+
+<div class="text-center widget search">
+    <div>
+        <h3 class="h6">Search the blog</h3>
+    </div>
+
+    @using (Html.BeginForm("SearchPosts", "Home", FormMethod.Post, new { @class = "search-from" }))
+    {
+        <div class="form-group">
+            <input type="search" name="userSearch" placeholder="What are you looking for?">
+            <button type="submit" class="btn btn-outline-success">Search <i class="icon-search"></i></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <p class="text-primary text-center">
+            Found @Model.Count @(Model.Count == 1 ? "result" : "results") @getSearch
+        </p>
+    }
+    else
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    }
+</div>
+
+<section class="featured-posts no-padding-top">
+    @if (Model.Any())
+    {
+        <h2 style="margin: 50px 0px;" class="text-center">@ViewBag.Title</h2>
+    }
+    <div class="container">
+        <div class="row">
+
+            @if (Model.Any())
+            {
+                int counter = 0;
+                foreach (IndexPostViewModel post in Model)
+                {
+                    string postName = string.IsNullOrEmpty(post.PostAuthorName) && string.IsNullOrEmpty(post.PostAuthorName) ? "Anonymous User" : post.PostAuthorName;
+                    string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
+                    if (counter % 2 == 0)
+                    {
+                        <div class="row d-flex align-items-stretch">
+                            <div class="text col-lg-7">
+                                <div class="text-inner d-flex align-items-center">
+                                    <div class="content">
+
+                                        <header class="post-header">
+                                            @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                                            {
+                                                <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
+                                                    <div class="category">
+                                                        <a class="text-info" href="@Url.Action("EditPost", new { Id = post.Id })">Edit</a>
+                                                        <button class="text-danger">Delete</button>
+                                                    </div>
+                                                </form>
+                                            }
+
+                                            @* UPDATE THIS LINK *@
+                                            @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                            <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                                <h2 class="h4">@post.Title</h2>
+                                            </a>
+                                        </header>
+
+                                        <div class="index-post-body">
+                                            @(post.GetMiniBody(140) + " . . .")
+                                        </div>
+
+                                        <footer class="post-footer d-flex align-items-center">
+                                            <a href="#" class="author d-flex align-items-center flex-wrap">
+                                                @*<div class="avatar">
+                                                        <img src="@Url.Content(@"~/TemplateContent/img/avatar-1.jpg")" alt="..." class="img-fluid">
+                                                    </div>*@
+
+                                                <div class="title">
+                                                    <span>@postName</span>
+                                                </div>
+                                            </a>
+
+                                            <div class="date"><i class="icon-clock"></i> @post.GetPostTimeFromNow()</div>
+
+                                            @*<div class="comments"><i class="icon-comment"></i>12</div>*@
+                                        </footer>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-5" style="padding: 0px;">
+                                @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                    <img class="img-fluid" src="@postLink" alt="...">
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row d-flex align-items-stretch">
+                            <div class="col-lg-5" style="padding: 0px;">
+                                @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                    <img class="img-fluid" src="@postLink" alt="...">
+                                </a>
+                            </div>
+
+                            <div class="text col-lg-7">
+                                <div class="text-inner d-flex align-items-center">
+                                    <div class="text-inner d-flex align-items-center">
+                                        <div class="content">
+
+                                            <header class="post-header">
+                                                @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                                                {
+                                                    <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
+                                                        <div class="category">
+                                                            <a class="text-info" href="@Url.Action("EditPost", new { Id = post.Id })">Edit</a>
+                                                            <button class="text-danger">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                }
+
+                                                @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                                <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                                    <h2 class="h4">@post.Title</h2>
+                                                </a>
+                                            </header>
+
+                                            <div class="index-post-body">
+                                                @(post.GetMiniBody(140) + " . . .")
+                                            </div>
+
+                                            <footer class="post-footer d-flex align-items-center">
+                                                <a href="#" class="author d-flex align-items-center flex-wrap">
+                                                    @*<div class="avatar">
+                                                            <img src="@Url.Content("~/TemplateContent/img/avatar-2.jpg")" alt="..." class="img-fluid">
+                                                        </div>*@
+
+                                                    <div class="title">
+                                                        <span>@postName</span>
+                                                    </div>
+                                                </a>
+
+                                                <div class="date"><i class="icon-clock"></i> @post.GetPostTimeFromNow()</div>
+
+                                                @*<div class="comments"><i class="icon-comment"></i></div>*@
+                                            </footer>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    counter++;
+                }
+
+            }
+
+        </div>
+    </div>
+</section>
+

@@ -29,12 +29,25 @@
 <section class="intro">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <h2 class="h3">Some great intro here</h2>
-                <p class="text-big">
-                    All posts have meaningful content... I promise
-                </p>
+                <p class="text-big">All posts have meaningful content... I promise</p>
             </div>
+
+            <div class="text-center widget search col-lg-6">
+                <div>
+                    <h3 class="h6">Search the blog</h3>
+                </div>
+
+                @using (Html.BeginForm("SearchPosts", "Home", FormMethod.Post, new { @class = "search-from" }))
+                {
+                    <div class="form-group">
+                        <input type="search" name="userSearch" placeholder="What are you looking for?">
+                        <button type="submit" class="btn btn-outline-success">Search <i class="icon-search"></i></button>
+                    </div>
+                }
+            </div>
+
         </div>
     </div>
 </section>
@@ -114,9 +127,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-7">
-                <h2>
-                    All Posts below
-                </h2>
+                <h2>All Posts below</h2>
                 <a href=".hero" class="hero-link link-scroll">Back to the Top</a>@* UPDATE THIS LINK *@
             </div>
         </div>

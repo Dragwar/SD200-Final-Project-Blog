@@ -14,3 +14,16 @@ form .category button {
     border: none;
     background: none;
 }
+
+body > div > section.intro > div > div > div.widget.search.col-lg-6 > form > div > input[type="search"] {
+    margin: auto;
+}
+.img-fluid {
+    max-width: 100%;
+    height: unset;
+    width: 750px;
+}
+
+.validation-summary-errors ul {
+    list-style: none;
+}
