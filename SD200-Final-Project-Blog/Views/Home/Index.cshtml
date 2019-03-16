@@ -4,6 +4,10 @@
     ViewBag.Title = "Home Page";
 }
 
+@section Scripts {
+    <script src="~/Scripts/myScripts/preventFormSubmitOnEmptySearch.js"></script>
+}
+
 @section Styles {
     @Styles.Render("~/index")
 }
@@ -39,7 +43,7 @@
                     <h3 class="h6">Search the blog</h3>
                 </div>
 
-                @using (Html.BeginForm("SearchPosts", "Home", FormMethod.Post, new { @class = "search-from" }))
+                @using (Html.BeginForm("SearchPosts", "Home", FormMethod.Post, new { id = "searchForm", @class = "search-from" }))
                 {
                     <div class="form-group">
                         <input type="search" name="userSearch" placeholder="What are you looking for?">

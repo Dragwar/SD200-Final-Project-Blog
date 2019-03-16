@@ -6,6 +6,10 @@
     string currentPostImageLink = string.IsNullOrEmpty(Model.HeroImageUrl) || string.IsNullOrWhiteSpace(Model.HeroImageUrl) ? "" : Url.Content($@"{Model.HeroImageUrl}");
 }
 
+@section Scripts {
+    <script src="~/Scripts/myScripts/preventFormSubmitOnEmptySearch.js"></script>
+}
+
 @section Styles {
     @Styles.Render("~/index")
 }
@@ -235,13 +239,13 @@
         <aside class="col-lg-4">
 
             <!-- Widget [Search Bar Widget]-->
-            
+
             <div class="widget search">
                 <div>
                     <h3 class="h6">Search the blog</h3>
                 </div>
 
-                @using (Html.BeginForm("SearchPosts", "Home", FormMethod.Post, new { @class = "search-from" }))
+                @using (Html.BeginForm("SearchPosts", "Home", FormMethod.Post, new { id = "searchForm", @class = "search-from" }))
                 {
                     <div class="form-group">
                         <input type="text" name="userSearch" placeholder="What are you looking for?">
@@ -249,7 +253,7 @@
                     </div>
                 }
             </div>
-            
+
             <!-- Widget [Latest Posts Widget] -->
             <div class="widget latest-posts">
                 <header>
