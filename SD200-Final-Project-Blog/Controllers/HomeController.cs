@@ -13,7 +13,7 @@ namespace SD200_Final_Project_Blog.Controllers
     public class HomeController : Controller
     {
         private ApplicationDbContext DbContext { get; set; }
-        public static readonly List<string> AllowedFileExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
+        public static readonly HashSet<string> AllowedFileExtensions = new HashSet<string> { ".jpg", ".jpeg", ".png", ".gif" };
         private const string UserImageUploadFolderRelativePath = @"~/UserUploads/PostHeroImages/";
         public static readonly HashSet<char> MyUnwantedSymbols = new HashSet<char>()
         {'.', '!', '*', '\'', '"', '`', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '|', '\\', '?', '%', '#', '[', ']', '{', '}'};
@@ -192,6 +192,12 @@ namespace SD200_Final_Project_Blog.Controllers
                     // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
                     allPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
+                    // Filter out unpublished posts when user isn't admin
+                    if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
+                    {
+                        allPosts = allPosts.Where(post => post.Published).ToList();
+                    }
+
                     model = new PostViewModel()
                     {
                         Id = foundPost.Id,
@@ -291,7 +297,7 @@ namespace SD200_Final_Project_Blog.Controllers
             {
                 fileExtension = Path.GetExtension(model.HeroImage.FileName);
 
-                if (!AllowedFileExtensions.Contains(fileExtension))
+                if (!AllowedFileExtensions.Contains(fileExtension.ToLower()))
                 {
                     ModelState.AddModelError("", "File extension is not allowed.");
                     return View();
@@ -346,6 +352,7 @@ namespace SD200_Final_Project_Blog.Controllers
 
             myPost.Title = model.Title;
             myPost.Body = model.Body;
+            myPost.Published = model.Published;
             myPost.DateUpdated = DateTime.Now;
 
 
