@@ -20,6 +20,7 @@ namespace SD200_Final_Project_Blog.Models.Domain
 
         public Post()
         {
+            Id = Guid.NewGuid();
             DateCreated = DateTime.Now;
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace SD200_Final_Project_Blog.Models.Domain
+﻿namespace SD200_Final_Project_Blog.MyHelpers
 {
     public enum UserRolesEnum
     {

@@ -2,6 +2,7 @@
 using SD200_Final_Project_Blog.Models;
 using SD200_Final_Project_Blog.Models.Domain;
 using SD200_Final_Project_Blog.Models.ViewModels;
+using SD200_Final_Project_Blog.MyHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -314,7 +315,6 @@ namespace SD200_Final_Project_Blog.Controllers
 
                 myPost = new Post()
                 {
-                    Id = Guid.NewGuid(),
                     Slug = slug,
                     UserId = currentUserId,
 

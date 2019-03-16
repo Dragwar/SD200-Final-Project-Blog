@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace SD200_Final_Project_Blog.Models.Domain
+namespace SD200_Final_Project_Blog.MyHelpers
 {
     [NotMapped]
     public static class StringHelper

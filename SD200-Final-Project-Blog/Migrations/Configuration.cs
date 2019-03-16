@@ -5,6 +5,7 @@ namespace SD200_Final_Project_Blog.Migrations
     using SD200_Final_Project_Blog.Controllers;
     using SD200_Final_Project_Blog.Models;
     using SD200_Final_Project_Blog.Models.Domain;
+    using SD200_Final_Project_Blog.MyHelpers;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity.Migrations;
@@ -130,7 +131,6 @@ namespace SD200_Final_Project_Blog.Migrations
                 #endregion
                 Post newPost = new Post()
                 {
-                    Id = Guid.NewGuid(),
                     Title = title,
                     Slug = title.GenerateSlug(HomeController.MyUnwantedSymbols),
                     User = initialUsers[i],

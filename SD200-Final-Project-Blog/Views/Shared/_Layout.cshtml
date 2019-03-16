@@ -67,7 +67,7 @@
                                 @Html.ActionLink("Blog", "Blog", new { controller = "Home" }, new { @class = "nav-link BlogPage" })
                             </li>*@
 
-                        @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                        @if (User.IsInRole(nameof(UserRolesEnum.Admin)))
                         {
                             <li class="nav-item">
                                 @Html.ActionLink("Create Post", "CreatePost", new { controller = "Home" }, new { @class = "nav-link CreatePostPage" })

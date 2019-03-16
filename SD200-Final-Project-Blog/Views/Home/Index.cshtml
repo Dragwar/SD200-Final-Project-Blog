@@ -90,7 +90,7 @@
                             <div class="post-meta d-flex justify-content-between">
                                 <div class="date">@post.GetPostDateAndTime()</div>
 
-                                @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                                @if (User.IsInRole(nameof(UserRolesEnum.Admin)))
                                 {
                                     <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
                                         <div class="category">
@@ -159,7 +159,7 @@
                                 <div class="content">
 
                                     <header class="post-header">
-                                        @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                                        @if (User.IsInRole(nameof(UserRolesEnum.Admin)))
                                         {
                                             <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
                                                 <div class="category">
@@ -224,7 +224,7 @@
                                     <div class="content">
 
                                         <header class="post-header">
-                                            @if (User.IsInRole(nameof(SD200_Final_Project_Blog.Models.Domain.UserRolesEnum.Admin)))
+                                            @if (User.IsInRole(nameof(UserRolesEnum.Admin)))
                                             {
                                                 <form action="@Url.Action("DeletePost", new { Id = post.Id })" method="post">
                                                     <div class="category">
