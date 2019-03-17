@@ -62,7 +62,9 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="date"><i class="icon-clock"></i> @Model.GetPostTimeFromNow()</div>
                                 @*<div class="views"><i class="icon-eye"></i> 500</div>*@
-                                @*<div class="comments meta-last"><i class="icon-comment"></i>12</div>*@
+
+                                @* Update for comment count *@
+                                <div class="comments meta-last"><i class="icon-comment"></i>12</div>
                             </div>
                         </div>
 
@@ -100,104 +102,106 @@
                             </a>
                         </div>
                         -->
-                        @*
-                            <!-- All Comments -->
-                            <div class="post-comments">
-                                <header>
-                                    <h3 class="h6">Post Comments<span class="no-of-comments">(3)</span></h3>
-                                </header>
+                        <!-- All Comments -->
+                        <div class="post-comments">
+                            <header>
+                                <h3 class="h6">Post Comments<span class="no-of-comments">(3)</span></h3>
+                            </header>
 
-                                <!-- Comment -->
-                                <div class="comment">
-                                    <div class="comment-header d-flex justify-content-between">
-                                        <div class="user d-flex align-items-center">
-                                            <div class="image">
-                                                <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
-                                            </div>
-
-                                            <div class="title">
-                                                <strong>Jabi Hernandiz</strong>
-                                                <span class="date">
-                                                    May
-                                                    2016
-                                                </span>
-                                            </div>
+                            <!-- Comment -->
+                            <div class="comment">
+                                <div class="comment-header d-flex justify-content-between">
+                                    <div class="user d-flex align-items-center">
+                                        <div class="image">
+                                            <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
                                         </div>
-                                    </div>
 
-                                    <div class="comment-body">
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut
-                                            labore et dolore magna aliqua. Ut enim ad minim veniam.
-                                        </p>
+                                        <div class="title">
+                                            <strong>Jabi Hernandiz</strong>
+                                            <span class="date">
+                                                May
+                                                2016
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Comment -->
-                                <div class="comment">
-                                    <div class="comment-header d-flex justify-content-between">
-                                        <div class="user d-flex align-items-center">
-                                            <div class="image">
-                                                <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
-                                            </div>
-
-                                            <div class="title">
-                                                <strong>Nikolas</strong>
-                                                <span class="date">
-                                                    May
-                                                    2016
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="comment-body">
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut
-                                            labore et dolore magna aliqua. Ut enim ad minim veniam.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Comment -->
-                                <div class="comment">
-                                    <div class="comment-header d-flex justify-content-between">
-                                        <div class="user d-flex align-items-center">
-                                            <div class="image">
-                                                <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
-                                            </div>
-
-                                            <div class="title">
-                                                <strong>John Doe</strong>
-                                                <span class="date">
-                                                    May
-                                                    2016
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="comment-body">
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut
-                                            labore et dolore magna aliqua. Ut enim ad minim veniam.
-                                        </p>
-                                    </div>
+                                <div class="comment-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor incididunt ut
+                                        labore et dolore magna aliqua. Ut enim ad minim veniam.
+                                    </p>
                                 </div>
                             </div>
 
-                            <!-- Adding A New Comment -->
-                            <div class="add-comment">
-                                <header>
-                                    <h3 class="h6">Leave a reply</h3>
-                                </header>
+                            <!-- Comment -->
+                            <div class="comment">
+                                <div class="comment-header d-flex justify-content-between">
+                                    <div class="user d-flex align-items-center">
+                                        <div class="image">
+                                            <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
+                                        </div>
 
-                                @* UPDATE THIS LINK * @
+                                        <div class="title">
+                                            <strong>Nikolas</strong>
+                                            <span class="date">
+                                                May
+                                                2016
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="comment-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor incididunt ut
+                                        labore et dolore magna aliqua. Ut enim ad minim veniam.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Comment -->
+                            <div class="comment">
+                                <div class="comment-header d-flex justify-content-between">
+                                    <div class="user d-flex align-items-center">
+                                        <div class="image">
+                                            <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
+                                        </div>
+
+                                        <div class="title">
+                                            <strong>John Doe</strong>
+                                            <span class="date">
+                                                May
+                                                2016
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="comment-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor incididunt ut
+                                        labore et dolore magna aliqua. Ut enim ad minim veniam.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Adding A New Comment -->
+                        <div class="add-comment">
+                            <header>
+                                <h3 class="h6">Leave a reply</h3>
+                            </header>
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @* UPDATE THIS LINK *@
                                 <form action="#" class="commenting-form">
-
                                     <div class="row">
                                         <div class="form-group col-md-6">
                                             <input type="text"
@@ -227,8 +231,16 @@
                                         </div>
                                     </div>
                                 </form>
+                            }
+                            else
+                            {
+                                <p class="text-secondary">
+                                    To Leave a comment you need to be logged in
+                                    @Html.ActionLink("Log in", "Login", "Account", new { ReturnUrl = Request.Url.AbsoluteUri }, new { })
+                                </p>
+                            }
 
-                            </div>*@
+                        </div>
 
                     </div>
                 </div>
@@ -280,7 +292,9 @@
                                     <div class="d-flex align-items-center">
                                         <div class="date"><i class="icon-clock"></i> @newerPost.GetPostTimeFromNow()</div>
                                         @*<div class="views"><i class="icon-eye"></i> 500</div>*@
-                                        @*<div class="comments"><i class="icon-comment"></i>12</div>*@
+
+                                        @* Update for comment count *@
+                                        <div class="comments"><i class="icon-comment"></i>12</div>
                                     </div>
 
                                 </div>
@@ -318,7 +332,6 @@
                 </ul>
             </div>
             -->
-
         </aside>
 
     </div>
