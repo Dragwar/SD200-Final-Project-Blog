@@ -145,6 +145,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         Comments = foundPost.Comments
                             .Select(comment => new PostCommentViewModel()
                             {
+                                Id = comment.Id,
                                 AuthorName = comment.User == null ? "" : comment.User.UserName,
                                 Body = comment.Body,
                                 DateCreated = comment.DateCreated,
@@ -231,6 +232,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         Comments = foundPost.Comments
                             .Select(comment => new PostCommentViewModel()
                             {
+                                Id = comment.Id,
                                 AuthorName = comment.User == null ? "" : comment.User.UserName,
                                 Body = comment.Body,
                                 DateCreated = comment.DateCreated,
