@@ -48,6 +48,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         DateUpdated = post.DateUpdated,
                         Published = post.Published,
                         HeroImageUrl = post.HeroImageUrl,
+                        CommentCount = post.Comments.Count,
                     }).ToList();
 
                 // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
@@ -103,7 +104,9 @@ namespace SD200_Final_Project_Blog.Controllers
 
                 if (foundPost != null)
                 {
-                    List<IndexPostViewModel> allPosts = DbContext.Posts
+                    List<IndexPostViewModel> latestPosts = DbContext.Posts
+                        .Where(post => post.Id != foundPost.Id)
+                        .Take(3)
                         .Select(post => new IndexPostViewModel()
                         {
                             Id = post.Id,
@@ -115,15 +118,17 @@ namespace SD200_Final_Project_Blog.Controllers
                             DateUpdated = post.DateUpdated,
                             Published = post.Published,
                             HeroImageUrl = post.HeroImageUrl,
+                            CommentCount = post.Comments.Count,
                         }).ToList();
 
                     // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
-                    allPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+                    latestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+
 
                     // Filter out unpublished posts when user isn't admin
                     if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
                     {
-                        allPosts = allPosts.Where(post => post.Published).ToList();
+                        latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
                     model = new PostViewModel()
@@ -137,8 +142,18 @@ namespace SD200_Final_Project_Blog.Controllers
                         Published = foundPost.Published,
                         HeroImageUrl = foundPost.HeroImageUrl,
 
+                        Comments = foundPost.Comments
+                            .Select(comment => new PostCommentViewModel()
+                            {
+                                AuthorName = comment.User == null ? "" : comment.User.UserName,
+                                Body = comment.Body,
+                                DateCreated = comment.DateCreated,
+                                DateUpdated = comment.DateUpdated,
+                                UpdatedReason = comment.UpdatedReason,
+                            }).ToList(),
+
                         // Get three latest posts (without the current post)
-                        LatestPosts = allPosts.Where(post => post.Id != foundPost.Id).Take(3).ToList(),
+                        LatestPosts = latestPosts,
                     };
 
                 }
@@ -176,7 +191,9 @@ namespace SD200_Final_Project_Blog.Controllers
 
                 if (foundPost != null)
                 {
-                    List<IndexPostViewModel> allPosts = DbContext.Posts
+                    List<IndexPostViewModel> latestPosts = DbContext.Posts
+                        .Where(post => post.Id != foundPost.Id)
+                        .Take(3)
                         .Select(post => new IndexPostViewModel()
                         {
                             Id = post.Id,
@@ -188,15 +205,16 @@ namespace SD200_Final_Project_Blog.Controllers
                             DateUpdated = post.DateUpdated,
                             Published = post.Published,
                             HeroImageUrl = post.HeroImageUrl,
+                            CommentCount = post.Comments.Count,
                         }).ToList();
 
                     // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
-                    allPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+                    latestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
                     // Filter out unpublished posts when user isn't admin
                     if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
                     {
-                        allPosts = allPosts.Where(post => post.Published).ToList();
+                        latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
                     model = new PostViewModel()
@@ -210,8 +228,18 @@ namespace SD200_Final_Project_Blog.Controllers
                         Published = foundPost.Published,
                         HeroImageUrl = foundPost.HeroImageUrl,
 
+                        Comments = foundPost.Comments
+                            .Select(comment => new PostCommentViewModel()
+                            {
+                                AuthorName = comment.User == null ? "" : comment.User.UserName,
+                                Body = comment.Body,
+                                DateCreated = comment.DateCreated,
+                                DateUpdated = comment.DateUpdated,
+                                UpdatedReason = comment.UpdatedReason,
+                            }).ToList(),
+
                         // Get three latest posts (without the current post)
-                        LatestPosts = allPosts.Where(post => post.Id != foundPost.Id).Take(3).ToList(),
+                        LatestPosts = latestPosts,
                     };
 
                 }
@@ -438,6 +466,7 @@ namespace SD200_Final_Project_Blog.Controllers
                     PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
                     Published = post.Published,
                     HeroImageUrl = post.HeroImageUrl,
+                    CommentCount = post.Comments.Count,
                 }).ToList();
 
             ViewBag.userSearch = userSearch;

@@ -1,33 +1,20 @@
-﻿using SD200_Final_Project_Blog.Models.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace SD200_Final_Project_Blog.Models.ViewModels
 {
-    public class PostViewModel
+    public class PostCommentViewModel
     {
-        public PostViewModel()
-        {
-            LatestPosts = new List<IndexPostViewModel>();
-        }
-        public List<IndexPostViewModel> LatestPosts { get; set; }
+        public string AuthorName { get; set; }
 
-        public Guid? Id { get; set; }
-
-        public string Title { get; set; }
         public string Body { get; set; }
-        public bool Published { get; set; }
+        public string UpdatedReason { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
-        public string HeroImageUrl { get; set; }
-        public string PostAuthorName { get; set; }
 
-        public List<PostCommentViewModel> Comments { get; set; }
-        public int CommentCount { get => Comments.Count; }
-
-        public string GetPostTimeFromNow()
+        public string GetCommentPostTimeFromNow()
         {
             int postDay = DateTime.Today.Day - DateCreated.Day;
             TimeSpan postTime = DateTime.Now.TimeOfDay - DateCreated.TimeOfDay;
@@ -53,6 +40,6 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
             }
         }
 
-        public string GetPostDateAndTime() => $"{DateCreated.ToString("m") + ", " + DateCreated.ToShortTimeString()} | {DateCreated.Year}";
+        public string GetCommentPostDateAndTime() => $"{DateCreated.ToString("m") + ", " + DateCreated.ToShortTimeString()} | {DateCreated.Year}";
     }
 }

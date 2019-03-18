@@ -12,10 +12,12 @@ namespace SD200_Final_Project_Blog.Models
     public class ApplicationUser : IdentityUser
     {
         public virtual List<Post> Posts { get; set; }
+        public virtual List<Comment> Comments { get; set; }
 
         public ApplicationUser()
         {
             Posts = new List<Post>();
+            Comments = new List<Comment>();
         }
 
 
@@ -36,6 +38,7 @@ namespace SD200_Final_Project_Blog.Models
         }
 
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         public static ApplicationDbContext Create()
         {

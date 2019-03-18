@@ -15,6 +15,8 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public string HeroImageUrl { get; set; }
         public string PostAuthorName { get; set; }
 
+        public int CommentCount { get; set; }
+
         public string Slug { get; set; }
 
         private string GetPlainTextFromHtml(string htmlString)
