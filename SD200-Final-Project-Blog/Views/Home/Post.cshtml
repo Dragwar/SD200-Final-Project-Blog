@@ -110,6 +110,15 @@
 
                             @foreach (PostCommentViewModel comment in Model.Comments)
                             {
+                                if (User.IsInRole(nameof(UserRolesEnum.Admin)))
+                                {
+                                    <form action="@Url.Action("DeleteComment", "Comment", new { Id = comment.Id })" method="post">
+                                        <div class="category">
+                                            <a class="text-info" href="@Url.Action("EditComment", "Comment", new { Id = comment.Id })">Edit</a>
+                                            <button class="text-danger">Delete</button>
+                                        </div>
+                                    </form>
+                                }
                                 <!-- Comment -->
                                 <div class="comment">
                                     <div class="comment-header d-flex justify-content-between">
@@ -147,42 +156,28 @@
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     @* UPDATE THIS LINK *@
-                                    <form action="#" class="commenting-form">
+                                    using (Html.BeginForm("CreateComment", "Comment", FormMethod.Post, new { @class = "commenting-form" }))
+                                    {
                                         <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <input type="text"
-                                                       name="username"
-                                                       id="username"
-                                                       placeholder="Name"
-                                                       class="form-control">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <input type="email"
-                                                       name="username"
-                                                       id="useremail"
-                                                       placeholder="Email Address (will not be published)"
-                                                       class="form-control">
-                                            </div>
-
                                             <div class="form-group col-md-12">
-                                                <textarea name="usercomment"
-                                                          id="usercomment"
+                                                <textarea style="max-width: unset;"
+                                                          name="newComment"
+                                                          id="newComment"
                                                           placeholder="Type your comment"
                                                           class="form-control"></textarea>
                                             </div>
 
                                             <div class="form-group col-md-12">
-                                                <button type="submit" class="btn btn-secondary">Submit Comment</button>
+                                                <button type="submit" class="btn btn-outline-secondary">Submit Comment</button>
                                             </div>
                                         </div>
-                                    </form>
+                                    }
                                 }
                                 else
                                 {
                                     <p class="text-secondary">
                                         To Leave a comment you need to be logged in
-                                        @Html.ActionLink("Log in", "Login", "Account", new { ReturnUrl = Request.Url.AbsoluteUri }, new { })
+                                        @Html.ActionLink("Log in", "Login", "Account", new { ReturnUrl = Request.Url.AbsoluteUri }, new { @class = "text-primary" })
                                     </p>
                                 }
 

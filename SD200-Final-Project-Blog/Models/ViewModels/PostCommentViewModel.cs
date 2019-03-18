@@ -7,6 +7,8 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
 {
     public class PostCommentViewModel
     {
+        public Guid? Id { get; set; }
+
         public string AuthorName { get; set; }
 
         public string Body { get; set; }
