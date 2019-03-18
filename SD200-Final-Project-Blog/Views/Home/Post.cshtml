@@ -110,7 +110,7 @@
 
                             @foreach (PostCommentViewModel comment in Model.Comments)
                             {
-                                if (User.IsInRole(nameof(UserRolesEnum.Admin)))
+                                if (User.IsInRole(nameof(UserRolesEnum.Admin)) || User.IsInRole(nameof(UserRolesEnum.Moderator)))
                                 {
                                     <form action="@Url.Action("DeleteComment", "Comment", new { Id = comment.Id })" method="post">
                                         <div class="category">
