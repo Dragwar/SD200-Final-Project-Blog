@@ -511,13 +511,13 @@
     <Content Include="Scripts\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Home\SearchPosts.cshtml" />
+    <Content Include="Views\Comment\EditComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="TemplateContent\vendor\font-awesome\less\" />
     <Folder Include="TemplateContent\vendor\font-awesome\scss\" />
     <Folder Include="TemplateContent\vendor\jquery.cookie\test\" />
-    <Folder Include="Views\Comment\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SD200_Final_Project_Blog.Controllers
 {
@@ -7,12 +8,11 @@ namespace SD200_Final_Project_Blog.Controllers
         public Guid? Id { get; set; }
 
         public string CommentAuthorName { get; set; }
-        public string UserId { get; set; }
 
+        [Required]
         public string Body { get; set; }
-        public string UpdatedReason { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
 
+        [Required]
+        public string UpdatedReason { get; set; }
     }
 }

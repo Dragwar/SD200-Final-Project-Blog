@@ -110,6 +110,11 @@
 
                             @foreach (PostCommentViewModel comment in Model.Comments)
                             {
+                                string updateReason =
+                                    string.IsNullOrEmpty(comment.UpdatedReason) ||
+                                    string.IsNullOrWhiteSpace(comment.UpdatedReason) ?
+                                    "" : $"({comment.UpdatedReason})";
+
                                 if (User.IsInRole(nameof(UserRolesEnum.Admin)) || User.IsInRole(nameof(UserRolesEnum.Moderator)))
                                 {
                                     <form action="@Url.Action("DeleteComment", "Comment", new { Id = comment.Id })" method="post">
@@ -119,29 +124,39 @@
                                         </div>
                                     </form>
                                 }
-                                <!-- Comment -->
-                                <div class="comment">
-                                    <div class="comment-header d-flex justify-content-between">
-                                        <div class="user d-flex align-items-center">
-                                            <div class="image">
-                                                <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
-                                            </div>
 
-                                            <div class="title">
-                                                <strong>@comment.CommentAuthorName</strong>
-                                                <span class="date">
-                                                    @comment.GetCommentPostTimeFromNow()
-                                                </span>
+                                <!-- Comment -->
+                                    <div class="comment">
+                                        <div class="comment-header d-flex justify-content-between">
+                                            <div class="user d-flex align-items-center">
+                                                <div class="image">
+                                                    @* Update Image in future *@
+                                                    <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
+                                                </div>
+
+                                                <div class="title">
+                                                    <strong>
+                                                        @comment.CommentAuthorName
+                                                    </strong>
+
+                                                    <span class="date">
+                                                        @comment.GetCommentPostTimeFromNow()
+                                                    </span>
+
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="comment-body">
-                                        <p>
-                                            @comment.Body
-                                        </p>
+                                        <small class="text-muted text-small">
+                                            @updateReason
+                                        </small>
+
+                                        <div class="comment-body">
+                                            <p>
+                                                @comment.Body
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
                             }
 
 
@@ -156,8 +171,8 @@
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     @* UPDATE THIS LINK *@
-                                using (Html.BeginForm("CreateComment", "Comment", new { postId = Model.Id }, FormMethod.Post, new { @class = "commenting-form" }))
-                                {
+                                    using (Html.BeginForm("CreateComment", "Comment", new { postId = Model.Id }, FormMethod.Post, new { @class = "commenting-form" }))
+                                    {
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <textarea style="max-width: unset;"
