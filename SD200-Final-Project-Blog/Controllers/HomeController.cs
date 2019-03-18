@@ -428,6 +428,10 @@ namespace SD200_Final_Project_Blog.Controllers
                 RedirectToAction(nameof(HomeController.Index));
             }
 
+            // remove comments before deleting actual post
+            // this will avoid deletion error
+            DbContext.Comments.RemoveRange(foundPost.Comments);
+
             DbContext.Posts.Remove(foundPost);
             DbContext.SaveChanges();
             return RedirectToAction(nameof(HomeController.Index));
