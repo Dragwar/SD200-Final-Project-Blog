@@ -12,6 +12,17 @@
 
 @section Styles {
     @Styles.Render("~/index")
+    <style>
+        .latest-posts-aside {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body > div > div > div > aside > div.widget.latest-posts > div > a:nth-child(2) > div > div.title > div > div.comments {
+            margin: 0;
+        }
+    </style>
 }
 
 <!-- Main Post Page -->
@@ -126,37 +137,37 @@
                                 }
 
                                 <!-- Comment -->
-                                    <div class="comment">
-                                        <div class="comment-header d-flex justify-content-between">
-                                            <div class="user d-flex align-items-center">
-                                                <div class="image">
-                                                    @* Update Image in future *@
-                                                    <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
-                                                </div>
+                                <div class="comment">
+                                    <div class="comment-header d-flex justify-content-between">
+                                        <div class="user d-flex align-items-center">
+                                            <div class="image">
+                                                @* Update Image in future *@
+                                                <img src="@Url.Content(@"~/TemplateContent/img/user.svg")" alt="..." class="img-fluid rounded-circle">
+                                            </div>
 
-                                                <div class="title">
-                                                    <strong>
-                                                        @comment.CommentAuthorName
-                                                    </strong>
+                                            <div class="title">
+                                                <strong>
+                                                    @comment.CommentAuthorName
+                                                </strong>
 
-                                                    <span class="date">
-                                                        @comment.GetCommentPostTimeFromNow()
-                                                    </span>
+                                                <span class="date">
+                                                    @comment.GetCommentPostTimeFromNow()
+                                                </span>
 
-                                                </div>
                                             </div>
                                         </div>
-
-                                        <small class="text-muted text-small">
-                                            @updateReason
-                                        </small>
-
-                                        <div class="comment-body">
-                                            <p>
-                                                @comment.Body
-                                            </p>
-                                        </div>
                                     </div>
+
+                                    <small class="text-muted text-small">
+                                        @updateReason
+                                    </small>
+
+                                    <div class="comment-body">
+                                        <p>
+                                            @comment.Body
+                                        </p>
+                                    </div>
+                                </div>
                             }
 
 
@@ -243,15 +254,17 @@
                                     <img src="@postImageLink" alt="..." class="img-fluid">
                                 </div>
 
-                                <div class="title">
+                                <div class="title" style="min-width: 125px;">
                                     <strong>@newerPost.Title</strong>
 
-                                    <div class="d-flex align-items-center">
-                                        <div class="date"><i class="icon-clock"></i> @newerPost.GetPostTimeFromNow()</div>
-                                        @*<div class="views"><i class="icon-eye"></i> 500</div>*@
+                                    <div class="latest-posts-aside">
+                                        <div class="date text-small text-muted" style="font-size: 12px;"><i class="icon-clock"></i> @newerPost.GetPostTimeFromNow()</div>
+
+                                        @* maybe Implement view count later *@
+                                        @*<div class="views text-small"><i class="icon-eye"></i> 500</div>*@
 
                                         @* Update for comment count *@
-                                        <div class="comments"><i class="icon-comment"></i>@newerPost.CommentCount</div>
+                                        <div class="comments text-small" style="margin: unset;"><i class="icon-comment"></i>@newerPost.CommentCount</div>
                                     </div>
 
                                 </div>
