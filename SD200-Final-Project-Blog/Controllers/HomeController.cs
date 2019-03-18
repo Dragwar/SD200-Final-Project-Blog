@@ -146,7 +146,7 @@ namespace SD200_Final_Project_Blog.Controllers
                             .Select(comment => new PostCommentViewModel()
                             {
                                 Id = comment.Id,
-                                AuthorName = comment.User == null ? "" : comment.User.UserName,
+                                CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
                                 Body = comment.Body,
                                 DateCreated = comment.DateCreated,
                                 DateUpdated = comment.DateUpdated,
@@ -233,7 +233,7 @@ namespace SD200_Final_Project_Blog.Controllers
                             .Select(comment => new PostCommentViewModel()
                             {
                                 Id = comment.Id,
-                                AuthorName = comment.User == null ? "" : comment.User.UserName,
+                                CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
                                 Body = comment.Body,
                                 DateCreated = comment.DateCreated,
                                 DateUpdated = comment.DateUpdated,
@@ -243,6 +243,9 @@ namespace SD200_Final_Project_Blog.Controllers
                         // Get three latest posts (without the current post)
                         LatestPosts = latestPosts,
                     };
+
+                    // sort comments by creation date
+                    model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
 
                 }
             }

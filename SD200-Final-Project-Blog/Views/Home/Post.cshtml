@@ -128,7 +128,7 @@
                                             </div>
 
                                             <div class="title">
-                                                <strong>@comment.AuthorName</strong>
+                                                <strong>@comment.CommentAuthorName</strong>
                                                 <span class="date">
                                                     @comment.GetCommentPostTimeFromNow()
                                                 </span>
@@ -156,13 +156,13 @@
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     @* UPDATE THIS LINK *@
-                                    using (Html.BeginForm("CreateComment", "Comment", FormMethod.Post, new { @class = "commenting-form" }))
-                                    {
+                                using (Html.BeginForm("CreateComment", "Comment", new { postId = Model.Id }, FormMethod.Post, new { @class = "commenting-form" }))
+                                {
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <textarea style="max-width: unset;"
-                                                          name="newComment"
-                                                          id="newComment"
+                                                          name="Body"
+                                                          id="Body"
                                                           placeholder="Type your comment"
                                                           class="form-control"></textarea>
                                             </div>

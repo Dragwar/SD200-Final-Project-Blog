@@ -1,4 +1,5 @@
-﻿using SD200_Final_Project_Blog.Models;
+﻿using Microsoft.AspNet.Identity;
+using SD200_Final_Project_Blog.Models;
 using SD200_Final_Project_Blog.Models.Domain;
 using SD200_Final_Project_Blog.MyHelpers;
 using System;
@@ -44,12 +45,41 @@ namespace SD200_Final_Project_Blog.Controllers
             }
 
 
-            foundPost.Comments.Remove(foundComment);
+            DbContext.Comments.Remove(foundComment);
             DbContext.SaveChanges();
 
             return Redirect(Url.Action(nameof(HomeController.PostBySlug), "Home", new { slug = foundPost.Slug }));
         }
 
+        [HttpPost]
+        public ActionResult CreateComment(Guid? postId, CreateEditCommentViewModel newComment)
+        {
+            if (!postId.HasValue)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
 
+            string currentUserId = User.Identity.GetUserId();
+
+            Post foundPost = DbContext.Posts.FirstOrDefault(post => post.Id == postId);
+
+            if (foundPost == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
+            }
+
+            Comment myComment = new Comment()
+            {
+                Body = newComment.Body,
+                DateUpdated = DateTime.Now,
+                UserId = currentUserId,
+                User = DbContext.Users.FirstOrDefault(user => user.Id == currentUserId),
+            };
+
+            foundPost.Comments.Add(myComment);
+            DbContext.SaveChanges();
+
+            return Redirect(Url.Action(nameof(HomeController.PostBySlug), "Home", new { slug = foundPost.Slug }));
+        }
     }
 }

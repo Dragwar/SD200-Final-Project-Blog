@@ -9,7 +9,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
     {
         public Guid? Id { get; set; }
 
-        public string AuthorName { get; set; }
+        public string CommentAuthorName { get; set; }
 
         public string Body { get; set; }
         public string UpdatedReason { get; set; }
