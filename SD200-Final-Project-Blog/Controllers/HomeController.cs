@@ -90,11 +90,13 @@ namespace SD200_Final_Project_Blog.Controllers
                 {
                     List<IndexPostViewModel> latestPosts = DbContext.Posts
                         .Where(post => post.Id != foundPost.Id)
-                        .Take(3)
                         .ToList() // need to retrieve the list before using this method below
                         .Select(post => IndexPostViewModel.CreateIndexPostViewModel(post))
                         .ToList();
 
+                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
+                    latestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+                    latestPosts = latestPosts.Take(3).ToList();
 
                     // Filter out unpublished posts when user isn't admin
                     if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
@@ -103,9 +105,6 @@ namespace SD200_Final_Project_Blog.Controllers
                     }
 
                     model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);
-
-                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
-                    model.LatestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
                     // sort comments by creation date
                     model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
@@ -143,11 +142,13 @@ namespace SD200_Final_Project_Blog.Controllers
                 {
                     List<IndexPostViewModel> latestPosts = DbContext.Posts
                         .Where(post => post.Id != foundPost.Id)
-                        .Take(3)
                         .ToList() // need to retrieve the list before using this method below
                         .Select(post => IndexPostViewModel.CreateIndexPostViewModel(post))
                         .ToList();
 
+                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
+                    latestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+                    latestPosts = latestPosts.Take(3).ToList();
 
                     // Filter out unpublished posts when user isn't admin
                     if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
@@ -155,10 +156,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
-                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);
-
-                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
-                    model.LatestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);                    
 
                     // sort comments by creation date
                     model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
