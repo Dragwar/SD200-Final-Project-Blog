@@ -52,10 +52,11 @@
                 foreach (IndexPostViewModel post in Model)
                 {
                     string postName = string.IsNullOrEmpty(post.PostAuthorName) && string.IsNullOrEmpty(post.PostAuthorName) ? "Anonymous User" : post.PostAuthorName;
-                    string postLink = string.IsNullOrEmpty(post.HeroImageUrl) || string.IsNullOrWhiteSpace(post.HeroImageUrl) ? "" : Url.Content($@"{post.HeroImageUrl}");
+                    bool isHeroImageUrlValidEnough = !string.IsNullOrEmpty(post.HeroImageUrl) && !string.IsNullOrWhiteSpace(post.HeroImageUrl);
+                    string heroImageUrl = isHeroImageUrlValidEnough ? Url.Content($@"{post.HeroImageUrl}") : "";
                     if (counter % 2 == 0)
                     {
-                        <div class="row d-flex align-items-stretch">
+                        <div class="row d-flex align-items-stretch searchPostResult">
                             <div class="text col-lg-7">
                                 <div class="text-inner d-flex align-items-center">
                                     <div class="content">
@@ -85,8 +86,8 @@
                                         <footer class="post-footer d-flex align-items-center">
                                             <a href="#" class="author d-flex align-items-center flex-wrap">
                                                 @*<div class="avatar">
-                                                        <img src="@Url.Content(@"~/TemplateContent/img/avatar-1.jpg")" alt="..." class="img-fluid">
-                                                    </div>*@
+                                                <img src="@Url.Content(@"~/TemplateContent/img/avatar-1.jpg")" alt="..." class="img-fluid">
+                                            </div>*@
 
                                                 <div class="title">
                                                     <span>@postName</span>
@@ -103,23 +104,46 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-5" style="padding: 0px;">
-                                @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
-                                <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
-                                    <img class="img-fluid" src="@postLink" alt="...">
+                            @if (isHeroImageUrlValidEnough)
+                            {
+                                <div class="col-lg-5" style="padding: 0px;">
+                                    @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                    <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                        <img class="img-fluid" src="@heroImageUrl" alt="...">
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="col-lg-5 noImagePlaceHolder" href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                    <div class="text-muted">
+                                        Author didn't upload an image
+                                    </div>
                                 </a>
-                            </div>
+                            }
+
                         </div>
                     }
                     else
                     {
-                        <div class="row d-flex align-items-stretch">
-                            <div class="col-lg-5" style="padding: 0px;">
-                                @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
-                                <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
-                                    <img class="img-fluid" src="@postLink" alt="...">
+                        <div class="row d-flex align-items-stretch searchPostResult">
+                            @if (isHeroImageUrlValidEnough)
+                            {
+                                <div class="col-lg-5" style="padding: 0px;">
+                                    @*<a href="@Url.Action("Post", new { Id = post.Id })">*@
+                                    <a href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                        <img class="img-fluid" src="@heroImageUrl" alt="...">
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="col-lg-5 noImagePlaceHolder" href="@Url.Action("PostBySlug", new { slug = post.Slug })">
+                                    <div class="text-muted">
+                                        Author didn't upload an image
+                                    </div>
                                 </a>
-                            </div>
+                            }
 
                             <div class="text col-lg-7">
                                 <div class="text-inner d-flex align-items-center">
@@ -150,8 +174,8 @@
                                             <footer class="post-footer d-flex align-items-center">
                                                 <a href="#" class="author d-flex align-items-center flex-wrap">
                                                     @*<div class="avatar">
-                                                            <img src="@Url.Content("~/TemplateContent/img/avatar-2.jpg")" alt="..." class="img-fluid">
-                                                        </div>*@
+                                                    <img src="@Url.Content("~/TemplateContent/img/avatar-2.jpg")" alt="..." class="img-fluid">
+                                                </div>*@
 
                                                     <div class="title">
                                                         <span>@postName</span>

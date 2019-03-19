@@ -27,3 +27,31 @@ body > div > section.intro > div > div > div.widget.search.col-lg-6 > form > div
 .validation-summary-errors ul {
     list-style: none;
 }
+
+.noImagePlaceHolder {
+    padding: 0px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgray;
+}
+
+.searchPostResult {
+    width: 105%;
+    width: -webkit-fill-available;
+}
+
+div.date {
+    font-size: 12px;
+}
+
+.latest-posts-aside {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+body > div > div > div > aside > div.widget.latest-posts > div > a:nth-child(2) > div > div.title > div > div.comments {
+    margin: 0;
+}

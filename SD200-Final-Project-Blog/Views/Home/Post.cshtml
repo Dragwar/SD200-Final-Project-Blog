@@ -3,7 +3,8 @@
 @{
     ViewBag.Title = Model.Title;
     string postAuthorName = string.IsNullOrEmpty(Model.PostAuthorName) || string.IsNullOrWhiteSpace(Model.PostAuthorName) ? "Anonymous User" : Model.PostAuthorName;
-    string currentPostImageLink = string.IsNullOrEmpty(Model.HeroImageUrl) || string.IsNullOrWhiteSpace(Model.HeroImageUrl) ? "" : Url.Content($@"{Model.HeroImageUrl}");
+    bool isPostImageUrlValidEnough = !string.IsNullOrEmpty(Model.HeroImageUrl) && !string.IsNullOrWhiteSpace(Model.HeroImageUrl);
+    string postImageUrl = isPostImageUrlValidEnough ? Url.Content($@"{Model.HeroImageUrl}") : "";
 }
 
 @section Scripts {
@@ -12,17 +13,6 @@
 
 @section Styles {
     @Styles.Render("~/index")
-    <style>
-        .latest-posts-aside {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        body > div > div > div > aside > div.widget.latest-posts > div > a:nth-child(2) > div > div.title > div > div.comments {
-            margin: 0;
-        }
-    </style>
 }
 
 <!-- Main Post Page -->
@@ -81,9 +71,12 @@
 
                         <!-- Post Body -->
                         <div class="post-body">
-                            <p>
-                                <img src="@currentPostImageLink" alt="..." class="img-fluid">
-                            </p>
+                            @if (isPostImageUrlValidEnough)
+                            {
+                                <p>
+                                    <img src="@postImageUrl" alt="..." class="img-fluid">
+                                </p>
+                            }
 
                             <div>
                                 @Html.Raw(Model.Body)
@@ -244,15 +237,29 @@
                 <div class="blog-posts">
                     @foreach (IndexPostViewModel newerPost in Model.LatestPosts)
                     {
-                        string postImageLink = string.IsNullOrEmpty(newerPost.HeroImageUrl) || string.IsNullOrWhiteSpace(newerPost.HeroImageUrl) ? "" : Url.Content($@"{newerPost.HeroImageUrl}");
+                        bool isHeroImageUrlValidEnough = !string.IsNullOrEmpty(newerPost.HeroImageUrl) && !string.IsNullOrWhiteSpace(newerPost.HeroImageUrl);
+                        string heroImageUrl = isHeroImageUrlValidEnough ? Url.Content($@"{newerPost.HeroImageUrl}") : "";
                         @* UPDATE THIS LINK *@
                         @*<a href="@Url.Action("Post", new { Id = newerPost.Id })">*@
                         <a href="@Url.Action("PostBySlug", new { slug = newerPost.Slug })">
                             <div class="item d-flex align-items-center">
-                                <div class="image">
-                                    @* UPDATE IMAGE *@
-                                    <img src="@postImageLink" alt="..." class="img-fluid">
-                                </div>
+                                @if (isHeroImageUrlValidEnough)
+                                {
+                                    <div class="image">
+                                        @* UPDATE IMAGE *@
+                                        <img src="@heroImageUrl" alt="..." class="img-fluid">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="image">
+                                        <div class="text-small text-center" style="background-color: lightgray;">
+
+                                            @* UPDATE IMAGE *@
+                                            <span>No Image</span>
+                                        </div>
+                                    </div>
+                                }
 
                                 <div class="title" style="min-width: 125px;">
                                     <strong>@newerPost.Title</strong>
@@ -273,6 +280,10 @@
                     }
                 </div>
             </div>
+
+
+
+
 
 
 
