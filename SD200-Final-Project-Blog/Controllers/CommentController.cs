@@ -74,7 +74,6 @@ namespace SD200_Final_Project_Blog.Controllers
             Comment myComment = new Comment()
             {
                 Body = newComment.Body,
-                DateUpdated = DateTime.Now,
                 UserId = currentUserId,
                 User = DbContext.Users.FirstOrDefault(user => user.Id == currentUserId),
             };

@@ -285,6 +285,7 @@ namespace SD200_Final_Project_Blog.Controllers
             else
             {
                 myPost = DbContext.Posts.FirstOrDefault(post => post.Id == id.Value);
+                myPost.DateUpdated = DateTime.Now;
 
                 if (myPost == null)
                 {
@@ -295,7 +296,6 @@ namespace SD200_Final_Project_Blog.Controllers
             myPost.Title = model.Title;
             myPost.Body = model.Body;
             myPost.Published = model.Published;
-            myPost.DateUpdated = DateTime.Now;
 
 
             // Handling file upload

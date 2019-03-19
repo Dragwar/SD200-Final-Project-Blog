@@ -135,7 +135,6 @@ namespace SD200_Final_Project_Blog.Migrations
                     Slug = title.GenerateSlug(HomeController.MyUnwantedSymbols),
                     User = initialUsers[i],
                     UserId = initialUsers[i].Id,
-                    DateUpdated = DateTime.Now,
                     Published = true,
                     HeroImageUrl = $@"\UserUploads\PostHeroImages\blog-post-{1 + i}.jpeg",
                     Body = $@"<h1>Test Post {i} Body</h1>" + body,
@@ -148,7 +147,6 @@ namespace SD200_Final_Project_Blog.Migrations
                     UserId = initialUsers[i].Id,
                     Body = $"{newPost.User.UserName}'s comment on \"{newPost.Title}\" post",
                     DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now,
                 });
                 // Add new movie to database if the name of the movie doesn't match any in the database
                 context.Posts.AddOrUpdate(post => post.Title, newPost);

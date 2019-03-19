@@ -14,7 +14,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public string Body { get; set; }
         public string UpdatedReason { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
+        public DateTime? DateUpdated { get; set; }
 
         public string GetCommentPostTimeFromNow()
         {

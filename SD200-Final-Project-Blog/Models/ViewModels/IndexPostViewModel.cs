@@ -79,7 +79,9 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
                 Slug = post.Slug,
                 Body = post.Body,
                 DateCreated = post.DateCreated,
-                DateUpdated = post.DateUpdated,
+
+                // if DateUpdated is null then it will default to show DateCreated (not modifying actual Post)
+                DateUpdated = (DateTime)(post.DateUpdated.HasValue ? post.DateUpdated : post.DateCreated),
                 Published = post.Published,
                 HeroImageUrl = post.HeroImageUrl,
                 CommentCount = post.Comments.Count,

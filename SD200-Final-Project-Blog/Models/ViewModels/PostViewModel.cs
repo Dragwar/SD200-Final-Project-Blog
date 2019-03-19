@@ -72,7 +72,9 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
                 Title = post.Title,
                 Body = post.Body,
                 DateCreated = post.DateCreated,
-                DateUpdated = post.DateUpdated,
+
+                // if DateUpdated is null then it will default to show DateCreated (not modifying actual Post)
+                DateUpdated = (DateTime)(post.DateUpdated.HasValue ? post.DateUpdated : post.DateCreated),
                 Published = post.Published,
                 HeroImageUrl = post.HeroImageUrl,
 
@@ -83,7 +85,9 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
                                 CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
                                 Body = comment.Body,
                                 DateCreated = comment.DateCreated,
-                                DateUpdated = comment.DateUpdated,
+
+                                // if DateUpdated is null then it will default to show DateCreated (not modifying actual Comment)
+                                DateUpdated = (DateTime)(post.DateUpdated.HasValue ? post.DateUpdated : post.DateCreated),
                                 UpdatedReason = comment.UpdatedReason,
                             }).ToList(),
 

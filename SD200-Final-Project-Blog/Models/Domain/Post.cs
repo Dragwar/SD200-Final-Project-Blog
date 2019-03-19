@@ -14,7 +14,7 @@ namespace SD200_Final_Project_Blog.Models.Domain
         public string Body { get; set; }
         public bool Published { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
+        public DateTime? DateUpdated { get; set; }
         public string HeroImageUrl { get; set; }
         public string Slug { get; set; }
 
