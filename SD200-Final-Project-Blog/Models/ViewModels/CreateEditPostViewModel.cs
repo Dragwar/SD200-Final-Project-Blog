@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SD200_Final_Project_Blog.Models.Domain;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,5 +21,17 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public HttpPostedFileBase HeroImage { get; set; }
 
         public bool Published { get; set; }
+
+
+        public static CreateEditPostViewModel CreateCreateEditPostViewModel(Post post)
+        {
+            CreateEditPostViewModel createEditPostViewModel = new CreateEditPostViewModel()
+            {
+                Title = post.Title,
+                Body = post.Body,
+                Published = post.Published,
+            };
+            return createEditPostViewModel;
+        }
     }
 }

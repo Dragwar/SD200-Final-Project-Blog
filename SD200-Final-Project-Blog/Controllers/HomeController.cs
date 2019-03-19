@@ -26,10 +26,7 @@ namespace SD200_Final_Project_Blog.Controllers
 
         public ActionResult Index()
         {
-            /// <summary>
-            ///     Just for finding which header nav to bold
-            /// </summary>
-            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            // Just for finding which header nav to bold
             ViewBag.CurrentControllerMethodName = nameof(HomeController.Index);
 
             List<IndexPostViewModel> model;
@@ -37,19 +34,9 @@ namespace SD200_Final_Project_Blog.Controllers
             if (DbContext.Posts.Any())
             {
                 model = DbContext.Posts
-                    .Select(post => new IndexPostViewModel
-                    {
-                        Id = post.Id,
-                        PostAuthorName = post.User.UserName,
-                        Title = post.Title,
-                        Slug = post.Slug,
-                        Body = post.Body,
-                        DateCreated = post.DateCreated,
-                        DateUpdated = post.DateUpdated,
-                        Published = post.Published,
-                        HeroImageUrl = post.HeroImageUrl,
-                        CommentCount = post.Comments.Count,
-                    }).ToList();
+                    .ToList() // need to retrieve the list before using this method below
+                    .Select(post => IndexPostViewModel.CreateIndexPostViewModel(post))
+                    .ToList();
 
                 // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
                 model.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
@@ -89,10 +76,7 @@ namespace SD200_Final_Project_Blog.Controllers
                 return RedirectToAction(nameof(HomeController.Index));
             }
 
-            /// <summary>
-            ///     Just for finding which header nav to bold
-            /// </summary>
-            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            // Just for finding which header nav to bold
             ViewBag.CurrentControllerMethodName = nameof(HomeController.Post);
 
             Post foundPost = null;
@@ -107,22 +91,9 @@ namespace SD200_Final_Project_Blog.Controllers
                     List<IndexPostViewModel> latestPosts = DbContext.Posts
                         .Where(post => post.Id != foundPost.Id)
                         .Take(3)
-                        .Select(post => new IndexPostViewModel()
-                        {
-                            Id = post.Id,
-                            Title = post.Title,
-                            Slug = post.Slug,
-                            PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
-                            Body = post.Body,
-                            DateCreated = post.DateCreated,
-                            DateUpdated = post.DateUpdated,
-                            Published = post.Published,
-                            HeroImageUrl = post.HeroImageUrl,
-                            CommentCount = post.Comments.Count,
-                        }).ToList();
-
-                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
-                    latestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
+                        .ToList() // need to retrieve the list before using this method below
+                        .Select(post => IndexPostViewModel.CreateIndexPostViewModel(post))
+                        .ToList();
 
 
                     // Filter out unpublished posts when user isn't admin
@@ -131,32 +102,13 @@ namespace SD200_Final_Project_Blog.Controllers
                         latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
-                    model = new PostViewModel()
-                    {
-                        Id = foundPost.Id,
-                        PostAuthorName = foundPost.User == null ? "" : foundPost.User.UserName,
-                        Title = foundPost.Title,
-                        Body = foundPost.Body,
-                        DateCreated = foundPost.DateCreated,
-                        DateUpdated = foundPost.DateUpdated,
-                        Published = foundPost.Published,
-                        HeroImageUrl = foundPost.HeroImageUrl,
+                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);
 
-                        Comments = foundPost.Comments
-                            .Select(comment => new PostCommentViewModel()
-                            {
-                                Id = comment.Id,
-                                CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
-                                Body = comment.Body,
-                                DateCreated = comment.DateCreated,
-                                DateUpdated = comment.DateUpdated,
-                                UpdatedReason = comment.UpdatedReason,
-                            }).ToList(),
+                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
+                    model.LatestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
-                        // Get three latest posts (without the current post)
-                        LatestPosts = latestPosts,
-                    };
-
+                    // sort comments by creation date
+                    model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
                 }
             }
 
@@ -177,10 +129,7 @@ namespace SD200_Final_Project_Blog.Controllers
                 return RedirectToAction(nameof(HomeController.Index));
             }
 
-            /// <summary>
-            ///     Just for finding which header nav to bold
-            /// </summary>
-            /// <variable name="CurrentControllerMethodName">Holds the method name (view name)</variable>
+            // Just for finding which header nav to bold
             ViewBag.CurrentControllerMethodName = nameof(HomeController.Post);
 
             Post foundPost = null;
@@ -195,22 +144,10 @@ namespace SD200_Final_Project_Blog.Controllers
                     List<IndexPostViewModel> latestPosts = DbContext.Posts
                         .Where(post => post.Id != foundPost.Id)
                         .Take(3)
-                        .Select(post => new IndexPostViewModel()
-                        {
-                            Id = post.Id,
-                            Title = post.Title,
-                            Slug = post.Slug,
-                            PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
-                            Body = post.Body,
-                            DateCreated = post.DateCreated,
-                            DateUpdated = post.DateUpdated,
-                            Published = post.Published,
-                            HeroImageUrl = post.HeroImageUrl,
-                            CommentCount = post.Comments.Count,
-                        }).ToList();
+                        .ToList() // need to retrieve the list before using this method below
+                        .Select(post => IndexPostViewModel.CreateIndexPostViewModel(post))
+                        .ToList();
 
-                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
-                    latestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
                     // Filter out unpublished posts when user isn't admin
                     if (!User.IsInRole(nameof(UserRolesEnum.Admin)))
@@ -218,35 +155,13 @@ namespace SD200_Final_Project_Blog.Controllers
                         latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
-                    model = new PostViewModel()
-                    {
-                        Id = foundPost.Id,
-                        PostAuthorName = foundPost.User == null ? "" : foundPost.User.UserName,
-                        Title = foundPost.Title,
-                        Body = foundPost.Body,
-                        DateCreated = foundPost.DateCreated,
-                        DateUpdated = foundPost.DateUpdated,
-                        Published = foundPost.Published,
-                        HeroImageUrl = foundPost.HeroImageUrl,
+                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);
 
-                        Comments = foundPost.Comments
-                            .Select(comment => new PostCommentViewModel()
-                            {
-                                Id = comment.Id,
-                                CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
-                                Body = comment.Body,
-                                DateCreated = comment.DateCreated,
-                                DateUpdated = comment.DateUpdated,
-                                UpdatedReason = comment.UpdatedReason,
-                            }).ToList(),
-
-                        // Get three latest posts (without the current post)
-                        LatestPosts = latestPosts,
-                    };
+                    // Get descending order by the dateCreated for model (most recent posts is first oldest posts are last)
+                    model.LatestPosts.Sort((postA, postB) => postB.DateCreated.CompareTo(postA.DateCreated));
 
                     // sort comments by creation date
                     model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
-
                 }
             }
 
@@ -290,12 +205,7 @@ namespace SD200_Final_Project_Blog.Controllers
             }
 
 
-            CreateEditPostViewModel model = new CreateEditPostViewModel
-            {
-                Title = foundPost.Title,
-                Body = foundPost.Body,
-                Published = foundPost.Published,
-            };
+            CreateEditPostViewModel model = CreateEditPostViewModel.CreateCreateEditPostViewModel(foundPost);
 
             return View(model);
         }
@@ -464,19 +374,9 @@ namespace SD200_Final_Project_Blog.Controllers
                     post.Title.ToLower().Contains(query) ||
                     post.Slug.ToLower().Contains(query) ||
                     post.Body.ToLower().Contains(query)
-                )).Select(post => new IndexPostViewModel()
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Slug = post.Slug,
-                    Body = post.Body,
-                    DateCreated = post.DateCreated,
-                    DateUpdated = post.DateUpdated,
-                    PostAuthorName = post.User == null ? "Anonymous User" : post.User.UserName,
-                    Published = post.Published,
-                    HeroImageUrl = post.HeroImageUrl,
-                    CommentCount = post.Comments.Count,
-                }).ToList();
+                )).ToList() // need to retrieve the list before using this method below
+                .Select(post => IndexPostViewModel.CreateIndexPostViewModel(post))
+                .ToList();
 
             ViewBag.userSearch = userSearch;
 

@@ -54,5 +54,43 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         }
 
         public string GetPostDateAndTime() => $"{DateCreated.ToString("m") + ", " + DateCreated.ToShortTimeString()} | {DateCreated.Year}";
+
+        /// <summary>
+        /// Retrieves all post information from passed in post
+        /// and this needs latestPosts as well to display along side the Main Post
+        /// returns the built up PostViewModel from the two passed in parameters
+        /// </summary>
+        /// <param name="post">Retrieves all post information from this</param>
+        /// <param name="latestPosts"></param>
+        /// <returns>PostViewModel</returns>
+        public static PostViewModel CreatePostViewModel(Post post, List<IndexPostViewModel> latestPosts)
+        {
+            PostViewModel postViewModel = new PostViewModel()
+            {
+                Id = post.Id,
+                PostAuthorName = post.User == null ? "" : post.User.UserName,
+                Title = post.Title,
+                Body = post.Body,
+                DateCreated = post.DateCreated,
+                DateUpdated = post.DateUpdated,
+                Published = post.Published,
+                HeroImageUrl = post.HeroImageUrl,
+
+                Comments = post.Comments
+                            .Select(comment => new PostCommentViewModel()
+                            {
+                                Id = comment.Id,
+                                CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
+                                Body = comment.Body,
+                                DateCreated = comment.DateCreated,
+                                DateUpdated = comment.DateUpdated,
+                                UpdatedReason = comment.UpdatedReason,
+                            }).ToList(),
+
+                // Get three latest posts (without the current post)
+                LatestPosts = latestPosts,
+            };
+            return postViewModel;
+        }
     }
 }
