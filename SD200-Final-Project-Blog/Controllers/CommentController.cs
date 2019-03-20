@@ -56,21 +56,27 @@ namespace SD200_Final_Project_Blog.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateComment(Guid? postId, CreateCommentViewModel newComment)
+        public ActionResult CreateComment(CreateCommentViewModel newComment)
         {
-            if (!postId.HasValue)
+            if (!newComment.PostId.HasValue)
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
             string currentUserId = User.Identity.GetUserId();
 
-            Post foundPost = DbContext.Posts.FirstOrDefault(post => post.Id == postId);
+            Post foundPost = DbContext.Posts.FirstOrDefault(post => post.Id == newComment.PostId.Value);
 
             if (foundPost == null)
             {
                 return RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
             }
+
+            if (!ModelState.IsValid)
+            {
+                return Redirect(Url.Action(nameof(HomeController.PostBySlug), "Home", new { slug = foundPost.Slug, commentError = "The comment body field is required for leaving a comment" }));
+            }
+
 
             Comment myComment = new Comment()
             {

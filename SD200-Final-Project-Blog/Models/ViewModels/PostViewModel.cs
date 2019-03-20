@@ -26,6 +26,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public List<CommentViewModel> Comments { get; set; }
         public int CommentCount { get => Comments.Count; }
 
+        public string CommentError { get; set; }
 
         /// <summary>
         /// Retrieves all post information from passed in post
@@ -35,7 +36,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         /// <param name="post">Retrieves all post information from this</param>
         /// <param name="latestPosts"></param>
         /// <returns>PostViewModel</returns>
-        public static PostViewModel CreatePostViewModel(Post post, List<IndexPostViewModel> latestPosts)
+        public static PostViewModel CreatePostViewModel(Post post, List<IndexPostViewModel> latestPosts, string commentError)
         {
             PostViewModel postViewModel = new PostViewModel()
             {
@@ -50,6 +51,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
                 Published = post.Published,
                 HeroImageUrl = post.HeroImageUrl,
 
+                CommentError = commentError,
                 Comments = post.Comments
                     .Select(comment => new CommentViewModel()
                     {

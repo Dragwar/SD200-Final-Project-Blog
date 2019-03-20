@@ -69,11 +69,17 @@ namespace SD200_Final_Project_Blog.Controllers
         //}
 
         [HttpGet]
-        public ActionResult Post(Guid? id)
+        public ActionResult Post(Guid? id, string commentError)
         {
             if (!id.HasValue)
             {
                 return RedirectToAction(nameof(HomeController.Index));
+            }
+
+
+            if (!string.IsNullOrEmpty(commentError) && !string.IsNullOrWhiteSpace(commentError))
+            {
+                ModelState.AddModelError("", commentError);
             }
 
             // Just for finding which header nav to bold
@@ -104,7 +110,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
-                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);
+                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts, commentError);
 
                     // sort comments by creation date
                     model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
@@ -121,11 +127,16 @@ namespace SD200_Final_Project_Blog.Controllers
 
         [HttpGet]
         [Route("Blog/{slug}")]
-        public ActionResult PostBySlug(string slug)
+        public ActionResult PostBySlug(string slug, string commentError)
         {
             if (string.IsNullOrEmpty(slug) || string.IsNullOrWhiteSpace(slug))
             {
                 return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            if (!string.IsNullOrEmpty(commentError) && !string.IsNullOrWhiteSpace(commentError))
+            {
+                ModelState.AddModelError("", commentError);
             }
 
             // Just for finding which header nav to bold
@@ -156,7 +167,7 @@ namespace SD200_Final_Project_Blog.Controllers
                         latestPosts = latestPosts.Where(post => post.Published).ToList();
                     }
 
-                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts);                    
+                    model = PostViewModel.CreatePostViewModel(foundPost, latestPosts, commentError);                    
 
                     // sort comments by creation date
                     model.Comments.Sort((commentA, commentB) => commentB.DateCreated.CompareTo(commentA.DateCreated));
