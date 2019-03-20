@@ -94,7 +94,7 @@
                                                 </div>
                                             </a>
 
-                                            <div class="date"><i class="icon-clock"></i> @post.GetPostTimeFromNow()</div>
+                                            <div class="date"><i class="icon-clock"></i> @post.DateCreated.GetCreatedDateTimeFromNow()</div>
 
                                             @* Update for comment count *@
                                             <div class="comments"><i class="icon-comment"></i>@post.CommentCount</div>
@@ -182,7 +182,7 @@
                                                     </div>
                                                 </a>
 
-                                                <div class="date"><i class="icon-clock"></i> @post.GetPostTimeFromNow()</div>
+                                                <div class="date"><i class="icon-clock"></i> @post.DateCreated.GetCreatedDateTimeFromNow()</div>
 
                                                 @* Update for comment count *@
                                                 <div class="comments"><i class="icon-comment"></i>@post.CommentCount</div>

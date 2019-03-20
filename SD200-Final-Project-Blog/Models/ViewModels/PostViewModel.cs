@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace SD200_Final_Project_Blog.Models.ViewModels
 {
@@ -27,33 +26,6 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public List<CommentViewModel> Comments { get; set; }
         public int CommentCount { get => Comments.Count; }
 
-        public string GetPostTimeFromNow()
-        {
-            int postDay = DateTime.Today.Day - DateCreated.Day;
-            TimeSpan postTime = DateTime.Now.TimeOfDay - DateCreated.TimeOfDay;
-            if (postDay >= 1)
-            {
-                return $"{postDay} {(postTime.Hours == 1 ? "day" : "days")} ago";
-            }
-            else if (postDay == 0 && postTime.Hours >= 1)
-            {
-                return $"{postTime.Hours} {(postTime.Hours == 1 ? "hour" : "hours")} ago";
-            }
-            else if (postTime.Hours == 0 && postTime.Minutes >= 1)
-            {
-                return $"{postTime.Minutes} {(postTime.Minutes == 1 ? "minute" : "minutes")} ago";
-            }
-            else if (postTime.Minutes == 0 && postTime.Seconds >= 1)
-            {
-                return $"{postTime.Seconds} {(postTime.Seconds == 1 ? "second" : "seconds")} ago";
-            }
-            else
-            {
-                return $"Just Posted";
-            }
-        }
-
-        public string GetPostDateAndTime() => $"{DateCreated.ToString("m") + ", " + DateCreated.ToShortTimeString()} | {DateCreated.Year}";
 
         /// <summary>
         /// Retrieves all post information from passed in post
@@ -79,17 +51,17 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
                 HeroImageUrl = post.HeroImageUrl,
 
                 Comments = post.Comments
-                            .Select(comment => new CommentViewModel()
-                            {
-                                Id = comment.Id,
-                                CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
-                                Body = comment.Body,
-                                DateCreated = comment.DateCreated,
+                    .Select(comment => new CommentViewModel()
+                    {
+                        Id = comment.Id,
+                        CommentAuthorName = comment.User == null ? "" : comment.User.UserName,
+                        Body = comment.Body,
+                        DateCreated = comment.DateCreated,
 
-                                // if DateUpdated is null then it will default to show DateCreated (not modifying actual Comment)
-                                DateUpdated = (DateTime)(post.DateUpdated.HasValue ? post.DateUpdated : post.DateCreated),
-                                UpdatedReason = comment.UpdatedReason,
-                            }).ToList(),
+                        // if DateUpdated is null then it will default to show DateCreated (not modifying actual Comment)
+                        DateUpdated = (DateTime)(post.DateUpdated.HasValue ? post.DateUpdated : post.DateCreated),
+                        UpdatedReason = comment.UpdatedReason,
+                    }).ToList(),
 
                 // Get three latest posts (without the current post)
                 LatestPosts = latestPosts,

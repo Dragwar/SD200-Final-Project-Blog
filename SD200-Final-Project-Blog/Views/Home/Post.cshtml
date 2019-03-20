@@ -61,7 +61,7 @@
                             </a>
 
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="date"><i class="icon-clock"></i> @Model.GetPostTimeFromNow()</div>
+                                <div class="date"><i class="icon-clock"></i> @Model.DateCreated.GetCreatedDateTimeFromNow()</div>
                                 @*<div class="views"><i class="icon-eye"></i> 500</div>*@
 
                                 @* Update for comment count *@
@@ -144,7 +144,7 @@
                                                 </strong>
 
                                                 <span class="date">
-                                                    @comment.GetCommentPostTimeFromNow()
+                                                    @comment.DateCreated.GetCreatedDateTimeFromNow()
                                                 </span>
 
                                             </div>
@@ -265,7 +265,7 @@
                                     <strong>@newerPost.Title</strong>
 
                                     <div class="latest-posts-aside">
-                                        <div class="date text-small text-muted" style="font-size: 12px;"><i class="icon-clock"></i> @newerPost.GetPostTimeFromNow()</div>
+                                        <div class="date text-small text-muted" style="font-size: 12px;"><i class="icon-clock"></i> @newerPost.DateCreated.GetCreatedDateTimeFromNow()</div>
 
                                         @* maybe Implement view count later *@
                                         @*<div class="views text-small"><i class="icon-eye"></i> 500</div>*@

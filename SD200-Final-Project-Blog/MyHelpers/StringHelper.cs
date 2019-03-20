@@ -47,8 +47,14 @@ namespace SD200_Final_Project_Blog.MyHelpers
                     !unwantedCharacters.Any(unWantedCharacter => character == unWantedCharacter)
                )).ToArray()
         );
-        
 
 
+        public static string GetPlainTextFromHtml(this string htmlString)
+        {
+            string htmlTagPattern = "<.*?>";
+            htmlString = Regex.Replace(htmlString, htmlTagPattern, "");
+            htmlString = Regex.Replace(htmlString, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
+            return htmlString;
+        }
     }
 }

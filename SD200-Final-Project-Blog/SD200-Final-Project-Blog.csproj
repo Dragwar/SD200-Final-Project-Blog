@@ -186,6 +186,7 @@
     <Compile Include="Models\Domain\Comment.cs" />
     <Compile Include="Models\Domain\Post.cs" />
     <Compile Include="Models\ViewModels\CommentViewModel.cs" />
+    <Compile Include="MyHelpers\DateHelper.cs" />
     <Compile Include="MyHelpers\StringHelper.cs" />
     <Compile Include="MyHelpers\UserRolesEnum.cs" />
     <Compile Include="Models\IdentityModels.cs" />

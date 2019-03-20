@@ -105,7 +105,7 @@
 
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
-                            <div class="date">@post.GetPostDateAndTime()</div>
+                            <div class="date">@post.DateCreated.GetCreatedDateAndTime()</div>
 
                             @if (User.IsInRole(nameof(UserRolesEnum.Admin)))
                             {
@@ -209,7 +209,7 @@
                                             </div>
                                         </a>
 
-                                        <div class="date"><i class="icon-clock"></i> @post.GetPostTimeFromNow()</div>
+                                        <div class="date"><i class="icon-clock"></i> @post.DateCreated.GetCreatedDateTimeFromNow()</div>
 
                                         @* Update for comment count *@
                                         <div class="comments"><i class="icon-comment"></i>@post.CommentCount</div>
@@ -297,7 +297,7 @@
                                                 </div>
                                             </a>
 
-                                            <div class="date"><i class="icon-clock"></i> @post.GetPostTimeFromNow()</div>
+                                            <div class="date"><i class="icon-clock"></i> @post.DateCreated.GetCreatedDateTimeFromNow()</div>
 
                                             @* Update for comment count *@
                                             <div class="comments"><i class="icon-comment"></i>@post.CommentCount</div>
