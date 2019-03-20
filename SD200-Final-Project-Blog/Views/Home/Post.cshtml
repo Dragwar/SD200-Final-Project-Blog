@@ -112,7 +112,7 @@
                                 <h3 class="h6">Post Comments<span class="no-of-comments">(@Model.CommentCount)</span></h3>
                             </header>
 
-                            @foreach (PostCommentViewModel comment in Model.Comments)
+                            @foreach (CommentViewModel comment in Model.Comments)
                             {
                                 string updateReason =
                                     string.IsNullOrEmpty(comment.UpdatedReason) ||

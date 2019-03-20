@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SD200_Final_Project_Blog.Controllers
+namespace SD200_Final_Project_Blog.Models.ViewModels
 {
-    public class CreateEditCommentViewModel
+    public class EditCommentViewModel
     {
         public Guid? Id { get; set; }
 

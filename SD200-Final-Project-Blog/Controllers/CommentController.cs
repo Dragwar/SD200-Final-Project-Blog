@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using SD200_Final_Project_Blog.Models;
 using SD200_Final_Project_Blog.Models.Domain;
+using SD200_Final_Project_Blog.Models.ViewModels;
 using SD200_Final_Project_Blog.MyHelpers;
 using System;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace SD200_Final_Project_Blog.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateComment(Guid? postId, CreateEditCommentViewModel newComment)
+        public ActionResult CreateComment(Guid? postId, CreateCommentViewModel newComment)
         {
             if (!postId.HasValue)
             {
@@ -93,14 +94,16 @@ namespace SD200_Final_Project_Blog.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
-            CreateEditCommentViewModel foundComment = DbContext.Comments
-                .Select(comment => new CreateEditCommentViewModel()
+            EditCommentViewModel foundComment = DbContext.Comments
+                .Select(comment => new EditCommentViewModel()
                 {
                     Id = comment.Id,
                     Body = comment.Body,
 
-                    //UpdatedReason = comment.UpdatedReason,
-                    UpdatedReason = "", // I want the user to fill this out completely each time
+                    // reset reason to "" because I want the moderator to type the reason each comment edit
+                    UpdatedReason = "",
+
+                    CommentAuthorName = comment.User.UserName,
                 }).FirstOrDefault(comment => comment.Id == id.Value);
 
 
@@ -109,7 +112,7 @@ namespace SD200_Final_Project_Blog.Controllers
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRolesEnum.Admin) + "," + nameof(UserRolesEnum.Moderator))]
-        public ActionResult EditComment(Guid? id, CreateEditCommentViewModel model)
+        public ActionResult EditComment(Guid? id, EditCommentViewModel model)
         {
             if (!ModelState.IsValid)
             {

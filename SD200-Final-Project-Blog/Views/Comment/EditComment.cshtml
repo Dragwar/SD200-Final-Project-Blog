@@ -1,4 +1,4 @@
-﻿@model SD200_Final_Project_Blog.Controllers.CreateEditCommentViewModel
+﻿@model EditCommentViewModel
 
 @{
     ViewBag.Title = $"Editing {Model.CommentAuthorName}'s Comment";
@@ -49,6 +49,6 @@
 
 
     <div style="margin-bottom: 50px;">
-        @Html.ActionLink("Discard Changes", "Index", "Home", new { @class = "btn btn-outline-danger" })
+        @Html.ActionLink("Discard Changes", "Index", new { controller = "Home" }, new { @class = "btn btn-outline-danger" })
     </div>
 </div>
