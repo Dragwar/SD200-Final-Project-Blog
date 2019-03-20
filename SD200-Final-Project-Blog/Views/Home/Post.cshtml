@@ -118,7 +118,7 @@
                                 string updateReason =
                                     string.IsNullOrEmpty(comment.UpdatedReason) ||
                                     string.IsNullOrWhiteSpace(comment.UpdatedReason) ?
-                                    "" : $"({comment.UpdatedReason})";
+                                    "" : $"({comment.DateUpdated} {comment.UpdatedReason})";
 
                                 if (User.IsInRole(nameof(UserRolesEnum.Admin)) || User.IsInRole(nameof(UserRolesEnum.Moderator)))
                                 {

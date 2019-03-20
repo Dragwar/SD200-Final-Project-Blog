@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,6 +9,8 @@ namespace SD200_Final_Project_Blog.MyHelpers
     [NotMapped]
     public static class StringHelper
     {
+        private static Random Random { get; } = new Random();
+
         /// <summary>
         ///     Generates a slug by passed in GetCharactersBy delegate
         ///     then with that this method returns the 
@@ -55,6 +58,26 @@ namespace SD200_Final_Project_Blog.MyHelpers
             htmlString = Regex.Replace(htmlString, htmlTagPattern, "");
             htmlString = Regex.Replace(htmlString, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
             return htmlString;
+        }
+
+
+        public static string GenerateRandomStringFromGuid(this Guid guid)
+        {
+            return new string(guid.ToString().Skip(Random.Next(16)).Take(Random.Next(16)).ToArray());
+        }
+
+        public static string GenerateRandomStringFromGuid(this Guid guid, int take)
+        {
+            if (take > 16)
+            {
+                take = 16;
+            }
+            else if (take < 1)
+            {
+                take = 1;
+            }
+
+            return new string(guid.ToString().Take(take).ToArray());
         }
     }
 }

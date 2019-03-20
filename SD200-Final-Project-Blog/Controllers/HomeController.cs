@@ -280,6 +280,10 @@ namespace SD200_Final_Project_Blog.Controllers
                     return RedirectToAction(nameof(HomeController.Index));
                 }
 
+                if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(slug))
+                {
+                    myPost.Slug = $"post-{myPost.Id.GenerateRandomStringFromGuid(8)}";
+                }
 
                 // check if slug is already taken
                 bool slugAlreadyTaken = DbContext.Posts.Any(post => post.Slug == slug);

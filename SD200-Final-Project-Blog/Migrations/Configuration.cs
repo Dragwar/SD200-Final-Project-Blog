@@ -123,33 +123,36 @@ namespace SD200_Final_Project_Blog.Migrations
             // make one default movie for all initial users
             for (int i = 0; i < initialUsers.Count; i++)
             {
-                string title = $"{initialUsers[i].UserName.Replace("@blog", "").Replace(".com", "")}'s Post";
-                #region Body Placeholder Text
-                string body = (
-                    "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae lectus a ante finibus mollis at sit amet turpis. Integer consectetur, orci eu feugiat hendrerit, lectus mauris placerat nulla, venenatis convallis nibh purus nec tellus. Aenean fringilla accumsan rutrum. Donec fermentum, purus non feugiat auctor, risus purus tempus odio, ac volutpat risus risus non sapien. Aliquam erat volutpat. Aliquam congue, dui et semper sodales, mi enim faucibus mi, in molestie urna mi vitae turpis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas condimentum massa et purus vehicula rhoncus. Fusce lacinia, ante eget lacinia lacinia, mi mi luctus magna, at tempor nisi ante et nulla. Ut at diam pharetra, posuere velit id, scelerisque arcu. In mi elit, blandit vel tellus vel, finibus consequat dolor.</p> <br />  <p>Curabitur fermentum massa non mi imperdiet, nec mattis quam porta.Sed justo turpis, mollis in tristique et, condimentum id elit. Vestibulum sed erat mollis risus mattis feugiat aliquet sed augue. Vestibulum nec nibh eu dolor consequat pretium.Nunc pellentesque eros ut lectus lobortis vestibulum.Cras tellus turpis, lobortis convallis congue non, suscipit ac lectus. Mauris aliquam arcu ut orci ultricies, non commodo sem fermentum.Curabitur iaculis lacus nibh, at gravida urna facilisis in. Suspendisse massa est, consequat sit amet libero eget, porta lobortis quam.</p>"
-                );
-                #endregion
-                Post newPost = new Post()
+                if (initialUsers[i].UserName != "moderator@blog.com")
                 {
-                    Title = title,
-                    Slug = title.GenerateSlug(HomeController.MyUnwantedSymbols),
-                    User = initialUsers[i],
-                    UserId = initialUsers[i].Id,
-                    Published = true,
-                    HeroImageUrl = $@"\UserUploads\PostHeroImages\blog-post-{1 + i}.jpeg",
-                    Body = $@"<h1>Test Post {i} Body</h1>" + body,
-                };
+                    string title = $"{initialUsers[i].UserName.Replace("@blog", "").Replace(".com", "")}'s Post";
+                    #region Body Placeholder Text
+                    string body = (
+                        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae lectus a ante finibus mollis at sit amet turpis. Integer consectetur, orci eu feugiat hendrerit, lectus mauris placerat nulla, venenatis convallis nibh purus nec tellus. Aenean fringilla accumsan rutrum. Donec fermentum, purus non feugiat auctor, risus purus tempus odio, ac volutpat risus risus non sapien. Aliquam erat volutpat. Aliquam congue, dui et semper sodales, mi enim faucibus mi, in molestie urna mi vitae turpis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas condimentum massa et purus vehicula rhoncus. Fusce lacinia, ante eget lacinia lacinia, mi mi luctus magna, at tempor nisi ante et nulla. Ut at diam pharetra, posuere velit id, scelerisque arcu. In mi elit, blandit vel tellus vel, finibus consequat dolor.</p> <br />  <p>Curabitur fermentum massa non mi imperdiet, nec mattis quam porta.Sed justo turpis, mollis in tristique et, condimentum id elit. Vestibulum sed erat mollis risus mattis feugiat aliquet sed augue. Vestibulum nec nibh eu dolor consequat pretium.Nunc pellentesque eros ut lectus lobortis vestibulum.Cras tellus turpis, lobortis convallis congue non, suscipit ac lectus. Mauris aliquam arcu ut orci ultricies, non commodo sem fermentum.Curabitur iaculis lacus nibh, at gravida urna facilisis in. Suspendisse massa est, consequat sit amet libero eget, porta lobortis quam.</p>"
+                    );
+                    #endregion
+                    Post newPost = new Post()
+                    {
+                        Title = title,
+                        Slug = title.GenerateSlug(HomeController.MyUnwantedSymbols),
+                        User = initialUsers[i],
+                        UserId = initialUsers[i].Id,
+                        Published = true,
+                        HeroImageUrl = $@"\UserUploads\PostHeroImages\blog-post-{1 + i}.jpeg",
+                        Body = $@"<h1>Test Post {i} Body</h1>" + body,
+                    };
 
-                // one comment per post (post creator owns this comment)
-                newPost.Comments.Add(new Comment()
-                {
-                    User = initialUsers[i],
-                    UserId = initialUsers[i].Id,
-                    Body = $"{newPost.User.UserName}'s comment on \"{newPost.Title}\" post",
-                    DateCreated = DateTime.Now,
-                });
-                // Add new movie to database if the name of the movie doesn't match any in the database
-                context.Posts.AddOrUpdate(post => post.Title, newPost);
+                    // one comment per post (post creator owns this comment)
+                    newPost.Comments.Add(new Comment()
+                    {
+                        User = initialUsers[i],
+                        UserId = initialUsers[i].Id,
+                        Body = $"{newPost.User.UserName}'s comment on \"{newPost.Title}\" post",
+                        DateCreated = DateTime.Now,
+                    });
+                    // Add new movie to database if the name of the movie doesn't match any in the database
+                    context.Posts.AddOrUpdate(post => post.Title, newPost);
+                }
             }
 
 
