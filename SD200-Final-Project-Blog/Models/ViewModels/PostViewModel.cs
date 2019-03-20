@@ -24,7 +24,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
         public string HeroImageUrl { get; set; }
         public string PostAuthorName { get; set; }
 
-        public List<PostCommentViewModel> Comments { get; set; }
+        public List<CommentViewModel> Comments { get; set; }
         public int CommentCount { get => Comments.Count; }
 
         public string GetPostTimeFromNow()
@@ -79,7 +79,7 @@ namespace SD200_Final_Project_Blog.Models.ViewModels
                 HeroImageUrl = post.HeroImageUrl,
 
                 Comments = post.Comments
-                            .Select(comment => new PostCommentViewModel()
+                            .Select(comment => new CommentViewModel()
                             {
                                 Id = comment.Id,
                                 CommentAuthorName = comment.User == null ? "" : comment.User.UserName,

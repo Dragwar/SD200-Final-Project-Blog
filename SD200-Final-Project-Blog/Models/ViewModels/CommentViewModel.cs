@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SD200_Final_Project_Blog.Models.ViewModels
 {
-    public class PostCommentViewModel
+    public class CommentViewModel
     {
         public Guid? Id { get; set; }
 
