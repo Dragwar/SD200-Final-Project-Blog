@@ -77,7 +77,7 @@
             }
             else
             {
-                foreach (IndexPostViewModel post in Model.Take(6))
+                foreach (IndexPostViewModel post in Model.Take(3))
                 {
                     bool isHeroImageUrlValidEnough = !string.IsNullOrEmpty(post.HeroImageUrl) && !string.IsNullOrWhiteSpace(post.HeroImageUrl);
                     string heroImageUrl = isHeroImageUrlValidEnough ? Url.Content($@"{post.HeroImageUrl}") : "";

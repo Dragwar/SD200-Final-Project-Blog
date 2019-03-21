@@ -445,6 +445,7 @@
     <Content Include="TemplateContent\vendor\jquery\jquery.min.js" />
     <Content Include="TemplateContent\vendor\jquery\jquery.slim.js" />
     <Content Include="TemplateContent\vendor\jquery\jquery.slim.min.js" />
+    <Content Include="UserUploads\PostHeroImages\blog-1.jpg" />
     <Content Include="UserUploads\PostHeroImages\blog-2.jpg" />
     <Content Include="UserUploads\PostHeroImages\blog-3.jpg" />
     <Content Include="UserUploads\PostHeroImages\blog-post-1.jpeg" />
@@ -455,6 +456,8 @@
     <Content Include="UserUploads\PostHeroImages\divider-bg.jpg" />
     <Content Include="UserUploads\PostHeroImages\gallery-3.jpg" />
     <Content Include="UserUploads\PostHeroImages\gallery-4.jpg" />
+    <Content Include="UserUploads\PostHeroImages\mvc-diagram.png" />
+    <Content Include="UserUploads\PostHeroImages\tekken-splash.jpg" />
     <Content Include="UserUploads\PostHeroImages\template-mac.png" />
     <Content Include="UserUploads\PostHeroImages\thumb-alberta.jpg" />
     <Content Include="Web.config" />
