@@ -8,7 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BlogContext>(options =>
-	options.UseSqlServer(connectionString));
+{
+	options.UseNpgsql(connectionString, npgsqlOptions =>
+		{
+			npgsqlOptions.MigrationsHistoryTable(BlogContext.MIGRATIONS_TABLE, BlogContext.DEFAULT_SCHEMA);
+		})
+		.UseSnakeCaseNamingConvention();
+});
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<User>(options =>
