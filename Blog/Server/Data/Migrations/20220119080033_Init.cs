@@ -89,7 +89,7 @@ namespace Blog.Server.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "user",
+                name: "users",
                 schema: "blg",
                 columns: table => new
                 {
@@ -111,7 +111,7 @@ namespace Blog.Server.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_user", x => x.id);
+                    table.PrimaryKey("pk_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,7 +155,7 @@ namespace Blog.Server.Data.Migrations
                         name: "fk_user_claims_asp_net_users_user_id",
                         column: x => x.user_id,
                         principalSchema: "blg",
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -177,7 +177,7 @@ namespace Blog.Server.Data.Migrations
                         name: "fk_user_logins_asp_net_users_user_id",
                         column: x => x.user_id,
                         principalSchema: "blg",
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -197,7 +197,7 @@ namespace Blog.Server.Data.Migrations
                         name: "fk_user_roles_asp_net_users_user_id",
                         column: x => x.user_id,
                         principalSchema: "blg",
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -226,7 +226,7 @@ namespace Blog.Server.Data.Migrations
                         name: "fk_user_tokens_asp_net_users_user_id",
                         column: x => x.user_id,
                         principalSchema: "blg",
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -288,19 +288,6 @@ namespace Blog.Server.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                schema: "blg",
-                table: "user",
-                column: "normalized_email");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                schema: "blg",
-                table: "user",
-                column: "normalized_user_name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "ix_user_claims_user_id",
                 schema: "blg",
                 table: "user_claims",
@@ -317,6 +304,19 @@ namespace Blog.Server.Data.Migrations
                 schema: "blg",
                 table: "user_roles",
                 column: "role_id");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                schema: "blg",
+                table: "users",
+                column: "normalized_email");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                schema: "blg",
+                table: "users",
+                column: "normalized_user_name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -358,7 +358,7 @@ namespace Blog.Server.Data.Migrations
                 schema: "blg");
 
             migrationBuilder.DropTable(
-                name: "user",
+                name: "users",
                 schema: "blg");
         }
     }
