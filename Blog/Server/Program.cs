@@ -1,6 +1,7 @@
 using Blog.Server.Data;
 using Blog.Server.Entities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,8 @@ builder.Services.AddDefaultIdentity<User>(options =>
 		options.SignIn.RequireConfirmedAccount = true;
 		options.Password.RequireNonAlphanumeric = false;
 	})
+	.AddRoles<IdentityRole>()
+	.AddRoleManager<RoleManager<IdentityRole>>()
 	.AddEntityFrameworkStores<BlogContext>();
 
 builder.Services.AddIdentityServer()
@@ -32,6 +35,8 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<ISeeder, Seeder>();
 
 var app = builder.Build();
 
@@ -63,5 +68,8 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+using var appStoppingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(app.Lifetime.ApplicationStopped, app.Lifetime.ApplicationStopping);
+await Seeder.CreateAndSeedAsync(app.Services, appStoppingTokenSource.Token);
 
 app.Run();
