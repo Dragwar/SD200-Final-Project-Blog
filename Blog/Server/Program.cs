@@ -38,7 +38,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<ISeeder, Seeder>();
 
-var app = builder.Build();
+await using var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -72,4 +72,4 @@ app.MapFallbackToFile("index.html");
 using var appStoppingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(app.Lifetime.ApplicationStopped, app.Lifetime.ApplicationStopping);
 await Seeder.CreateAndSeedAsync(app.Services, appStoppingTokenSource.Token);
 
-app.Run();
+await app.RunAsync(appStoppingTokenSource.Token);
