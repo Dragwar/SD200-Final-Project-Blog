@@ -1,39 +1,45 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Blog</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
-    </nav>
-</div>
+﻿<nav class="mzp-c-sidemenu">
+    <section class="mzp-c-sidemenu-main" id="sidebar-menu">
+        <h4 class="mzp-c-sidemenu-title">
+            <a href="/">Blog</a>
+        </h4>
+        <ul>
+            <li class="@GetActive(_home, NavLinkMatch.All)">
+                <NavLink href="" Match="NavLinkMatch.All">
+                    Home
+                </NavLink>
+            </li>
+            <li class="@GetActive(_counter)">
+                <NavLink href="@_counter">
+                    Counter
+                </NavLink>
+            </li>
+            <li class="@GetActive(_fetchdata)">
+                <NavLink href="@_fetchdata">
+                    Fetch data
+                </NavLink>
+            </li>
+        </ul>
+    </section>
+</nav>
 
 @code {
-    private bool _collapseNavMenu = true;
+    private const string _home = "";
+    private const string _counter = "counter";
+    private const string _fetchdata = "fetchdata";
 
-    private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
 
-    private void ToggleNavMenu()
+    protected override void OnInitialized()
+        => NavigationManager.LocationChanged += (s, e) => StateHasChanged();
+
+    private bool IsActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix)
     {
-        _collapseNavMenu = !_collapseNavMenu;
+        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).ToLower();
+        return navLinkMatch == NavLinkMatch.All ? relativePath == href.ToLower() : relativePath.StartsWith(href.ToLower());
     }
+
+    private string GetActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix)
+        => IsActive(href, navLinkMatch) ? "mzp-is-current" : "";
 }

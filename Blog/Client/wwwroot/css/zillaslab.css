@@ -1,0 +1,35 @@
+﻿/* ZillaSlab Regular */
+@font-face {
+    font-family: "ZillaSlab";
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-Regular.woff') format("woff");
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-Regular.woff2') format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ZillaSlab Bold */
+@font-face {
+    font-family: "ZillaSlab";
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-Bold.woff') format("woff");
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-Bold.woff2') format("woff2");
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* ZillaSlab Italic */
+@font-face {
+    font-family: "ZillaSlab";
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-RegularItalic.woff') format("woff");
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-RegularItalic.woff2') format("woff2");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* ZillaSlab Bold-Italic */
+@font-face {
+    font-family: "ZillaSlab";
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-BoldItalic.woff') format("woff");
+    src: url('../mozilla-protocol/core/protocol/fonts/ZillaSlab-BoldItalic.woff2') format("woff2");
+    font-weight: bold;
+    font-style: italic;
+}

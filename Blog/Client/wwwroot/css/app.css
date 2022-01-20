@@ -1,12 +1,53 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿@import url('../mozilla-protocol/core/protocol/css/protocol.min.css');
+@import url('../mozilla-protocol/core/protocol/css/protocol-components.min.css');
+@import 'inter.css';
+@import 'metrepolis.css';
+@import 'zillaslab.css';
+
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: 'Inter', Helvetica Neue, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-size: 1rem;
 }
 
-h1:focus {
-    outline: none;
+table {
+    border: solid 2px gray;
 }
+
+td {
+    padding: 0.5rem;
+    margin: 0;
+    border: 2px gray solid;
+    border-collapse: collapse;
+    border-right: none;
+    border-left: none;
+}
+
+th {
+    vertical-align: inherit;
+    font-weight: bold;
+    text-align: left;
+    padding: 1rem;
+    border: 2px gray solid;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-right: none;
+    border-left: none;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'ZillaSlab', Inter, X-LocaleSpecific, sans-serif;
+    font-weight: bold;
+}
+
+    h1:focus {
+        outline: none;
+    }
 
 a, .btn-link {
     color: #0071c1;
