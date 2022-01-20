@@ -4,13 +4,12 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.0.2 (2019-03-05)
+ * Version: 5.10.2 (2021-11-17)
  */
 (function () {
-var insertdatetime = (function () {
     'use strict';
 
-    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
+    var global$1 = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
     var getDateFormat = function (editor) {
       return editor.getParam('insertdatetime_dateformat', editor.translate('%Y-%m-%d'));
@@ -33,13 +32,6 @@ var insertdatetime = (function () {
     var shouldInsertTimeElement = function (editor) {
       return editor.getParam('insertdatetime_element', false);
     };
-    var Settings = {
-      getDateFormat: getDateFormat,
-      getTimeFormat: getTimeFormat,
-      getFormats: getFormats,
-      getDefaultDateTime: getDefaultDateTime,
-      shouldInsertTimeElement: shouldInsertTimeElement
-    };
 
     var daysShort = 'Sun Mon Tue Wed Thu Fri Sat Sun'.split(' ');
     var daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(' ');
@@ -55,7 +47,9 @@ var insertdatetime = (function () {
       return value;
     };
     var getDateTime = function (editor, fmt, date) {
-      date = date || new Date();
+      if (date === void 0) {
+        date = new Date();
+      }
       fmt = fmt.replace('%D', '%m/%d/%Y');
       fmt = fmt.replace('%r', '%I:%M:%S %p');
       fmt = fmt.replace('%Y', '' + date.getFullYear());
@@ -82,7 +76,7 @@ var insertdatetime = (function () {
       editor.selection.collapse(false);
     };
     var insertDateTime = function (editor, format) {
-      if (Settings.shouldInsertTimeElement(editor)) {
+      if (shouldInsertTimeElement(editor)) {
         var userTime = getDateTime(editor, format);
         var computerTime = void 0;
         if (/%[HMSIp]/.test(format)) {
@@ -100,22 +94,15 @@ var insertdatetime = (function () {
         editor.insertContent(getDateTime(editor, format));
       }
     };
-    var Actions = {
-      insertDateTime: insertDateTime,
-      getDateTime: getDateTime
-    };
 
-    var register = function (editor) {
-      editor.addCommand('mceInsertDate', function () {
-        Actions.insertDateTime(editor, Settings.getDateFormat(editor));
+    var register$1 = function (editor) {
+      editor.addCommand('mceInsertDate', function (_ui, value) {
+        insertDateTime(editor, value !== null && value !== void 0 ? value : getDateFormat(editor));
       });
-      editor.addCommand('mceInsertTime', function () {
-        Actions.insertDateTime(editor, Settings.getTimeFormat(editor));
+      editor.addCommand('mceInsertTime', function (_ui, value) {
+        insertDateTime(editor, value !== null && value !== void 0 ? value : getTimeFormat(editor));
       });
     };
-    var Commands = { register: register };
-
-    var global$1 = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     var Cell = function (initial) {
       var value = initial;
@@ -125,19 +112,20 @@ var insertdatetime = (function () {
       var set = function (v) {
         value = v;
       };
-      var clone = function () {
-        return Cell(get());
-      };
       return {
         get: get,
-        set: set,
-        clone: clone
+        set: set
       };
     };
 
-    var register$1 = function (editor) {
-      var formats = Settings.getFormats(editor);
-      var defaultFormat = Cell(Settings.getDefaultDateTime(editor));
+    var global = tinymce.util.Tools.resolve('tinymce.util.Tools');
+
+    var register = function (editor) {
+      var formats = getFormats(editor);
+      var defaultFormat = Cell(getDefaultDateTime(editor));
+      var insertDateTime = function (format) {
+        return editor.execCommand('mceInsertDate', false, format);
+      };
       editor.ui.registry.addSplitButton('insertdatetime', {
         icon: 'insert-time',
         tooltip: 'Insert date/time',
@@ -145,56 +133,50 @@ var insertdatetime = (function () {
           return value === defaultFormat.get();
         },
         fetch: function (done) {
-          done(global$1.map(formats, function (format) {
+          done(global.map(formats, function (format) {
             return {
               type: 'choiceitem',
-              text: Actions.getDateTime(editor, format),
+              text: getDateTime(editor, format),
               value: format
             };
           }));
         },
-        onAction: function () {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-          }
-          Actions.insertDateTime(editor, defaultFormat.get());
+        onAction: function (_api) {
+          insertDateTime(defaultFormat.get());
         },
-        onItemAction: function (_, value) {
+        onItemAction: function (_api, value) {
           defaultFormat.set(value);
-          Actions.insertDateTime(editor, value);
+          insertDateTime(value);
         }
       });
       var makeMenuItemHandler = function (format) {
         return function () {
           defaultFormat.set(format);
-          Actions.insertDateTime(editor, format);
+          insertDateTime(format);
         };
       };
       editor.ui.registry.addNestedMenuItem('insertdatetime', {
         icon: 'insert-time',
         text: 'Date/time',
         getSubmenuItems: function () {
-          return global$1.map(formats, function (format) {
+          return global.map(formats, function (format) {
             return {
               type: 'menuitem',
-              text: Actions.getDateTime(editor, format),
+              text: getDateTime(editor, format),
               onAction: makeMenuItemHandler(format)
             };
           });
         }
       });
     };
-    var Buttons = { register: register$1 };
 
-    global.add('insertdatetime', function (editor) {
-      Commands.register(editor);
-      Buttons.register(editor);
-    });
     function Plugin () {
+      global$1.add('insertdatetime', function (editor) {
+        register$1(editor);
+        register(editor);
+      });
     }
 
-    return Plugin;
+    Plugin();
 
 }());
-})();

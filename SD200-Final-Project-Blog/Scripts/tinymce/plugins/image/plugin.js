@@ -4,217 +4,12 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.0.2 (2019-03-05)
+ * Version: 5.10.2 (2021-11-17)
  */
 (function () {
-var image = (function (domGlobals) {
     'use strict';
 
-    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
-
-    var noop = function () {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-    };
-    var constant = function (value) {
-      return function () {
-        return value;
-      };
-    };
-    var identity = function (x) {
-      return x;
-    };
-    var die = function (msg) {
-      return function () {
-        throw new Error(msg);
-      };
-    };
-    var never = constant(false);
-    var always = constant(true);
-
-    var never$1 = never;
-    var always$1 = always;
-    var none = function () {
-      return NONE;
-    };
-    var NONE = function () {
-      var eq = function (o) {
-        return o.isNone();
-      };
-      var call = function (thunk) {
-        return thunk();
-      };
-      var id = function (n) {
-        return n;
-      };
-      var noop = function () {
-      };
-      var nul = function () {
-        return null;
-      };
-      var undef = function () {
-        return undefined;
-      };
-      var me = {
-        fold: function (n, s) {
-          return n();
-        },
-        is: never$1,
-        isSome: never$1,
-        isNone: always$1,
-        getOr: id,
-        getOrThunk: call,
-        getOrDie: function (msg) {
-          throw new Error(msg || 'error: getOrDie called on none.');
-        },
-        getOrNull: nul,
-        getOrUndefined: undef,
-        or: id,
-        orThunk: call,
-        map: none,
-        ap: none,
-        each: noop,
-        bind: none,
-        flatten: none,
-        exists: never$1,
-        forall: always$1,
-        filter: none,
-        equals: eq,
-        equals_: eq,
-        toArray: function () {
-          return [];
-        },
-        toString: constant('none()')
-      };
-      if (Object.freeze)
-        Object.freeze(me);
-      return me;
-    }();
-    var some = function (a) {
-      var constant_a = function () {
-        return a;
-      };
-      var self = function () {
-        return me;
-      };
-      var map = function (f) {
-        return some(f(a));
-      };
-      var bind = function (f) {
-        return f(a);
-      };
-      var me = {
-        fold: function (n, s) {
-          return s(a);
-        },
-        is: function (v) {
-          return a === v;
-        },
-        isSome: always$1,
-        isNone: never$1,
-        getOr: constant_a,
-        getOrThunk: constant_a,
-        getOrDie: constant_a,
-        getOrNull: constant_a,
-        getOrUndefined: constant_a,
-        or: self,
-        orThunk: self,
-        map: map,
-        ap: function (optfab) {
-          return optfab.fold(none, function (fab) {
-            return some(fab(a));
-          });
-        },
-        each: function (f) {
-          f(a);
-        },
-        bind: bind,
-        flatten: constant_a,
-        exists: bind,
-        forall: bind,
-        filter: function (f) {
-          return f(a) ? me : NONE;
-        },
-        equals: function (o) {
-          return o.is(a);
-        },
-        equals_: function (o, elementEq) {
-          return o.fold(never$1, function (b) {
-            return elementEq(a, b);
-          });
-        },
-        toArray: function () {
-          return [a];
-        },
-        toString: function () {
-          return 'some(' + a + ')';
-        }
-      };
-      return me;
-    };
-    var from = function (value) {
-      return value === null || value === undefined ? NONE : some(value);
-    };
-    var Option = {
-      some: some,
-      none: none,
-      from: from
-    };
-
-    var typeOf = function (x) {
-      if (x === null)
-        return 'null';
-      var t = typeof x;
-      if (t === 'object' && Array.prototype.isPrototypeOf(x))
-        return 'array';
-      if (t === 'object' && String.prototype.isPrototypeOf(x))
-        return 'string';
-      return t;
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isString = isType('string');
-    var isObject = isType('object');
-    var isFunction = isType('function');
-    var isNumber = isType('number');
-
-    var each = function (xs, f) {
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
-        f(x, i, xs);
-      }
-    };
-    var find = function (xs, pred) {
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
-        if (pred(x, i, xs)) {
-          return Option.some(x);
-        }
-      }
-      return Option.none();
-    };
-    var push = Array.prototype.push;
-    var flatten = function (xs) {
-      var r = [];
-      for (var i = 0, len = xs.length; i < len; ++i) {
-        if (!Array.prototype.isPrototypeOf(xs[i]))
-          throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
-        push.apply(r, xs[i]);
-      }
-      return r;
-    };
-    var slice = Array.prototype.slice;
-    var head = function (xs) {
-      return xs.length === 0 ? Option.none() : Option.some(xs[0]);
-    };
-    var from$1 = isFunction(Array.from) ? Array.from : function (x) {
-      return slice.call(x);
-    };
+    var global$6 = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
     var __assign = function () {
       __assign = Object.assign || function __assign(t) {
@@ -229,579 +24,345 @@ var image = (function (domGlobals) {
       return __assign.apply(this, arguments);
     };
 
-    var nu = function (baseFn) {
-      var data = Option.none();
-      var callbacks = [];
-      var map = function (f) {
-        return nu(function (nCallback) {
-          get(function (data) {
-            nCallback(f(data));
-          });
-        });
-      };
-      var get = function (nCallback) {
-        if (isReady())
-          call(nCallback);
-        else
-          callbacks.push(nCallback);
-      };
-      var set = function (x) {
-        data = Option.some(x);
-        run(callbacks);
-        callbacks = [];
-      };
-      var isReady = function () {
-        return data.isSome();
-      };
-      var run = function (cbs) {
-        each(cbs, call);
-      };
-      var call = function (cb) {
-        data.each(function (x) {
-          setTimeout(function () {
-            cb(x);
-          }, 0);
-        });
-      };
-      baseFn(set);
-      return {
-        get: get,
-        map: map,
-        isReady: isReady
+    var typeOf = function (x) {
+      var t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+        return 'array';
+      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
       };
     };
-    var pure = function (a) {
-      return nu(function (callback) {
-        callback(a);
-      });
+    var isSimpleType = function (type) {
+      return function (value) {
+        return typeof value === type;
+      };
     };
-    var LazyValue = {
-      nu: nu,
-      pure: pure
+    var eq = function (t) {
+      return function (a) {
+        return t === a;
+      };
     };
+    var isString = isType('string');
+    var isObject = isType('object');
+    var isArray = isType('array');
+    var isNull = eq(null);
+    var isBoolean = isSimpleType('boolean');
+    var isNullable = function (a) {
+      return a === null || a === undefined;
+    };
+    var isNonNullable = function (a) {
+      return !isNullable(a);
+    };
+    var isFunction = isSimpleType('function');
+    var isNumber = isSimpleType('number');
 
-    var bounce = function (f) {
+    var noop = function () {
+    };
+    var constant = function (value) {
       return function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          args[_i] = arguments[_i];
-        }
-        var me = this;
-        setTimeout(function () {
-          f.apply(me, args);
-        }, 0);
+        return value;
       };
     };
+    var identity = function (x) {
+      return x;
+    };
+    var never = constant(false);
+    var always = constant(true);
 
-    var nu$1 = function (baseFn) {
-      var get = function (callback) {
-        baseFn(bounce(callback));
-      };
-      var map = function (fab) {
-        return nu$1(function (callback) {
-          get(function (a) {
-            var value = fab(a);
-            callback(value);
-          });
-        });
-      };
-      var bind = function (aFutureB) {
-        return nu$1(function (callback) {
-          get(function (a) {
-            aFutureB(a).get(callback);
-          });
-        });
-      };
-      var anonBind = function (futureB) {
-        return nu$1(function (callback) {
-          get(function (a) {
-            futureB.get(callback);
-          });
-        });
-      };
-      var toLazy = function () {
-        return LazyValue.nu(get);
-      };
-      var toCached = function () {
-        var cache = null;
-        return nu$1(function (callback) {
-          if (cache === null) {
-            cache = toLazy();
-          }
-          cache.get(callback);
-        });
-      };
-      return {
-        map: map,
-        bind: bind,
-        anonBind: anonBind,
-        toLazy: toLazy,
-        toCached: toCached,
-        get: get
-      };
+    var none = function () {
+      return NONE;
     };
-    var pure$1 = function (a) {
-      return nu$1(function (callback) {
-        callback(a);
-      });
-    };
-    var Future = {
-      nu: nu$1,
-      pure: pure$1
-    };
-
-    var value = function (o) {
-      var is = function (v) {
-        return o === v;
+    var NONE = function () {
+      var call = function (thunk) {
+        return thunk();
       };
-      var or = function (opt) {
-        return value(o);
-      };
-      var orThunk = function (f) {
-        return value(o);
-      };
-      var map = function (f) {
-        return value(f(o));
-      };
-      var mapError = function (f) {
-        return value(o);
-      };
-      var each = function (f) {
-        f(o);
-      };
-      var bind = function (f) {
-        return f(o);
-      };
-      var fold = function (_, onValue) {
-        return onValue(o);
-      };
-      var exists = function (f) {
-        return f(o);
-      };
-      var forall = function (f) {
-        return f(o);
-      };
-      var toOption = function () {
-        return Option.some(o);
-      };
-      return {
-        is: is,
-        isValue: always,
-        isError: never,
-        getOr: constant(o),
-        getOrThunk: constant(o),
-        getOrDie: constant(o),
-        or: or,
-        orThunk: orThunk,
-        fold: fold,
-        map: map,
-        mapError: mapError,
-        each: each,
-        bind: bind,
-        exists: exists,
-        forall: forall,
-        toOption: toOption
-      };
-    };
-    var error = function (message) {
-      var getOrThunk = function (f) {
-        return f();
-      };
-      var getOrDie = function () {
-        return die(String(message))();
-      };
-      var or = function (opt) {
-        return opt;
-      };
-      var orThunk = function (f) {
-        return f();
-      };
-      var map = function (f) {
-        return error(message);
-      };
-      var mapError = function (f) {
-        return error(f(message));
-      };
-      var bind = function (f) {
-        return error(message);
-      };
-      var fold = function (onError, _) {
-        return onError(message);
-      };
-      return {
-        is: never,
-        isValue: never,
-        isError: always,
-        getOr: identity,
-        getOrThunk: getOrThunk,
-        getOrDie: getOrDie,
-        or: or,
-        orThunk: orThunk,
-        fold: fold,
-        map: map,
-        mapError: mapError,
+      var id = identity;
+      var me = {
+        fold: function (n, _s) {
+          return n();
+        },
+        isSome: never,
+        isNone: always,
+        getOr: id,
+        getOrThunk: call,
+        getOrDie: function (msg) {
+          throw new Error(msg || 'error: getOrDie called on none.');
+        },
+        getOrNull: constant(null),
+        getOrUndefined: constant(undefined),
+        or: id,
+        orThunk: call,
+        map: none,
         each: noop,
-        bind: bind,
+        bind: none,
         exists: never,
         forall: always,
-        toOption: Option.none
+        filter: function () {
+          return none();
+        },
+        toArray: function () {
+          return [];
+        },
+        toString: constant('none()')
       };
-    };
-    var Result = {
-      value: value,
-      error: error
-    };
-
-    var wrap = function (delegate) {
-      var toCached = function () {
-        return wrap(delegate.toCached());
+      return me;
+    }();
+    var some = function (a) {
+      var constant_a = constant(a);
+      var self = function () {
+        return me;
       };
-      var bindFuture = function (f) {
-        return wrap(delegate.bind(function (resA) {
-          return resA.fold(function (err) {
-            return Future.pure(Result.error(err));
-          }, function (a) {
-            return f(a);
-          });
-        }));
+      var bind = function (f) {
+        return f(a);
       };
-      var bindResult = function (f) {
-        return wrap(delegate.map(function (resA) {
-          return resA.bind(f);
-        }));
-      };
-      var mapResult = function (f) {
-        return wrap(delegate.map(function (resA) {
-          return resA.map(f);
-        }));
-      };
-      var mapError = function (f) {
-        return wrap(delegate.map(function (resA) {
-          return resA.mapError(f);
-        }));
-      };
-      var foldResult = function (whenError, whenValue) {
-        return delegate.map(function (res) {
-          return res.fold(whenError, whenValue);
-        });
-      };
-      var withTimeout = function (timeout, errorThunk) {
-        return wrap(Future.nu(function (callback) {
-          var timedOut = false;
-          var timer = window.setTimeout(function () {
-            timedOut = true;
-            callback(Result.error(errorThunk()));
-          }, timeout);
-          delegate.get(function (result) {
-            if (!timedOut) {
-              window.clearTimeout(timer);
-              callback(result);
-            }
-          });
-        }));
-      };
-      return __assign({}, delegate, {
-        toCached: toCached,
-        bindFuture: bindFuture,
-        bindResult: bindResult,
-        mapResult: mapResult,
-        mapError: mapError,
-        foldResult: foldResult,
-        withTimeout: withTimeout
-      });
-    };
-    var nu$2 = function (worker) {
-      return wrap(Future.nu(worker));
-    };
-    var value$1 = function (value) {
-      return wrap(Future.pure(Result.value(value)));
-    };
-    var error$1 = function (error) {
-      return wrap(Future.pure(Result.error(error)));
-    };
-    var fromResult = function (result) {
-      return wrap(Future.pure(result));
-    };
-    var fromFuture = function (future) {
-      return wrap(future.map(Result.value));
-    };
-    var fromPromise = function (promise) {
-      return nu$2(function (completer) {
-        promise.then(function (value) {
-          completer(Result.value(value));
-        }, function (error) {
-          completer(Result.error(error));
-        });
-      });
-    };
-    var FutureResult = {
-      nu: nu$2,
-      wrap: wrap,
-      pure: value$1,
-      value: value$1,
-      error: error$1,
-      fromResult: fromResult,
-      fromFuture: fromFuture,
-      fromPromise: fromPromise
-    };
-
-    var hasOwnProperty = Object.prototype.hasOwnProperty;
-    var shallow = function (old, nu) {
-      return nu;
-    };
-    var deep = function (old, nu) {
-      var bothObjects = isObject(old) && isObject(nu);
-      return bothObjects ? deepMerge(old, nu) : nu;
-    };
-    var baseMerge = function (merger) {
-      return function () {
-        var objects = new Array(arguments.length);
-        for (var i = 0; i < objects.length; i++)
-          objects[i] = arguments[i];
-        if (objects.length === 0)
-          throw new Error('Can\'t merge zero objects');
-        var ret = {};
-        for (var j = 0; j < objects.length; j++) {
-          var curObject = objects[j];
-          for (var key in curObject)
-            if (hasOwnProperty.call(curObject, key)) {
-              ret[key] = merger(ret[key], curObject[key]);
-            }
+      var me = {
+        fold: function (n, s) {
+          return s(a);
+        },
+        isSome: always,
+        isNone: never,
+        getOr: constant_a,
+        getOrThunk: constant_a,
+        getOrDie: constant_a,
+        getOrNull: constant_a,
+        getOrUndefined: constant_a,
+        or: self,
+        orThunk: self,
+        map: function (f) {
+          return some(f(a));
+        },
+        each: function (f) {
+          f(a);
+        },
+        bind: bind,
+        exists: bind,
+        forall: bind,
+        filter: function (f) {
+          return f(a) ? me : NONE;
+        },
+        toArray: function () {
+          return [a];
+        },
+        toString: function () {
+          return 'some(' + a + ')';
         }
-        return ret;
+      };
+      return me;
+    };
+    var from = function (value) {
+      return value === null || value === undefined ? NONE : some(value);
+    };
+    var Optional = {
+      some: some,
+      none: none,
+      from: from
+    };
+
+    var keys = Object.keys;
+    var hasOwnProperty = Object.hasOwnProperty;
+    var each = function (obj, f) {
+      var props = keys(obj);
+      for (var k = 0, len = props.length; k < len; k++) {
+        var i = props[k];
+        var x = obj[i];
+        f(x, i);
+      }
+    };
+    var objAcc = function (r) {
+      return function (x, i) {
+        r[i] = x;
       };
     };
-    var deepMerge = baseMerge(deep);
-    var merge = baseMerge(shallow);
-
-    var Global = typeof window !== 'undefined' ? window : Function('return this;')();
-
-    var path = function (parts, scope) {
-      var o = scope !== undefined && scope !== null ? scope : Global;
-      for (var i = 0; i < parts.length && o !== undefined && o !== null; ++i)
-        o = o[parts[i]];
-      return o;
-    };
-    var resolve = function (p, scope) {
-      var parts = p.split('.');
-      return path(parts, scope);
-    };
-
-    var unsafe = function (name, scope) {
-      return resolve(name, scope);
-    };
-    var getOrDie = function (name, scope) {
-      var actual = unsafe(name, scope);
-      if (actual === undefined || actual === null)
-        throw name + ' not available on this browser';
-      return actual;
-    };
-    var Global$1 = { getOrDie: getOrDie };
-
-    var url = function () {
-      return Global$1.getOrDie('URL');
-    };
-    var createObjectURL = function (blob) {
-      return url().createObjectURL(blob);
-    };
-    var revokeObjectURL = function (u) {
-      url().revokeObjectURL(u);
-    };
-    var URL = {
-      createObjectURL: createObjectURL,
-      revokeObjectURL: revokeObjectURL
-    };
-
-    var makeItems = function (info) {
-      var imageUrl = {
-        name: 'src',
-        type: 'urlinput',
-        filetype: 'image',
-        label: 'Source'
-      };
-      var imageList = info.imageList.map(function (items) {
-        return {
-          name: 'images',
-          type: 'selectbox',
-          label: 'Image list',
-          items: items
-        };
+    var internalFilter = function (obj, pred, onTrue, onFalse) {
+      var r = {};
+      each(obj, function (x, i) {
+        (pred(x, i) ? onTrue : onFalse)(x, i);
       });
-      var imageDescription = {
-        name: 'alt',
-        type: 'input',
-        label: 'Image description'
-      };
-      var imageTitle = {
-        name: 'title',
-        type: 'input',
-        label: 'Image title'
-      };
-      var imageDimensions = {
-        name: 'dimensions',
-        type: 'sizeinput'
-      };
-      var classList = info.classList.map(function (items) {
-        return {
-          name: 'classes',
-          type: 'selectbox',
-          label: 'Class',
-          items: items
-        };
-      });
-      var caption = {
-        type: 'label',
-        label: 'Caption',
-        items: [{
-            type: 'checkbox',
-            name: 'caption',
-            label: 'Show caption'
-          }]
-      };
-      return flatten([
-        [imageUrl],
-        imageList.toArray(),
-        info.hasDescription ? [imageDescription] : [],
-        info.hasImageTitle ? [imageTitle] : [],
-        info.hasDimensions ? [imageDimensions] : [],
-        [{
-            type: 'grid',
-            columns: 2,
-            items: flatten([
-              classList.toArray(),
-              info.hasImageCaption ? [caption] : []
-            ])
-          }]
-      ]);
+      return r;
     };
-    var makeTab = function (info) {
-      return {
-        title: 'General',
-        items: makeItems(info)
-      };
+    var filter = function (obj, pred) {
+      var t = {};
+      internalFilter(obj, pred, objAcc(t), noop);
+      return t;
     };
-    var MainTab = {
-      makeTab: makeTab,
-      makeItems: makeItems
+    var has = function (obj, key) {
+      return hasOwnProperty.call(obj, key);
+    };
+    var hasNonNullableKey = function (obj, key) {
+      return has(obj, key) && obj[key] !== undefined && obj[key] !== null;
     };
 
-    function FileReader () {
-      var f = Global$1.getOrDie('FileReader');
-      return new f();
-    }
+    var nativePush = Array.prototype.push;
+    var flatten = function (xs) {
+      var r = [];
+      for (var i = 0, len = xs.length; i < len; ++i) {
+        if (!isArray(xs[i])) {
+          throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
+        }
+        nativePush.apply(r, xs[i]);
+      }
+      return r;
+    };
+    var get = function (xs, i) {
+      return i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
+    };
+    var head = function (xs) {
+      return get(xs, 0);
+    };
+    var findMap = function (arr, f) {
+      for (var i = 0; i < arr.length; i++) {
+        var r = f(arr[i], i);
+        if (r.isSome()) {
+          return r;
+        }
+      }
+      return Optional.none();
+    };
 
-    var global$1 = tinymce.util.Tools.resolve('tinymce.util.Promise');
+    typeof window !== 'undefined' ? window : Function('return this;')();
 
-    var global$2 = tinymce.util.Tools.resolve('tinymce.util.Tools');
+    var rawSet = function (dom, key, value) {
+      if (isString(value) || isBoolean(value) || isNumber(value)) {
+        dom.setAttribute(key, value + '');
+      } else {
+        console.error('Invalid call to Attribute.set. Key ', key, ':: Value ', value, ':: Element ', dom);
+        throw new Error('Attribute value was not simple');
+      }
+    };
+    var set = function (element, key, value) {
+      rawSet(element.dom, key, value);
+    };
+    var remove = function (element, key) {
+      element.dom.removeAttribute(key);
+    };
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.util.XHR');
+    var fromHtml = function (html, scope) {
+      var doc = scope || document;
+      var div = doc.createElement('div');
+      div.innerHTML = html;
+      if (!div.hasChildNodes() || div.childNodes.length > 1) {
+        console.error('HTML does not have a single root node', html);
+        throw new Error('HTML must have a single root node');
+      }
+      return fromDom(div.childNodes[0]);
+    };
+    var fromTag = function (tag, scope) {
+      var doc = scope || document;
+      var node = doc.createElement(tag);
+      return fromDom(node);
+    };
+    var fromText = function (text, scope) {
+      var doc = scope || document;
+      var node = doc.createTextNode(text);
+      return fromDom(node);
+    };
+    var fromDom = function (node) {
+      if (node === null || node === undefined) {
+        throw new Error('Node cannot be null or undefined');
+      }
+      return { dom: node };
+    };
+    var fromPoint = function (docElm, x, y) {
+      return Optional.from(docElm.dom.elementFromPoint(x, y)).map(fromDom);
+    };
+    var SugarElement = {
+      fromHtml: fromHtml,
+      fromTag: fromTag,
+      fromText: fromText,
+      fromDom: fromDom,
+      fromPoint: fromPoint
+    };
+
+    var global$5 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
+
+    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Promise');
+
+    var global$3 = tinymce.util.Tools.resolve('tinymce.util.URI');
+
+    var global$2 = tinymce.util.Tools.resolve('tinymce.util.XHR');
 
     var hasDimensions = function (editor) {
-      return editor.settings.image_dimensions === false ? false : true;
+      return editor.getParam('image_dimensions', true, 'boolean');
     };
     var hasAdvTab = function (editor) {
-      return editor.settings.image_advtab === true ? true : false;
+      return editor.getParam('image_advtab', false, 'boolean');
+    };
+    var hasUploadTab = function (editor) {
+      return editor.getParam('image_uploadtab', true, 'boolean');
     };
     var getPrependUrl = function (editor) {
-      return editor.getParam('image_prepend_url', '');
+      return editor.getParam('image_prepend_url', '', 'string');
     };
     var getClassList = function (editor) {
       return editor.getParam('image_class_list');
     };
     var hasDescription = function (editor) {
-      return editor.settings.image_description === false ? false : true;
+      return editor.getParam('image_description', true, 'boolean');
     };
     var hasImageTitle = function (editor) {
-      return editor.settings.image_title === true ? true : false;
+      return editor.getParam('image_title', false, 'boolean');
     };
     var hasImageCaption = function (editor) {
-      return editor.settings.image_caption === true ? true : false;
+      return editor.getParam('image_caption', false, 'boolean');
     };
     var getImageList = function (editor) {
       return editor.getParam('image_list', false);
     };
     var hasUploadUrl = function (editor) {
-      return !!editor.getParam('images_upload_url', false);
+      return isNonNullable(editor.getParam('images_upload_url'));
     };
     var hasUploadHandler = function (editor) {
-      return !!editor.getParam('images_upload_handler', false);
+      return isNonNullable(editor.getParam('images_upload_handler'));
     };
-    var getUploadUrl = function (editor) {
-      return editor.getParam('images_upload_url');
+    var showAccessibilityOptions = function (editor) {
+      return editor.getParam('a11y_advanced_options', false, 'boolean');
     };
-    var getUploadHandler = function (editor) {
-      return editor.getParam('images_upload_handler');
-    };
-    var getUploadBasePath = function (editor) {
-      return editor.getParam('images_upload_base_path');
-    };
-    var getUploadCredentials = function (editor) {
-      return editor.getParam('images_upload_credentials');
-    };
-    var Settings = {
-      hasDimensions: hasDimensions,
-      hasAdvTab: hasAdvTab,
-      getPrependUrl: getPrependUrl,
-      getClassList: getClassList,
-      hasDescription: hasDescription,
-      hasImageTitle: hasImageTitle,
-      hasImageCaption: hasImageCaption,
-      getImageList: getImageList,
-      hasUploadUrl: hasUploadUrl,
-      hasUploadHandler: hasUploadHandler,
-      getUploadUrl: getUploadUrl,
-      getUploadHandler: getUploadHandler,
-      getUploadBasePath: getUploadBasePath,
-      getUploadCredentials: getUploadCredentials
+    var isAutomaticUploadsEnabled = function (editor) {
+      return editor.getParam('automatic_uploads', true, 'boolean');
     };
 
     var parseIntAndGetMax = function (val1, val2) {
       return Math.max(parseInt(val1, 10), parseInt(val2, 10));
     };
-    var getImageSize = function (url, callback) {
-      var img = domGlobals.document.createElement('img');
-      function done(dimensions) {
-        if (img.parentNode) {
-          img.parentNode.removeChild(img);
-        }
-        callback(dimensions);
-      }
-      img.onload = function () {
-        var width = parseIntAndGetMax(img.width, img.clientWidth);
-        var height = parseIntAndGetMax(img.height, img.clientHeight);
-        var dimensions = {
-          width: width,
-          height: height
-        };
-        done(Result.value(dimensions));
-      };
-      img.onerror = function () {
-        done(Result.error(undefined));
-      };
-      var style = img.style;
-      style.visibility = 'hidden';
-      style.position = 'fixed';
-      style.bottom = style.left = '0px';
-      style.width = style.height = 'auto';
-      domGlobals.document.body.appendChild(img);
-      img.src = url;
-    };
-    var buildListItems = function (inputList, itemCallback, startItems) {
-      function appendItems(values, output) {
-        output = output || [];
-        global$2.each(values, function (item) {
-          var menuItem = { text: item.text || item.title };
-          if (item.menu) {
-            menuItem.menu = appendItems(item.menu);
-          } else {
-            menuItem.value = item.value;
-            itemCallback(menuItem);
+    var getImageSize = function (url) {
+      return new global$4(function (callback) {
+        var img = document.createElement('img');
+        var done = function (dimensions) {
+          img.onload = img.onerror = null;
+          if (img.parentNode) {
+            img.parentNode.removeChild(img);
           }
-          output.push(menuItem);
-        });
-        return output;
-      }
-      return appendItems(inputList, startItems || []);
+          callback(dimensions);
+        };
+        img.onload = function () {
+          var width = parseIntAndGetMax(img.width, img.clientWidth);
+          var height = parseIntAndGetMax(img.height, img.clientHeight);
+          var dimensions = {
+            width: width,
+            height: height
+          };
+          done(global$4.resolve(dimensions));
+        };
+        img.onerror = function () {
+          done(global$4.reject('Failed to get image dimensions for: ' + url));
+        };
+        var style = img.style;
+        style.visibility = 'hidden';
+        style.position = 'fixed';
+        style.bottom = style.left = '0px';
+        style.width = style.height = 'auto';
+        document.body.appendChild(img);
+        img.src = url;
+      });
     };
     var removePixelSuffix = function (value) {
       if (value) {
@@ -848,33 +409,33 @@ var image = (function (domGlobals) {
       return css;
     };
     var createImageList = function (editor, callback) {
-      var imageList = Settings.getImageList(editor);
-      if (typeof imageList === 'string') {
-        global$3.send({
+      var imageList = getImageList(editor);
+      if (isString(imageList)) {
+        global$2.send({
           url: imageList,
           success: function (text) {
             callback(JSON.parse(text));
           }
         });
-      } else if (typeof imageList === 'function') {
+      } else if (isFunction(imageList)) {
         imageList(callback);
       } else {
         callback(imageList);
       }
     };
     var waitLoadImage = function (editor, data, imgElm) {
-      function selectImage() {
+      var selectImage = function () {
         imgElm.onload = imgElm.onerror = null;
         if (editor.selection) {
           editor.selection.select(imgElm);
           editor.nodeChanged();
         }
-      }
+      };
       imgElm.onload = function () {
-        if (!data.width && !data.height && Settings.hasDimensions(editor)) {
+        if (!data.width && !data.height && hasDimensions(editor)) {
           editor.dom.setAttribs(imgElm, {
-            width: imgElm.clientWidth,
-            height: imgElm.clientHeight
+            width: String(imgElm.clientWidth),
+            height: String(imgElm.clientHeight)
           });
         }
         selectImage();
@@ -882,8 +443,8 @@ var image = (function (domGlobals) {
       imgElm.onerror = selectImage;
     };
     var blobToDataUri = function (blob) {
-      return new global$1(function (resolve, reject) {
-        var reader = FileReader();
+      return new global$4(function (resolve, reject) {
+        var reader = new FileReader();
         reader.onload = function () {
           resolve(reader.result);
         };
@@ -893,37 +454,31 @@ var image = (function (domGlobals) {
         reader.readAsDataURL(blob);
       });
     };
-    var Utils = {
-      getImageSize: getImageSize,
-      buildListItems: buildListItems,
-      removePixelSuffix: removePixelSuffix,
-      addPixelSuffix: addPixelSuffix,
-      mergeMargins: mergeMargins,
-      createImageList: createImageList,
-      waitLoadImage: waitLoadImage,
-      blobToDataUri: blobToDataUri
+    var isPlaceholderImage = function (imgElm) {
+      return imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
+    };
+    var isSafeImageUrl = function (editor, src) {
+      return global$3.isDomSafe(src, 'img', editor.settings);
     };
 
-    var global$4 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
-
-    var DOM = global$4.DOM;
+    var DOM = global$5.DOM;
     var getHspace = function (image) {
       if (image.style.marginLeft && image.style.marginRight && image.style.marginLeft === image.style.marginRight) {
-        return Utils.removePixelSuffix(image.style.marginLeft);
+        return removePixelSuffix(image.style.marginLeft);
       } else {
         return '';
       }
     };
     var getVspace = function (image) {
       if (image.style.marginTop && image.style.marginBottom && image.style.marginTop === image.style.marginBottom) {
-        return Utils.removePixelSuffix(image.style.marginTop);
+        return removePixelSuffix(image.style.marginTop);
       } else {
         return '';
       }
     };
     var getBorder = function (image) {
       if (image.style.borderWidth) {
-        return Utils.removePixelSuffix(image.style.borderWidth);
+        return removePixelSuffix(image.style.borderWidth);
       } else {
         return '';
       }
@@ -941,14 +496,18 @@ var image = (function (domGlobals) {
     var hasCaption = function (image) {
       return image.parentNode !== null && image.parentNode.nodeName === 'FIGURE';
     };
-    var setAttrib = function (image, name, value) {
-      image.setAttribute(name, value);
+    var updateAttrib = function (image, name, value) {
+      if (value === '') {
+        image.removeAttribute(name);
+      } else {
+        image.setAttribute(name, value);
+      }
     };
     var wrapInFigure = function (image) {
       var figureElm = DOM.create('figure', { class: 'image' });
       DOM.insertAfter(figureElm, image);
       figureElm.appendChild(image);
-      figureElm.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
+      figureElm.appendChild(DOM.create('figcaption', { contentEditable: 'true' }, 'Caption'));
       figureElm.contentEditable = 'false';
     };
     var removeFigure = function (image) {
@@ -976,32 +535,32 @@ var image = (function (domGlobals) {
     var setSize = function (name, normalizeCss) {
       return function (image, name, value) {
         if (image.style[name]) {
-          image.style[name] = Utils.addPixelSuffix(value);
+          image.style[name] = addPixelSuffix(value);
           normalizeStyle(image, normalizeCss);
         } else {
-          setAttrib(image, name, value);
+          updateAttrib(image, name, value);
         }
       };
     };
     var getSize = function (image, name) {
       if (image.style[name]) {
-        return Utils.removePixelSuffix(image.style[name]);
+        return removePixelSuffix(image.style[name]);
       } else {
         return getAttrib(image, name);
       }
     };
     var setHspace = function (image, value) {
-      var pxValue = Utils.addPixelSuffix(value);
+      var pxValue = addPixelSuffix(value);
       image.style.marginLeft = pxValue;
       image.style.marginRight = pxValue;
     };
     var setVspace = function (image, value) {
-      var pxValue = Utils.addPixelSuffix(value);
+      var pxValue = addPixelSuffix(value);
       image.style.marginTop = pxValue;
       image.style.marginBottom = pxValue;
     };
     var setBorder = function (image, value) {
-      var pxValue = Utils.addPixelSuffix(value);
+      var pxValue = addPixelSuffix(value);
       image.style.borderWidth = pxValue;
     };
     var setBorderStyle = function (image, value) {
@@ -1016,6 +575,16 @@ var image = (function (domGlobals) {
     var isImage = function (elm) {
       return elm.nodeName === 'IMG';
     };
+    var getIsDecorative = function (image) {
+      return DOM.getAttrib(image, 'alt').length === 0 && DOM.getAttrib(image, 'role') === 'presentation';
+    };
+    var getAlt = function (image) {
+      if (getIsDecorative(image)) {
+        return '';
+      } else {
+        return getAttrib(image, 'alt');
+      }
+    };
     var defaultData = function () {
       return {
         src: '',
@@ -1029,12 +598,13 @@ var image = (function (domGlobals) {
         hspace: '',
         vspace: '',
         border: '',
-        borderStyle: ''
+        borderStyle: '',
+        isDecorative: false
       };
     };
     var getStyleValue = function (normalizeCss, data) {
-      var image = domGlobals.document.createElement('img');
-      setAttrib(image, 'style', data.style);
+      var image = document.createElement('img');
+      updateAttrib(image, 'style', data.style);
       if (getHspace(image) || data.hspace !== '') {
         setHspace(image, data.hspace);
       }
@@ -1050,13 +620,13 @@ var image = (function (domGlobals) {
       return normalizeCss(image.getAttribute('style'));
     };
     var create = function (normalizeCss, data) {
-      var image = domGlobals.document.createElement('img');
-      write(normalizeCss, merge(data, { caption: false }), image);
-      setAttrib(image, 'alt', data.alt);
+      var image = document.createElement('img');
+      write(normalizeCss, __assign(__assign({}, data), { caption: false }), image);
+      setAlt(image, data.alt, data.isDecorative);
       if (data.caption) {
         var figure = DOM.create('figure', { class: 'image' });
         figure.appendChild(image);
-        figure.appendChild(DOM.create('figcaption', { contentEditable: true }, 'Caption'));
+        figure.appendChild(DOM.create('figcaption', { contentEditable: 'true' }, 'Caption'));
         figure.contentEditable = 'false';
         return figure;
       } else {
@@ -1066,7 +636,7 @@ var image = (function (domGlobals) {
     var read = function (normalizeCss, image) {
       return {
         src: getAttrib(image, 'src'),
-        alt: getAttrib(image, 'alt'),
+        alt: getAlt(image),
         title: getAttrib(image, 'title'),
         width: getSize(image, 'width'),
         height: getSize(image, 'height'),
@@ -1076,12 +646,36 @@ var image = (function (domGlobals) {
         hspace: getHspace(image),
         vspace: getVspace(image),
         border: getBorder(image),
-        borderStyle: getStyle(image, 'borderStyle')
+        borderStyle: getStyle(image, 'borderStyle'),
+        isDecorative: getIsDecorative(image)
       };
     };
     var updateProp = function (image, oldData, newData, name, set) {
       if (newData[name] !== oldData[name]) {
         set(image, name, newData[name]);
+      }
+    };
+    var setAlt = function (image, alt, isDecorative) {
+      if (isDecorative) {
+        DOM.setAttrib(image, 'role', 'presentation');
+        var sugarImage = SugarElement.fromDom(image);
+        set(sugarImage, 'alt', '');
+      } else {
+        if (isNull(alt)) {
+          var sugarImage = SugarElement.fromDom(image);
+          remove(sugarImage, 'alt');
+        } else {
+          var sugarImage = SugarElement.fromDom(image);
+          set(sugarImage, 'alt', alt);
+        }
+        if (DOM.getAttrib(image, 'role') === 'presentation') {
+          DOM.setAttrib(image, 'role', '');
+        }
+      }
+    };
+    var updateAlt = function (image, oldData, newData) {
+      if (newData.alt !== oldData.alt || newData.isDecorative !== oldData.isDecorative) {
+        setAlt(image, newData.alt, newData.isDecorative);
       }
     };
     var normalized = function (set, normalizeCss) {
@@ -1095,24 +689,24 @@ var image = (function (domGlobals) {
       updateProp(image, oldData, newData, 'caption', function (image, _name, _value) {
         return toggleCaption(image);
       });
-      updateProp(image, oldData, newData, 'src', setAttrib);
-      updateProp(image, oldData, newData, 'alt', setAttrib);
-      updateProp(image, oldData, newData, 'title', setAttrib);
+      updateProp(image, oldData, newData, 'src', updateAttrib);
+      updateProp(image, oldData, newData, 'title', updateAttrib);
       updateProp(image, oldData, newData, 'width', setSize('width', normalizeCss));
       updateProp(image, oldData, newData, 'height', setSize('height', normalizeCss));
-      updateProp(image, oldData, newData, 'class', setAttrib);
+      updateProp(image, oldData, newData, 'class', updateAttrib);
       updateProp(image, oldData, newData, 'style', normalized(function (image, value) {
-        return setAttrib(image, 'style', value);
+        return updateAttrib(image, 'style', value);
       }, normalizeCss));
       updateProp(image, oldData, newData, 'hspace', normalized(setHspace, normalizeCss));
       updateProp(image, oldData, newData, 'vspace', normalized(setVspace, normalizeCss));
       updateProp(image, oldData, newData, 'border', normalized(setBorder, normalizeCss));
       updateProp(image, oldData, newData, 'borderStyle', normalized(setBorderStyle, normalizeCss));
+      updateAlt(image, oldData, newData);
     };
 
-    var normalizeCss = function (editor, cssText) {
+    var normalizeCss$1 = function (editor, cssText) {
       var css = editor.dom.styles.parse(cssText);
-      var mergedCss = Utils.mergeMargins(css);
+      var mergedCss = mergeMargins(css);
       var compressed = editor.dom.styles.parse(editor.dom.styles.serialize(mergedCss));
       return editor.dom.styles.serialize(compressed);
     };
@@ -1122,15 +716,18 @@ var image = (function (domGlobals) {
       if (figureElm) {
         return editor.dom.select('img', figureElm)[0];
       }
-      if (imgElm && (imgElm.nodeName !== 'IMG' || imgElm.getAttribute('data-mce-object') || imgElm.getAttribute('data-mce-placeholder'))) {
+      if (imgElm && (imgElm.nodeName !== 'IMG' || isPlaceholderImage(imgElm))) {
         return null;
       }
       return imgElm;
     };
     var splitTextBlock = function (editor, figure) {
       var dom = editor.dom;
+      var textBlockElements = filter(editor.schema.getTextBlockElements(), function (_, parentElm) {
+        return !editor.schema.isValidChild(parentElm, 'figure');
+      });
       var textBlock = dom.getParent(figure.parentNode, function (node) {
-        return editor.schema.getTextBlockElements()[node.nodeName];
+        return hasNonNullableKey(textBlockElements, node.nodeName);
       }, editor.getBody());
       if (textBlock) {
         return dom.split(textBlock, figure);
@@ -1141,12 +738,12 @@ var image = (function (domGlobals) {
     var readImageDataFromSelection = function (editor) {
       var image = getSelectedImage(editor);
       return image ? read(function (css) {
-        return normalizeCss(editor, css);
+        return normalizeCss$1(editor, css);
       }, image) : defaultData();
     };
     var insertImageAtCaret = function (editor, data) {
       var elm = create(function (css) {
-        return normalizeCss(editor, css);
+        return normalizeCss$1(editor, css);
       }, data);
       editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
       editor.focus();
@@ -1178,7 +775,7 @@ var image = (function (domGlobals) {
     var writeImageDataToSelection = function (editor, data) {
       var image = getSelectedImage(editor);
       write(function (css) {
-        return normalizeCss(editor, css);
+        return normalizeCss$1(editor, css);
       }, data, image);
       syncSrcAttr(editor, image);
       if (isFigure(image.parentNode)) {
@@ -1187,39 +784,82 @@ var image = (function (domGlobals) {
         editor.selection.select(image.parentNode);
       } else {
         editor.selection.select(image);
-        Utils.waitLoadImage(editor, data, image);
+        waitLoadImage(editor, data, image);
       }
     };
-    var insertOrUpdateImage = function (editor, data) {
+    var sanitizeImageData = function (editor, data) {
+      var src = data.src;
+      return __assign(__assign({}, data), { src: isSafeImageUrl(editor, src) ? src : '' });
+    };
+    var insertOrUpdateImage = function (editor, partialData) {
       var image = getSelectedImage(editor);
       if (image) {
+        var selectedImageData = read(function (css) {
+          return normalizeCss$1(editor, css);
+        }, image);
+        var data = __assign(__assign({}, selectedImageData), partialData);
+        var sanitizedData = sanitizeImageData(editor, data);
         if (data.src) {
-          writeImageDataToSelection(editor, data);
+          writeImageDataToSelection(editor, sanitizedData);
         } else {
           deleteImage(editor, image);
         }
-      } else if (data.src) {
-        insertImageAtCaret(editor, data);
+      } else if (partialData.src) {
+        insertImageAtCaret(editor, __assign(__assign({}, defaultData()), partialData));
       }
     };
 
-    var findMap = function (arr, f) {
-      for (var i = 0; i < arr.length; i++) {
-        var r = f(arr[i], i);
-        if (r.isSome()) {
-          return r;
-        }
-      }
-      return Option.none();
+    var deep = function (old, nu) {
+      var bothObjects = isObject(old) && isObject(nu);
+      return bothObjects ? deepMerge(old, nu) : nu;
     };
+    var baseMerge = function (merger) {
+      return function () {
+        var objects = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+          objects[_i] = arguments[_i];
+        }
+        if (objects.length === 0) {
+          throw new Error('Can\'t merge zero objects');
+        }
+        var ret = {};
+        for (var j = 0; j < objects.length; j++) {
+          var curObject = objects[j];
+          for (var key in curObject) {
+            if (has(curObject, key)) {
+              ret[key] = merger(ret[key], curObject[key]);
+            }
+          }
+        }
+        return ret;
+      };
+    };
+    var deepMerge = baseMerge(deep);
+
+    var isNotEmpty = function (s) {
+      return s.length > 0;
+    };
+
+    var global$1 = tinymce.util.Tools.resolve('tinymce.util.ImageUploader');
+
+    var global = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     var getValue = function (item) {
       return isString(item.value) ? item.value : '';
     };
+    var getText = function (item) {
+      if (isString(item.text)) {
+        return item.text;
+      } else if (isString(item.title)) {
+        return item.title;
+      } else {
+        return '';
+      }
+    };
     var sanitizeList = function (list, extractValue) {
       var out = [];
-      global$2.each(list, function (item) {
-        var text = isString(item.text) ? item.text : isString(item.title) ? item.title : '';
+      global.each(list, function (item) {
+        var text = getText(item);
         if (item.menu !== undefined) {
           var items = sanitizeList(item.menu, extractValue);
           out.push({
@@ -1236,17 +876,17 @@ var image = (function (domGlobals) {
       });
       return out;
     };
-    var sanitizer = function (extracter) {
-      if (extracter === void 0) {
-        extracter = getValue;
+    var sanitizer = function (extractor) {
+      if (extractor === void 0) {
+        extractor = getValue;
       }
       return function (list) {
         if (list) {
-          return Option.from(list).map(function (list) {
-            return sanitizeList(list, extracter);
+          return Optional.from(list).map(function (list) {
+            return sanitizeList(list, extractor);
           });
         } else {
-          return Option.none();
+          return Optional.none();
         }
       };
     };
@@ -1254,16 +894,16 @@ var image = (function (domGlobals) {
       return sanitizer(getValue)(list);
     };
     var isGroup = function (item) {
-      return Object.prototype.hasOwnProperty.call(item, 'items');
+      return has(item, 'items');
     };
     var findEntryDelegate = function (list, value) {
       return findMap(list, function (item) {
         if (isGroup(item)) {
           return findEntryDelegate(item.items, value);
         } else if (item.value === value) {
-          return Option.some(item);
+          return Optional.some(item);
         } else {
-          return Option.none();
+          return Optional.none();
         }
       });
     };
@@ -1278,73 +918,10 @@ var image = (function (domGlobals) {
       findEntry: findEntry
     };
 
-    function XMLHttpRequest () {
-      var f = Global$1.getOrDie('XMLHttpRequest');
-      return new f();
-    }
-
-    var noop$1 = function () {
-    };
-    var pathJoin = function (path1, path2) {
-      if (path1) {
-        return path1.replace(/\/$/, '') + '/' + path2.replace(/^\//, '');
-      }
-      return path2;
-    };
-    function Uploader (settings) {
-      var defaultHandler = function (blobInfo, success, failure, progress) {
-        var xhr, formData;
-        xhr = XMLHttpRequest();
-        xhr.open('POST', settings.url);
-        xhr.withCredentials = settings.credentials;
-        xhr.upload.onprogress = function (e) {
-          progress(e.loaded / e.total * 100);
-        };
-        xhr.onerror = function () {
-          failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-        };
-        xhr.onload = function () {
-          var json;
-          if (xhr.status < 200 || xhr.status >= 300) {
-            failure('HTTP Error: ' + xhr.status);
-            return;
-          }
-          json = JSON.parse(xhr.responseText);
-          if (!json || typeof json.location !== 'string') {
-            failure('Invalid JSON: ' + xhr.responseText);
-            return;
-          }
-          success(pathJoin(settings.basePath, json.location));
-        };
-        formData = new domGlobals.FormData();
-        formData.append('file', blobInfo.blob(), blobInfo.filename());
-        xhr.send(formData);
-      };
-      var uploadBlob = function (blobInfo, handler) {
-        return new global$1(function (resolve, reject) {
-          try {
-            handler(blobInfo, resolve, reject, noop$1);
-          } catch (ex) {
-            reject(ex.message);
-          }
-        });
-      };
-      var isDefaultHandler = function (handler) {
-        return handler === defaultHandler;
-      };
-      var upload = function (blobInfo) {
-        return !settings.url && isDefaultHandler(settings.handler) ? global$1.reject('Upload url missing from the settings.') : uploadBlob(blobInfo, settings.handler);
-      };
-      settings = global$2.extend({
-        credentials: false,
-        handler: defaultHandler
-      }, settings);
-      return { upload: upload };
-    }
-
-    var makeTab$1 = function (info) {
+    var makeTab$2 = function (_info) {
       return {
         title: 'Advanced',
+        name: 'advanced',
         items: [
           {
             type: 'input',
@@ -1358,20 +935,23 @@ var image = (function (domGlobals) {
               {
                 type: 'input',
                 label: 'Vertical space',
-                name: 'vspace'
+                name: 'vspace',
+                inputMode: 'numeric'
               },
               {
                 type: 'input',
                 label: 'Horizontal space',
-                name: 'hspace'
+                name: 'hspace',
+                inputMode: 'numeric'
               },
               {
                 type: 'input',
                 label: 'Border width',
-                name: 'border'
+                name: 'border',
+                inputMode: 'numeric'
               },
               {
-                type: 'selectbox',
+                type: 'listbox',
                 name: 'borderstyle',
                 label: 'Border style',
                 items: [
@@ -1426,14 +1006,14 @@ var image = (function (domGlobals) {
         ]
       };
     };
-    var AdvTab = { makeTab: makeTab$1 };
+    var AdvTab = { makeTab: makeTab$2 };
 
     var collect = function (editor) {
       var urlListSanitizer = ListUtils.sanitizer(function (item) {
         return editor.convertURL(item.value || item.url, 'src');
       });
-      var futureImageList = Future.nu(function (completer) {
-        Utils.createImageList(editor, function (imageList) {
+      var futureImageList = new global$4(function (completer) {
+        createImageList(editor, function (imageList) {
           completer(urlListSanitizer(imageList).map(function (items) {
             return flatten([
               [{
@@ -1445,54 +1025,142 @@ var image = (function (domGlobals) {
           }));
         });
       });
-      var classList = ListUtils.sanitize(Settings.getClassList(editor));
-      var hasAdvTab = Settings.hasAdvTab(editor);
-      var hasUploadUrl = Settings.hasUploadUrl(editor);
-      var hasUploadHandler = Settings.hasUploadHandler(editor);
+      var classList = ListUtils.sanitize(getClassList(editor));
+      var hasAdvTab$1 = hasAdvTab(editor);
+      var hasUploadTab$1 = hasUploadTab(editor);
+      var hasUploadUrl$1 = hasUploadUrl(editor);
+      var hasUploadHandler$1 = hasUploadHandler(editor);
       var image = readImageDataFromSelection(editor);
-      var hasDescription = Settings.hasDescription(editor);
-      var hasImageTitle = Settings.hasImageTitle(editor);
-      var hasDimensions = Settings.hasDimensions(editor);
-      var hasImageCaption = Settings.hasImageCaption(editor);
-      var url = Settings.getUploadUrl(editor);
-      var basePath = Settings.getUploadBasePath(editor);
-      var credentials = Settings.getUploadCredentials(editor);
-      var handler = Settings.getUploadHandler(editor);
-      var prependURL = Option.some(Settings.getPrependUrl(editor)).filter(function (preUrl) {
+      var hasDescription$1 = hasDescription(editor);
+      var hasImageTitle$1 = hasImageTitle(editor);
+      var hasDimensions$1 = hasDimensions(editor);
+      var hasImageCaption$1 = hasImageCaption(editor);
+      var hasAccessibilityOptions = showAccessibilityOptions(editor);
+      var automaticUploads = isAutomaticUploadsEnabled(editor);
+      var prependURL = Optional.some(getPrependUrl(editor)).filter(function (preUrl) {
         return isString(preUrl) && preUrl.length > 0;
       });
-      return futureImageList.map(function (imageList) {
+      return futureImageList.then(function (imageList) {
         return {
           image: image,
           imageList: imageList,
           classList: classList,
-          hasAdvTab: hasAdvTab,
-          hasUploadUrl: hasUploadUrl,
-          hasUploadHandler: hasUploadHandler,
-          hasDescription: hasDescription,
-          hasImageTitle: hasImageTitle,
-          hasDimensions: hasDimensions,
-          hasImageCaption: hasImageCaption,
-          url: url,
-          basePath: basePath,
-          credentials: credentials,
-          handler: handler,
-          prependURL: prependURL
+          hasAdvTab: hasAdvTab$1,
+          hasUploadTab: hasUploadTab$1,
+          hasUploadUrl: hasUploadUrl$1,
+          hasUploadHandler: hasUploadHandler$1,
+          hasDescription: hasDescription$1,
+          hasImageTitle: hasImageTitle$1,
+          hasDimensions: hasDimensions$1,
+          hasImageCaption: hasImageCaption$1,
+          prependURL: prependURL,
+          hasAccessibilityOptions: hasAccessibilityOptions,
+          automaticUploads: automaticUploads
         };
       });
     };
 
-    var makeTab$2 = function (info) {
+    var makeItems = function (info) {
+      var imageUrl = {
+        name: 'src',
+        type: 'urlinput',
+        filetype: 'image',
+        label: 'Source'
+      };
+      var imageList = info.imageList.map(function (items) {
+        return {
+          name: 'images',
+          type: 'listbox',
+          label: 'Image list',
+          items: items
+        };
+      });
+      var imageDescription = {
+        name: 'alt',
+        type: 'input',
+        label: 'Alternative description',
+        disabled: info.hasAccessibilityOptions && info.image.isDecorative
+      };
+      var imageTitle = {
+        name: 'title',
+        type: 'input',
+        label: 'Image title'
+      };
+      var imageDimensions = {
+        name: 'dimensions',
+        type: 'sizeinput'
+      };
+      var isDecorative = {
+        type: 'label',
+        label: 'Accessibility',
+        items: [{
+            name: 'isDecorative',
+            type: 'checkbox',
+            label: 'Image is decorative'
+          }]
+      };
+      var classList = info.classList.map(function (items) {
+        return {
+          name: 'classes',
+          type: 'listbox',
+          label: 'Class',
+          items: items
+        };
+      });
+      var caption = {
+        type: 'label',
+        label: 'Caption',
+        items: [{
+            type: 'checkbox',
+            name: 'caption',
+            label: 'Show caption'
+          }]
+      };
+      var getDialogContainerType = function (useColumns) {
+        return useColumns ? {
+          type: 'grid',
+          columns: 2
+        } : { type: 'panel' };
+      };
+      return flatten([
+        [imageUrl],
+        imageList.toArray(),
+        info.hasAccessibilityOptions && info.hasDescription ? [isDecorative] : [],
+        info.hasDescription ? [imageDescription] : [],
+        info.hasImageTitle ? [imageTitle] : [],
+        info.hasDimensions ? [imageDimensions] : [],
+        [__assign(__assign({}, getDialogContainerType(info.classList.isSome() && info.hasImageCaption)), {
+            items: flatten([
+              classList.toArray(),
+              info.hasImageCaption ? [caption] : []
+            ])
+          })]
+      ]);
+    };
+    var makeTab$1 = function (info) {
+      return {
+        title: 'General',
+        name: 'general',
+        items: makeItems(info)
+      };
+    };
+    var MainTab = {
+      makeTab: makeTab$1,
+      makeItems: makeItems
+    };
+
+    var makeTab = function (_info) {
       var items = [{
           type: 'dropzone',
           name: 'fileinput'
         }];
       return {
         title: 'Upload',
+        name: 'upload',
         items: items
       };
     };
-    var UploadTab = { makeTab: makeTab$2 };
+    var UploadTab = { makeTab: makeTab };
 
     var createState = function (info) {
       return {
@@ -1521,13 +1189,14 @@ var image = (function (domGlobals) {
         border: image.border,
         hspace: image.hspace,
         borderstyle: image.borderStyle,
-        fileinput: []
+        fileinput: [],
+        isDecorative: image.isDecorative
       };
     };
-    var toImageData = function (data) {
+    var toImageData = function (data, removeEmptyAlt) {
       return {
         src: data.src.value,
-        alt: data.alt,
+        alt: data.alt.length === 0 && removeEmptyAlt ? null : data.alt,
         title: data.title,
         width: data.dimensions.width,
         height: data.dimensions.height,
@@ -1537,19 +1206,20 @@ var image = (function (domGlobals) {
         hspace: data.hspace,
         vspace: data.vspace,
         border: data.border,
-        borderStyle: data.borderstyle
+        borderStyle: data.borderstyle,
+        isDecorative: data.isDecorative
       };
     };
     var addPrependUrl2 = function (info, srcURL) {
       if (!/^(?:[a-zA-Z]+:)?\/\//.test(srcURL)) {
         return info.prependURL.bind(function (prependUrl) {
           if (srcURL.substring(0, prependUrl.length) !== prependUrl) {
-            return Option.some(prependUrl + srcURL);
+            return Optional.some(prependUrl + srcURL);
           }
-          return Option.none();
+          return Optional.none();
         });
       }
-      return Option.none();
+      return Optional.none();
     };
     var addPrependUrl = function (info, api) {
       var data = api.getData();
@@ -1562,64 +1232,82 @@ var image = (function (domGlobals) {
         });
       });
     };
-    var formFillFromMeta2 = function (info, data) {
-      var meta = data.src.meta;
-      if (meta !== undefined) {
-        var dataCopy_1 = deepMerge({}, data);
-        if (info.hasDescription && isString(meta.alt)) {
-          dataCopy_1.alt = meta.alt;
-        }
-        if (info.hasImageTitle && isString(meta.title)) {
-          dataCopy_1.title = meta.title;
-        }
-        if (info.hasDimensions) {
-          if (isString(meta.width)) {
-            dataCopy_1.dimensions.width = meta.width;
-          }
-          if (isString(meta.height)) {
-            dataCopy_1.dimensions.height = meta.height;
-          }
-        }
-        if (isString(meta.class)) {
-          ListUtils.findEntry(info.classList, meta.class).each(function (entry) {
-            dataCopy_1.classes = entry.value;
-          });
-        }
-        if (info.hasAdvTab) {
-          if (isString(meta.vspace)) {
-            dataCopy_1.vspace = meta.vspace;
-          }
-          if (isString(meta.border)) {
-            dataCopy_1.border = meta.border;
-          }
-          if (isString(meta.hspace)) {
-            dataCopy_1.hspace = meta.hspace;
-          }
-          if (isString(meta.borderstyle)) {
-            dataCopy_1.borderstyle = meta.borderstyle;
-          }
-        }
-        return Option.some(dataCopy_1);
+    var formFillFromMeta2 = function (info, data, meta) {
+      if (info.hasDescription && isString(meta.alt)) {
+        data.alt = meta.alt;
       }
-      return Option.none();
+      if (info.hasAccessibilityOptions) {
+        data.isDecorative = meta.isDecorative || data.isDecorative || false;
+      }
+      if (info.hasImageTitle && isString(meta.title)) {
+        data.title = meta.title;
+      }
+      if (info.hasDimensions) {
+        if (isString(meta.width)) {
+          data.dimensions.width = meta.width;
+        }
+        if (isString(meta.height)) {
+          data.dimensions.height = meta.height;
+        }
+      }
+      if (isString(meta.class)) {
+        ListUtils.findEntry(info.classList, meta.class).each(function (entry) {
+          data.classes = entry.value;
+        });
+      }
+      if (info.hasImageCaption) {
+        if (isBoolean(meta.caption)) {
+          data.caption = meta.caption;
+        }
+      }
+      if (info.hasAdvTab) {
+        if (isString(meta.style)) {
+          data.style = meta.style;
+        }
+        if (isString(meta.vspace)) {
+          data.vspace = meta.vspace;
+        }
+        if (isString(meta.border)) {
+          data.border = meta.border;
+        }
+        if (isString(meta.hspace)) {
+          data.hspace = meta.hspace;
+        }
+        if (isString(meta.borderstyle)) {
+          data.borderstyle = meta.borderstyle;
+        }
+      }
     };
     var formFillFromMeta = function (info, api) {
-      formFillFromMeta2(info, api.getData()).each(function (data) {
-        return api.setData(data);
-      });
+      var data = api.getData();
+      var meta = data.src.meta;
+      if (meta !== undefined) {
+        var newData = deepMerge({}, data);
+        formFillFromMeta2(info, newData, meta);
+        api.setData(newData);
+      }
     };
     var calculateImageSize = function (helpers, info, state, api) {
       var data = api.getData();
       var url = data.src.value;
       var meta = data.src.meta || {};
       if (!meta.width && !meta.height && info.hasDimensions) {
-        helpers.imageSize(url).get(function (result) {
-          result.each(function (size) {
+        if (isNotEmpty(url)) {
+          helpers.imageSize(url).then(function (size) {
             if (state.open) {
               api.setData({ dimensions: size });
             }
+          }).catch(function (e) {
+            return console.error(e);
           });
-        });
+        } else {
+          api.setData({
+            dimensions: {
+              width: '',
+              height: ''
+            }
+          });
+        }
       }
     };
     var updateImagesDropdown = function (info, state, api) {
@@ -1666,14 +1354,14 @@ var image = (function (domGlobals) {
     };
     var calcVSpace = function (css) {
       var matchingTopBottom = css['margin-top'] && css['margin-bottom'] && css['margin-top'] === css['margin-bottom'];
-      return matchingTopBottom ? Utils.removePixelSuffix(String(css['margin-top'])) : '';
+      return matchingTopBottom ? removePixelSuffix(String(css['margin-top'])) : '';
     };
     var calcHSpace = function (css) {
       var matchingLeftRight = css['margin-right'] && css['margin-left'] && css['margin-right'] === css['margin-left'];
-      return matchingLeftRight ? Utils.removePixelSuffix(String(css['margin-right'])) : '';
+      return matchingLeftRight ? removePixelSuffix(String(css['margin-right'])) : '';
     };
     var calcBorderWidth = function (css) {
-      return css['border-width'] ? Utils.removePixelSuffix(String(css['border-width'])) : '';
+      return css['border-width'] ? removePixelSuffix(String(css['border-width'])) : '';
     };
     var calcBorderStyle = function (css) {
       return css['border-style'] ? String(css['border-style']) : '';
@@ -1682,7 +1370,7 @@ var image = (function (domGlobals) {
       return serializeStyle(parseStyle(serializeStyle(css)));
     };
     var changeStyle2 = function (parseStyle, serializeStyle, data) {
-      var css = Utils.mergeMargins(parseStyle(data.style));
+      var css = mergeMargins(parseStyle(data.style));
       var dataCopy = deepMerge({}, data);
       dataCopy.vspace = calcVSpace(css);
       dataCopy.hspace = calcHSpace(css);
@@ -1698,7 +1386,7 @@ var image = (function (domGlobals) {
     };
     var changeAStyle = function (helpers, info, api) {
       var data = deepMerge(fromImageData(info.image), api.getData());
-      var style = getStyleValue(helpers.normalizeCss, toImageData(data));
+      var style = getStyleValue(helpers.normalizeCss, toImageData(data, false));
       api.setData({ style: style });
     };
     var changeFileInput = function (helpers, info, state, api) {
@@ -1708,32 +1396,35 @@ var image = (function (domGlobals) {
         api.unblock();
       }, function (file) {
         var blobUri = URL.createObjectURL(file);
-        var uploader = Uploader({
-          url: info.url,
-          basePath: info.basePath,
-          credentials: info.credentials,
-          handler: info.handler
-        });
         var finalize = function () {
           api.unblock();
           URL.revokeObjectURL(blobUri);
         };
-        Utils.blobToDataUri(file).then(function (dataUrl) {
-          var blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-          uploader.upload(blobInfo).then(function (url) {
-            api.setData({
-              src: {
-                value: url,
-                meta: {}
-              }
-            });
-            api.showTab('General');
-            changeSrc(helpers, info, state, api);
-            finalize();
-          }).catch(function (err) {
-            finalize();
-            helpers.alertErr(api, err);
+        var updateSrcAndSwitchTab = function (url) {
+          api.setData({
+            src: {
+              value: url,
+              meta: {}
+            }
           });
+          api.showTab('general');
+          changeSrc(helpers, info, state, api);
+        };
+        blobToDataUri(file).then(function (dataUrl) {
+          var blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
+          if (info.automaticUploads) {
+            helpers.uploadImage(blobInfo).then(function (result) {
+              updateSrcAndSwitchTab(result.url);
+              finalize();
+            }).catch(function (err) {
+              finalize();
+              helpers.alertErr(err);
+            });
+          } else {
+            helpers.addToBlobCache(blobInfo);
+            updateSrcAndSwitchTab(blobInfo.blobUri());
+            api.unblock();
+          }
         });
       });
     };
@@ -1751,6 +1442,12 @@ var image = (function (domGlobals) {
           changeAStyle(helpers, info, api);
         } else if (evt.name === 'fileinput') {
           changeFileInput(helpers, info, state, api);
+        } else if (evt.name === 'isDecorative') {
+          if (api.getData().isDecorative) {
+            api.disable('alt');
+          } else {
+            api.enable('alt');
+          }
         }
       };
     };
@@ -1766,7 +1463,7 @@ var image = (function (domGlobals) {
           tabs: flatten([
             [MainTab.makeTab(info)],
             info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-            info.hasUploadUrl || info.hasUploadHandler ? [UploadTab.makeTab(info)] : []
+            info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
           ])
         };
         return tabPanel;
@@ -1809,9 +1506,7 @@ var image = (function (domGlobals) {
       return function (info) {
         return function (api) {
           var data = deepMerge(fromImageData(info.image), api.getData());
-          editor.undoManager.transact(function () {
-            insertOrUpdateImage(editor, toImageData(data));
-          });
+          editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
           editor.editorUpload.uploadImagesAuto();
           api.close();
         };
@@ -1819,17 +1514,19 @@ var image = (function (domGlobals) {
     };
     var imageSize = function (editor) {
       return function (url) {
-        return FutureResult.nu(function (completer) {
-          Utils.getImageSize(editor.documentBaseURI.toAbsolute(url), function (data) {
-            var result = data.bind(function (dimensions) {
-              return (isString(dimensions.width) || isNumber(dimensions.width)) && (isString(dimensions.height) || isNumber(dimensions.height)) ? Result.value({
-                width: String(dimensions.width),
-                height: String(dimensions.height)
-              }) : Result.error(undefined);
-            });
-            completer(result);
+        if (!isSafeImageUrl(editor, url)) {
+          return global$4.resolve({
+            width: '',
+            height: ''
           });
-        });
+        } else {
+          return getImageSize(editor.documentBaseURI.toAbsolute(url)).then(function (dimensions) {
+            return {
+              width: String(dimensions.width),
+              height: String(dimensions.height)
+            };
+          });
+        }
       };
     };
     var createBlobCache = function (editor) {
@@ -1838,18 +1535,24 @@ var image = (function (domGlobals) {
           blob: file,
           blobUri: blobUri,
           name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
+          filename: file.name,
           base64: dataUrl.split(',')[1]
         });
       };
     };
-    var alertErr = function (editor) {
-      return function (api, message) {
-        editor.windowManager.alert(message, api.close);
+    var addToBlobCache = function (editor) {
+      return function (blobInfo) {
+        editor.editorUpload.blobCache.add(blobInfo);
       };
     };
-    var normalizeCss$1 = function (editor) {
+    var alertErr = function (editor) {
+      return function (message) {
+        editor.windowManager.alert(message);
+      };
+    };
+    var normalizeCss = function (editor) {
       return function (cssText) {
-        return normalizeCss(editor, cssText);
+        return normalizeCss$1(editor, cssText);
       };
     };
     var parseStyle = function (editor) {
@@ -1862,28 +1565,45 @@ var image = (function (domGlobals) {
         return editor.dom.serializeStyle(stylesArg, name);
       };
     };
+    var uploadImage = function (editor) {
+      return function (blobInfo) {
+        return global$1(editor).upload([blobInfo], false).then(function (results) {
+          if (results.length === 0) {
+            return global$4.reject('Failed to upload image');
+          } else if (results[0].status === false) {
+            return global$4.reject(results[0].error.message);
+          } else {
+            return results[0];
+          }
+        });
+      };
+    };
     var Dialog = function (editor) {
       var helpers = {
         onSubmit: submitHandler(editor),
         imageSize: imageSize(editor),
+        addToBlobCache: addToBlobCache(editor),
         createBlobCache: createBlobCache(editor),
         alertErr: alertErr(editor),
-        normalizeCss: normalizeCss$1(editor),
+        normalizeCss: normalizeCss(editor),
         parseStyle: parseStyle(editor),
-        serializeStyle: serializeStyle(editor)
+        serializeStyle: serializeStyle(editor),
+        uploadImage: uploadImage(editor)
       };
       var open = function () {
-        return collect(editor).map(makeDialog(helpers)).get(function (spec) {
-          editor.windowManager.open(spec);
-        });
+        collect(editor).then(makeDialog(helpers)).then(editor.windowManager.open);
       };
       return { open: open };
     };
 
-    var register = function (editor) {
+    var register$1 = function (editor) {
       editor.addCommand('mceImage', Dialog(editor).open);
+      editor.addCommand('mceUpdateImage', function (_ui, data) {
+        editor.undoManager.transact(function () {
+          return insertOrUpdateImage(editor, data);
+        });
+      });
     };
-    var Commands = { register: register };
 
     var hasImageClass = function (node) {
       var className = node.attr('class');
@@ -1891,486 +1611,33 @@ var image = (function (domGlobals) {
     };
     var toggleContentEditableState = function (state) {
       return function (nodes) {
-        var i = nodes.length, node;
+        var i = nodes.length;
         var toggleContentEditable = function (node) {
           node.attr('contenteditable', state ? 'true' : null);
         };
         while (i--) {
-          node = nodes[i];
+          var node = nodes[i];
           if (hasImageClass(node)) {
             node.attr('contenteditable', state ? 'false' : null);
-            global$2.each(node.getAll('figcaption'), toggleContentEditable);
+            global.each(node.getAll('figcaption'), toggleContentEditable);
           }
         }
       };
     };
     var setup = function (editor) {
-      editor.on('preInit', function () {
+      editor.on('PreInit', function () {
         editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
         editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
       });
     };
-    var FilterContent = { setup: setup };
 
-    var fromHtml = function (html, scope) {
-      var doc = scope || domGlobals.document;
-      var div = doc.createElement('div');
-      div.innerHTML = html;
-      if (!div.hasChildNodes() || div.childNodes.length > 1) {
-        domGlobals.console.error('HTML does not have a single root node', html);
-        throw new Error('HTML must have a single root node');
-      }
-      return fromDom(div.childNodes[0]);
-    };
-    var fromTag = function (tag, scope) {
-      var doc = scope || domGlobals.document;
-      var node = doc.createElement(tag);
-      return fromDom(node);
-    };
-    var fromText = function (text, scope) {
-      var doc = scope || domGlobals.document;
-      var node = doc.createTextNode(text);
-      return fromDom(node);
-    };
-    var fromDom = function (node) {
-      if (node === null || node === undefined) {
-        throw new Error('Node cannot be null or undefined');
-      }
-      return { dom: constant(node) };
-    };
-    var fromPoint = function (docElm, x, y) {
-      var doc = docElm.dom();
-      return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
-    };
-    var Element = {
-      fromHtml: fromHtml,
-      fromTag: fromTag,
-      fromText: fromText,
-      fromDom: fromDom,
-      fromPoint: fromPoint
-    };
-
-    var ATTRIBUTE = domGlobals.Node.ATTRIBUTE_NODE;
-    var CDATA_SECTION = domGlobals.Node.CDATA_SECTION_NODE;
-    var COMMENT = domGlobals.Node.COMMENT_NODE;
-    var DOCUMENT = domGlobals.Node.DOCUMENT_NODE;
-    var DOCUMENT_TYPE = domGlobals.Node.DOCUMENT_TYPE_NODE;
-    var DOCUMENT_FRAGMENT = domGlobals.Node.DOCUMENT_FRAGMENT_NODE;
-    var ELEMENT = domGlobals.Node.ELEMENT_NODE;
-    var TEXT = domGlobals.Node.TEXT_NODE;
-    var PROCESSING_INSTRUCTION = domGlobals.Node.PROCESSING_INSTRUCTION_NODE;
-    var ENTITY_REFERENCE = domGlobals.Node.ENTITY_REFERENCE_NODE;
-    var ENTITY = domGlobals.Node.ENTITY_NODE;
-    var NOTATION = domGlobals.Node.NOTATION_NODE;
-
-    var name = function (element) {
-      var r = element.dom().nodeName;
-      return r.toLowerCase();
-    };
-
-    var Immutable = function () {
-      var fields = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        fields[_i] = arguments[_i];
-      }
-      return function () {
-        var values = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          values[_i] = arguments[_i];
-        }
-        if (fields.length !== values.length) {
-          throw new Error('Wrong number of arguments to struct. Expected "[' + fields.length + ']", got ' + values.length + ' arguments');
-        }
-        var struct = {};
-        each(fields, function (name, i) {
-          struct[name] = constant(values[i]);
-        });
-        return struct;
-      };
-    };
-
-    var node = function () {
-      var f = Global$1.getOrDie('Node');
-      return f;
-    };
-    var compareDocumentPosition = function (a, b, match) {
-      return (a.compareDocumentPosition(b) & match) !== 0;
-    };
-    var documentPositionPreceding = function (a, b) {
-      return compareDocumentPosition(a, b, node().DOCUMENT_POSITION_PRECEDING);
-    };
-    var documentPositionContainedBy = function (a, b) {
-      return compareDocumentPosition(a, b, node().DOCUMENT_POSITION_CONTAINED_BY);
-    };
-    var Node = {
-      documentPositionPreceding: documentPositionPreceding,
-      documentPositionContainedBy: documentPositionContainedBy
-    };
-
-    var cached = function (f) {
-      var called = false;
-      var r;
-      return function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          args[_i] = arguments[_i];
-        }
-        if (!called) {
-          called = true;
-          r = f.apply(null, args);
-        }
-        return r;
-      };
-    };
-
-    var firstMatch = function (regexes, s) {
-      for (var i = 0; i < regexes.length; i++) {
-        var x = regexes[i];
-        if (x.test(s))
-          return x;
-      }
-      return undefined;
-    };
-    var find$1 = function (regexes, agent) {
-      var r = firstMatch(regexes, agent);
-      if (!r)
-        return {
-          major: 0,
-          minor: 0
-        };
-      var group = function (i) {
-        return Number(agent.replace(r, '$' + i));
-      };
-      return nu$3(group(1), group(2));
-    };
-    var detect = function (versionRegexes, agent) {
-      var cleanedAgent = String(agent).toLowerCase();
-      if (versionRegexes.length === 0)
-        return unknown();
-      return find$1(versionRegexes, cleanedAgent);
-    };
-    var unknown = function () {
-      return nu$3(0, 0);
-    };
-    var nu$3 = function (major, minor) {
-      return {
-        major: major,
-        minor: minor
-      };
-    };
-    var Version = {
-      nu: nu$3,
-      detect: detect,
-      unknown: unknown
-    };
-
-    var edge = 'Edge';
-    var chrome = 'Chrome';
-    var ie = 'IE';
-    var opera = 'Opera';
-    var firefox = 'Firefox';
-    var safari = 'Safari';
-    var isBrowser = function (name, current) {
-      return function () {
-        return current === name;
-      };
-    };
-    var unknown$1 = function () {
-      return nu$4({
-        current: undefined,
-        version: Version.unknown()
-      });
-    };
-    var nu$4 = function (info) {
-      var current = info.current;
-      var version = info.version;
-      return {
-        current: current,
-        version: version,
-        isEdge: isBrowser(edge, current),
-        isChrome: isBrowser(chrome, current),
-        isIE: isBrowser(ie, current),
-        isOpera: isBrowser(opera, current),
-        isFirefox: isBrowser(firefox, current),
-        isSafari: isBrowser(safari, current)
-      };
-    };
-    var Browser = {
-      unknown: unknown$1,
-      nu: nu$4,
-      edge: constant(edge),
-      chrome: constant(chrome),
-      ie: constant(ie),
-      opera: constant(opera),
-      firefox: constant(firefox),
-      safari: constant(safari)
-    };
-
-    var windows = 'Windows';
-    var ios = 'iOS';
-    var android = 'Android';
-    var linux = 'Linux';
-    var osx = 'OSX';
-    var solaris = 'Solaris';
-    var freebsd = 'FreeBSD';
-    var isOS = function (name, current) {
-      return function () {
-        return current === name;
-      };
-    };
-    var unknown$2 = function () {
-      return nu$5({
-        current: undefined,
-        version: Version.unknown()
-      });
-    };
-    var nu$5 = function (info) {
-      var current = info.current;
-      var version = info.version;
-      return {
-        current: current,
-        version: version,
-        isWindows: isOS(windows, current),
-        isiOS: isOS(ios, current),
-        isAndroid: isOS(android, current),
-        isOSX: isOS(osx, current),
-        isLinux: isOS(linux, current),
-        isSolaris: isOS(solaris, current),
-        isFreeBSD: isOS(freebsd, current)
-      };
-    };
-    var OperatingSystem = {
-      unknown: unknown$2,
-      nu: nu$5,
-      windows: constant(windows),
-      ios: constant(ios),
-      android: constant(android),
-      linux: constant(linux),
-      osx: constant(osx),
-      solaris: constant(solaris),
-      freebsd: constant(freebsd)
-    };
-
-    var DeviceType = function (os, browser, userAgent) {
-      var isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
-      var isiPhone = os.isiOS() && !isiPad;
-      var isAndroid3 = os.isAndroid() && os.version.major === 3;
-      var isAndroid4 = os.isAndroid() && os.version.major === 4;
-      var isTablet = isiPad || isAndroid3 || isAndroid4 && /mobile/i.test(userAgent) === true;
-      var isTouch = os.isiOS() || os.isAndroid();
-      var isPhone = isTouch && !isTablet;
-      var iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
-      return {
-        isiPad: constant(isiPad),
-        isiPhone: constant(isiPhone),
-        isTablet: constant(isTablet),
-        isPhone: constant(isPhone),
-        isTouch: constant(isTouch),
-        isAndroid: os.isAndroid,
-        isiOS: os.isiOS,
-        isWebView: constant(iOSwebview)
-      };
-    };
-
-    var detect$1 = function (candidates, userAgent) {
-      var agent = String(userAgent).toLowerCase();
-      return find(candidates, function (candidate) {
-        return candidate.search(agent);
-      });
-    };
-    var detectBrowser = function (browsers, userAgent) {
-      return detect$1(browsers, userAgent).map(function (browser) {
-        var version = Version.detect(browser.versionRegexes, userAgent);
-        return {
-          current: browser.name,
-          version: version
-        };
-      });
-    };
-    var detectOs = function (oses, userAgent) {
-      return detect$1(oses, userAgent).map(function (os) {
-        var version = Version.detect(os.versionRegexes, userAgent);
-        return {
-          current: os.name,
-          version: version
-        };
-      });
-    };
-    var UaString = {
-      detectBrowser: detectBrowser,
-      detectOs: detectOs
-    };
-
-    var contains = function (str, substr) {
-      return str.indexOf(substr) !== -1;
-    };
-
-    var normalVersionRegex = /.*?version\/\ ?([0-9]+)\.([0-9]+).*/;
-    var checkContains = function (target) {
-      return function (uastring) {
-        return contains(uastring, target);
-      };
-    };
-    var browsers = [
-      {
-        name: 'Edge',
-        versionRegexes: [/.*?edge\/ ?([0-9]+)\.([0-9]+)$/],
-        search: function (uastring) {
-          var monstrosity = contains(uastring, 'edge/') && contains(uastring, 'chrome') && contains(uastring, 'safari') && contains(uastring, 'applewebkit');
-          return monstrosity;
-        }
-      },
-      {
-        name: 'Chrome',
-        versionRegexes: [
-          /.*?chrome\/([0-9]+)\.([0-9]+).*/,
-          normalVersionRegex
-        ],
-        search: function (uastring) {
-          return contains(uastring, 'chrome') && !contains(uastring, 'chromeframe');
-        }
-      },
-      {
-        name: 'IE',
-        versionRegexes: [
-          /.*?msie\ ?([0-9]+)\.([0-9]+).*/,
-          /.*?rv:([0-9]+)\.([0-9]+).*/
-        ],
-        search: function (uastring) {
-          return contains(uastring, 'msie') || contains(uastring, 'trident');
-        }
-      },
-      {
-        name: 'Opera',
-        versionRegexes: [
-          normalVersionRegex,
-          /.*?opera\/([0-9]+)\.([0-9]+).*/
-        ],
-        search: checkContains('opera')
-      },
-      {
-        name: 'Firefox',
-        versionRegexes: [/.*?firefox\/\ ?([0-9]+)\.([0-9]+).*/],
-        search: checkContains('firefox')
-      },
-      {
-        name: 'Safari',
-        versionRegexes: [
-          normalVersionRegex,
-          /.*?cpu os ([0-9]+)_([0-9]+).*/
-        ],
-        search: function (uastring) {
-          return (contains(uastring, 'safari') || contains(uastring, 'mobile/')) && contains(uastring, 'applewebkit');
-        }
-      }
-    ];
-    var oses = [
-      {
-        name: 'Windows',
-        search: checkContains('win'),
-        versionRegexes: [/.*?windows\ nt\ ?([0-9]+)\.([0-9]+).*/]
-      },
-      {
-        name: 'iOS',
-        search: function (uastring) {
-          return contains(uastring, 'iphone') || contains(uastring, 'ipad');
-        },
-        versionRegexes: [
-          /.*?version\/\ ?([0-9]+)\.([0-9]+).*/,
-          /.*cpu os ([0-9]+)_([0-9]+).*/,
-          /.*cpu iphone os ([0-9]+)_([0-9]+).*/
-        ]
-      },
-      {
-        name: 'Android',
-        search: checkContains('android'),
-        versionRegexes: [/.*?android\ ?([0-9]+)\.([0-9]+).*/]
-      },
-      {
-        name: 'OSX',
-        search: checkContains('os x'),
-        versionRegexes: [/.*?os\ x\ ?([0-9]+)_([0-9]+).*/]
-      },
-      {
-        name: 'Linux',
-        search: checkContains('linux'),
-        versionRegexes: []
-      },
-      {
-        name: 'Solaris',
-        search: checkContains('sunos'),
-        versionRegexes: []
-      },
-      {
-        name: 'FreeBSD',
-        search: checkContains('freebsd'),
-        versionRegexes: []
-      }
-    ];
-    var PlatformInfo = {
-      browsers: constant(browsers),
-      oses: constant(oses)
-    };
-
-    var detect$2 = function (userAgent) {
-      var browsers = PlatformInfo.browsers();
-      var oses = PlatformInfo.oses();
-      var browser = UaString.detectBrowser(browsers, userAgent).fold(Browser.unknown, Browser.nu);
-      var os = UaString.detectOs(oses, userAgent).fold(OperatingSystem.unknown, OperatingSystem.nu);
-      var deviceType = DeviceType(os, browser, userAgent);
-      return {
-        browser: browser,
-        os: os,
-        deviceType: deviceType
-      };
-    };
-    var PlatformDetection = { detect: detect$2 };
-
-    var detect$3 = cached(function () {
-      var userAgent = domGlobals.navigator.userAgent;
-      return PlatformDetection.detect(userAgent);
-    });
-    var PlatformDetection$1 = { detect: detect$3 };
-
-    var regularContains = function (e1, e2) {
-      var d1 = e1.dom();
-      var d2 = e2.dom();
-      return d1 === d2 ? false : d1.contains(d2);
-    };
-    var ieContains = function (e1, e2) {
-      return Node.documentPositionContainedBy(e1.dom(), e2.dom());
-    };
-    var browser = PlatformDetection$1.detect().browser;
-    var contains$1 = browser.isIE() ? ieContains : regularContains;
-
-    var parent = function (element) {
-      var dom = element.dom();
-      return Option.from(dom.parentNode).map(Element.fromDom);
-    };
-    var spot = Immutable('element', 'offset');
-
-    var getRootElement = function (elm) {
-      return parent(elm).filter(function (parentElm) {
-        return name(parentElm) === 'figure';
-      }).getOr(elm);
-    };
-    var register$1 = function (editor) {
-      var makeContextMenuItem = function (node) {
-        return {
-          text: 'Image',
-          icon: 'image',
-          onAction: function () {
-            var rootElm = getRootElement(Element.fromDom(node));
-            editor.selection.select(rootElm.dom());
-            Dialog(editor).open();
-          }
-        };
-      };
+    var register = function (editor) {
       editor.ui.registry.addToggleButton('image', {
         icon: 'image',
         tooltip: 'Insert/edit image',
         onAction: Dialog(editor).open,
         onSetup: function (buttonApi) {
+          buttonApi.setActive(isNonNullable(getSelectedImage(editor)));
           return editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', buttonApi.setActive).unbind;
         }
       });
@@ -2381,21 +1648,19 @@ var image = (function (domGlobals) {
       });
       editor.ui.registry.addContextMenu('image', {
         update: function (element) {
-          return isFigure(element) || isImage(element) ? [makeContextMenuItem(element)] : [];
+          return isFigure(element) || isImage(element) && !isPlaceholderImage(element) ? ['image'] : [];
         }
       });
     };
-    var Buttons = { register: register$1 };
 
-    global.add('image', function (editor) {
-      FilterContent.setup(editor);
-      Buttons.register(editor);
-      Commands.register(editor);
-    });
     function Plugin () {
+      global$6.add('image', function (editor) {
+        setup(editor);
+        register(editor);
+        register$1(editor);
+      });
     }
 
-    return Plugin;
+    Plugin();
 
-}(window));
-})();
+}());

@@ -248,6 +248,8 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\tinymce\icons\default\icons.js" />
+    <Content Include="Scripts\tinymce\icons\default\icons.min.js" />
     <Content Include="Scripts\tinymce\jquery.tinymce.min.js" />
     <Content Include="Scripts\tinymce\license.txt" />
     <Content Include="Scripts\tinymce\plugins\advlist\plugin.js" />
@@ -274,6 +276,8 @@
     <Content Include="Scripts\tinymce\plugins\contextmenu\plugin.min.js" />
     <Content Include="Scripts\tinymce\plugins\directionality\plugin.js" />
     <Content Include="Scripts\tinymce\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\js\emojiimages.js" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\js\emojiimages.min.js" />
     <Content Include="Scripts\tinymce\plugins\emoticons\js\emojis.js" />
     <Content Include="Scripts\tinymce\plugins\emoticons\js\emojis.min.js" />
     <Content Include="Scripts\tinymce\plugins\emoticons\plugin.js" />
@@ -340,6 +344,8 @@
     <Content Include="Scripts\tinymce\plugins\visualchars\plugin.min.js" />
     <Content Include="Scripts\tinymce\plugins\wordcount\plugin.js" />
     <Content Include="Scripts\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\tinymce\skins\content\dark\content.css" />
+    <Content Include="Scripts\tinymce\skins\content\dark\content.min.css" />
     <Content Include="Scripts\tinymce\skins\content\default\content.css" />
     <Content Include="Scripts\tinymce\skins\content\default\content.min.css" />
     <Content Include="Scripts\tinymce\skins\content\document\content.css" />
@@ -350,16 +356,26 @@
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\content.inline.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\content.inline.min.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\content.min.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\content.mobile.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\content.mobile.min.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\skin.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\skin.min.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\skin.mobile.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\skin.mobile.min.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\skin.shadowdom.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\skin.shadowdom.min.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\content.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\content.inline.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\content.inline.min.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\content.min.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide\content.mobile.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\content.mobile.min.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\skin.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\skin.min.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide\skin.mobile.css" />
     <Content Include="Scripts\tinymce\skins\ui\oxide\skin.mobile.min.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide\skin.shadowdom.css" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide\skin.shadowdom.min.css" />
     <Content Include="Scripts\tinymce\themes\mobile\theme.js" />
     <Content Include="Scripts\tinymce\themes\mobile\theme.min.js" />
     <Content Include="Scripts\tinymce\themes\silver\theme.js" />
@@ -512,11 +528,12 @@
     <Content Include="TemplateContent\vendor\jquery.cookie\cookie.jquery.json" />
     <Content Include="Views\Home\CreatePost.cshtml" />
     <Content Include="Views\Home\EditPost.cshtml" />
-    <Content Include="Scripts\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Home\SearchPosts.cshtml" />
     <Content Include="Views\Comment\EditComment.cshtml" />
     <Content Include="Views\Shared\_CreateCommentPartial.cshtml" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
+    <Content Include="Scripts\tinymce\skins\ui\oxide-dark\fonts\tinymce-mobile.woff" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -534,6 +551,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+    <TypeScriptCompile Include="Scripts\tinymce\tinymce.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

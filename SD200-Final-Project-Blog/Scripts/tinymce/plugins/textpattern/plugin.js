@@ -4,10 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.0.2 (2019-03-05)
+ * Version: 5.10.2 (2021-11-17)
  */
 (function () {
-var textpattern = (function (domGlobals) {
     'use strict';
 
     var Cell = function (initial) {
@@ -18,23 +17,60 @@ var textpattern = (function (domGlobals) {
       var set = function (v) {
         value = v;
       };
-      var clone = function () {
-        return Cell(get());
-      };
       return {
         get: get,
-        set: set,
-        clone: clone
+        set: set
       };
     };
 
-    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
+    var global$5 = tinymce.util.Tools.resolve('tinymce.PluginManager');
+
+    var __assign = function () {
+      __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s)
+            if (Object.prototype.hasOwnProperty.call(s, p))
+              t[p] = s[p];
+        }
+        return t;
+      };
+      return __assign.apply(this, arguments);
+    };
+    function __spreadArray(to, from, pack) {
+      if (pack || arguments.length === 2)
+        for (var i = 0, l = from.length, ar; i < l; i++) {
+          if (ar || !(i in from)) {
+            if (!ar)
+              ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+          }
+        }
+      return to.concat(ar || Array.prototype.slice.call(from));
+    }
+
+    var typeOf = function (x) {
+      var t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+        return 'array';
+      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
+      };
+    };
+    var isString = isType('string');
+    var isObject = isType('object');
+    var isArray = isType('array');
 
     var noop = function () {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
     };
     var constant = function (value) {
       return function () {
@@ -52,73 +88,48 @@ var textpattern = (function (domGlobals) {
     var never = constant(false);
     var always = constant(true);
 
-    var never$1 = never;
-    var always$1 = always;
     var none = function () {
       return NONE;
     };
     var NONE = function () {
-      var eq = function (o) {
-        return o.isNone();
-      };
       var call = function (thunk) {
         return thunk();
       };
-      var id = function (n) {
-        return n;
-      };
-      var noop = function () {
-      };
-      var nul = function () {
-        return null;
-      };
-      var undef = function () {
-        return undefined;
-      };
+      var id = identity;
       var me = {
-        fold: function (n, s) {
+        fold: function (n, _s) {
           return n();
         },
-        is: never$1,
-        isSome: never$1,
-        isNone: always$1,
+        isSome: never,
+        isNone: always,
         getOr: id,
         getOrThunk: call,
         getOrDie: function (msg) {
           throw new Error(msg || 'error: getOrDie called on none.');
         },
-        getOrNull: nul,
-        getOrUndefined: undef,
+        getOrNull: constant(null),
+        getOrUndefined: constant(undefined),
         or: id,
         orThunk: call,
         map: none,
-        ap: none,
         each: noop,
         bind: none,
-        flatten: none,
-        exists: never$1,
-        forall: always$1,
-        filter: none,
-        equals: eq,
-        equals_: eq,
+        exists: never,
+        forall: always,
+        filter: function () {
+          return none();
+        },
         toArray: function () {
           return [];
         },
         toString: constant('none()')
       };
-      if (Object.freeze)
-        Object.freeze(me);
       return me;
     }();
     var some = function (a) {
-      var constant_a = function () {
-        return a;
-      };
+      var constant_a = constant(a);
       var self = function () {
         return me;
-      };
-      var map = function (f) {
-        return some(f(a));
       };
       var bind = function (f) {
         return f(a);
@@ -127,11 +138,8 @@ var textpattern = (function (domGlobals) {
         fold: function (n, s) {
           return s(a);
         },
-        is: function (v) {
-          return a === v;
-        },
-        isSome: always$1,
-        isNone: never$1,
+        isSome: always,
+        isNone: never,
         getOr: constant_a,
         getOrThunk: constant_a,
         getOrDie: constant_a,
@@ -139,29 +147,17 @@ var textpattern = (function (domGlobals) {
         getOrUndefined: constant_a,
         or: self,
         orThunk: self,
-        map: map,
-        ap: function (optfab) {
-          return optfab.fold(none, function (fab) {
-            return some(fab(a));
-          });
+        map: function (f) {
+          return some(f(a));
         },
         each: function (f) {
           f(a);
         },
         bind: bind,
-        flatten: constant_a,
         exists: bind,
         forall: bind,
         filter: function (f) {
           return f(a) ? me : NONE;
-        },
-        equals: function (o) {
-          return o.is(a);
-        },
-        equals_: function (o, elementEq) {
-          return o.fold(never$1, function (b) {
-            return elementEq(a, b);
-          });
         },
         toArray: function () {
           return [a];
@@ -175,42 +171,17 @@ var textpattern = (function (domGlobals) {
     var from = function (value) {
       return value === null || value === undefined ? NONE : some(value);
     };
-    var Option = {
+    var Optional = {
       some: some,
       none: none,
       from: from
     };
 
-    var typeOf = function (x) {
-      if (x === null)
-        return 'null';
-      var t = typeof x;
-      if (t === 'object' && Array.prototype.isPrototypeOf(x))
-        return 'array';
-      if (t === 'object' && String.prototype.isPrototypeOf(x))
-        return 'string';
-      return t;
+    var nativeSlice = Array.prototype.slice;
+    var nativeIndexOf = Array.prototype.indexOf;
+    var rawIndexOf = function (ts, t) {
+      return nativeIndexOf.call(ts, t);
     };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isString = isType('string');
-    var isObject = isType('object');
-    var isArray = isType('array');
-    var isFunction = isType('function');
-
-    var rawIndexOf = function () {
-      var pIndexOf = Array.prototype.indexOf;
-      var fastIndex = function (xs, x) {
-        return pIndexOf.call(xs, x);
-      };
-      var slowIndex = function (xs, x) {
-        return slowIndexOf(xs, x);
-      };
-      return pIndexOf === undefined ? slowIndex : fastIndex;
-    }();
     var contains = function (xs, x) {
       return rawIndexOf(xs, x) > -1;
     };
@@ -219,69 +190,86 @@ var textpattern = (function (domGlobals) {
       var r = new Array(len);
       for (var i = 0; i < len; i++) {
         var x = xs[i];
-        r[i] = f(x, i, xs);
+        r[i] = f(x, i);
       }
       return r;
     };
     var each = function (xs, f) {
       for (var i = 0, len = xs.length; i < len; i++) {
         var x = xs[i];
-        f(x, i, xs);
+        f(x, i);
+      }
+    };
+    var eachr = function (xs, f) {
+      for (var i = xs.length - 1; i >= 0; i--) {
+        var x = xs[i];
+        f(x, i);
       }
     };
     var filter = function (xs, pred) {
       var r = [];
       for (var i = 0, len = xs.length; i < len; i++) {
         var x = xs[i];
-        if (pred(x, i, xs)) {
+        if (pred(x, i)) {
           r.push(x);
         }
       }
       return r;
     };
-    var foldl = function (xs, f, acc) {
-      each(xs, function (x) {
-        acc = f(acc, x);
+    var foldr = function (xs, f, acc) {
+      eachr(xs, function (x, i) {
+        acc = f(acc, x, i);
       });
       return acc;
     };
-    var slowIndexOf = function (xs, x) {
-      for (var i = 0, len = xs.length; i < len; ++i) {
-        if (xs[i] === x) {
-          return i;
+    var foldl = function (xs, f, acc) {
+      each(xs, function (x, i) {
+        acc = f(acc, x, i);
+      });
+      return acc;
+    };
+    var findUntil = function (xs, pred, until) {
+      for (var i = 0, len = xs.length; i < len; i++) {
+        var x = xs[i];
+        if (pred(x, i)) {
+          return Optional.some(x);
+        } else if (until(x, i)) {
+          break;
         }
       }
-      return -1;
+      return Optional.none();
+    };
+    var find = function (xs, pred) {
+      return findUntil(xs, pred, never);
     };
     var forall = function (xs, pred) {
       for (var i = 0, len = xs.length; i < len; ++i) {
         var x = xs[i];
-        if (pred(x, i, xs) !== true) {
+        if (pred(x, i) !== true) {
           return false;
         }
       }
       return true;
     };
-    var slice = Array.prototype.slice;
     var sort = function (xs, comparator) {
-      var copy = slice.call(xs, 0);
+      var copy = nativeSlice.call(xs, 0);
       copy.sort(comparator);
       return copy;
     };
-    var from$1 = isFunction(Array.from) ? Array.from : function (x) {
-      return slice.call(x);
+    var get$1 = function (xs, i) {
+      return i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
+    };
+    var head = function (xs) {
+      return get$1(xs, 0);
     };
 
     var keys = Object.keys;
     var hasOwnProperty = Object.hasOwnProperty;
-    var get = function (obj, key) {
-      return has(obj, key) ? Option.some(obj[key]) : Option.none();
-    };
     var has = function (obj, key) {
       return hasOwnProperty.call(obj, key);
     };
 
-    var generate = function (cases) {
+    var generate$1 = function (cases) {
       if (!isArray(cases)) {
         throw new Error('cases must be an array');
       }
@@ -306,13 +294,14 @@ var textpattern = (function (domGlobals) {
         }
         constructors.push(key);
         adt[key] = function () {
-          var argLength = arguments.length;
+          var args = [];
+          for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+          }
+          var argLength = args.length;
           if (argLength !== value.length) {
             throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
           }
-          var args = new Array(argLength);
-          for (var i = 0; i < args.length; i++)
-            args[i] = arguments[i];
           var match = function (branches) {
             var branchKeys = keys(branches);
             if (constructors.length !== branchKeys.length) {
@@ -321,16 +310,21 @@ var textpattern = (function (domGlobals) {
             var allReqd = forall(constructors, function (reqKey) {
               return contains(branchKeys, reqKey);
             });
-            if (!allReqd)
+            if (!allReqd) {
               throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + constructors.join(', '));
+            }
             return branches[key].apply(null, args);
           };
           return {
             fold: function () {
-              if (arguments.length !== cases.length) {
-                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
+              var foldArgs = [];
+              for (var _i = 0; _i < arguments.length; _i++) {
+                foldArgs[_i] = arguments[_i];
               }
-              var target = arguments[count];
+              if (foldArgs.length !== cases.length) {
+                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + foldArgs.length);
+              }
+              var target = foldArgs[count];
               return target.apply(null, args);
             },
             match: match,
@@ -346,9 +340,9 @@ var textpattern = (function (domGlobals) {
       });
       return adt;
     };
-    var Adt = { generate: generate };
+    var Adt = { generate: generate$1 };
 
-    var comparison = Adt.generate([
+    Adt.generate([
       {
         bothErrors: [
           'error1',
@@ -391,19 +385,16 @@ var textpattern = (function (domGlobals) {
     };
 
     var value = function (o) {
-      var is = function (v) {
-        return o === v;
-      };
-      var or = function (opt) {
+      var or = function (_opt) {
         return value(o);
       };
-      var orThunk = function (f) {
+      var orThunk = function (_f) {
         return value(o);
       };
       var map = function (f) {
         return value(f(o));
       };
-      var mapError = function (f) {
+      var mapError = function (_f) {
         return value(o);
       };
       var each = function (f) {
@@ -421,11 +412,10 @@ var textpattern = (function (domGlobals) {
       var forall = function (f) {
         return f(o);
       };
-      var toOption = function () {
-        return Option.some(o);
+      var toOptional = function () {
+        return Optional.some(o);
       };
       return {
-        is: is,
         isValue: always,
         isError: never,
         getOr: constant(o),
@@ -440,36 +430,33 @@ var textpattern = (function (domGlobals) {
         bind: bind,
         exists: exists,
         forall: forall,
-        toOption: toOption
+        toOptional: toOptional
       };
     };
-    var error = function (message) {
+    var error$1 = function (message) {
       var getOrThunk = function (f) {
         return f();
       };
       var getOrDie = function () {
         return die(String(message))();
       };
-      var or = function (opt) {
-        return opt;
-      };
+      var or = identity;
       var orThunk = function (f) {
         return f();
       };
-      var map = function (f) {
-        return error(message);
+      var map = function (_f) {
+        return error$1(message);
       };
       var mapError = function (f) {
-        return error(f(message));
+        return error$1(f(message));
       };
-      var bind = function (f) {
-        return error(message);
+      var bind = function (_f) {
+        return error$1(message);
       };
       var fold = function (onError, _) {
         return onError(message);
       };
       return {
-        is: never,
         isValue: never,
         isError: always,
         getOr: identity,
@@ -484,12 +471,18 @@ var textpattern = (function (domGlobals) {
         bind: bind,
         exists: never,
         forall: always,
-        toOption: Option.none
+        toOptional: Optional.none
       };
+    };
+    var fromOption = function (opt, err) {
+      return opt.fold(function () {
+        return error$1(err);
+      }, value);
     };
     var Result = {
       value: value,
-      error: error
+      error: error$1,
+      fromOption: fromOption
     };
 
     var isInlinePattern = function (pattern) {
@@ -646,7 +639,7 @@ var textpattern = (function (domGlobals) {
       };
     };
 
-    var get$1 = function (patternsState) {
+    var get = function (patternsState) {
       var setPatterns = function (newPatterns) {
         var normalized = partition(map(newPatterns, normalizePattern));
         if (normalized.errors.length > 0) {
@@ -656,18 +649,17 @@ var textpattern = (function (domGlobals) {
         patternsState.set(createPatternSet(normalized.values));
       };
       var getPatterns = function () {
-        return map(patternsState.get().inlinePatterns, denormalizePattern).concat(map(patternsState.get().blockPatterns, denormalizePattern));
+        return __spreadArray(__spreadArray([], map(patternsState.get().inlinePatterns, denormalizePattern), true), map(patternsState.get().blockPatterns, denormalizePattern), true);
       };
       return {
         setPatterns: setPatterns,
         getPatterns: getPatterns
       };
     };
-    var Api = { get: get$1 };
 
     var Global = typeof window !== 'undefined' ? window : Function('return this;')();
 
-    var error$1 = function () {
+    var error = function () {
       var args = [];
       for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
@@ -729,10 +721,10 @@ var textpattern = (function (domGlobals) {
         cmd: 'InsertUnorderedList'
       }
     ];
-    var getPatternSet = function (editorSettings) {
-      var patterns = get(editorSettings, 'textpattern_patterns').getOr(defaultPatterns);
+    var getPatternSet = function (editor) {
+      var patterns = editor.getParam('textpattern_patterns', defaultPatterns, 'array');
       if (!isArray(patterns)) {
-        error$1('The setting textpattern_patterns should be an array');
+        error('The setting textpattern_patterns should be an array');
         return {
           inlinePatterns: [],
           blockPatterns: []
@@ -740,96 +732,204 @@ var textpattern = (function (domGlobals) {
       }
       var normalized = partition(map(patterns, normalizePattern));
       each(normalized.errors, function (err) {
-        return error$1(err.message, err.pattern);
+        return error(err.message, err.pattern);
       });
       return createPatternSet(normalized.values);
     };
-
-    var global$1 = tinymce.util.Tools.resolve('tinymce.util.Delay');
-
-    var global$2 = tinymce.util.Tools.resolve('tinymce.util.VK');
-
-    var checkRange = function (str, substr, start) {
-      if (substr === '')
-        return true;
-      if (str.length < substr.length)
-        return false;
-      var x = str.substr(start, start + substr.length);
-      return x === substr;
-    };
-    var startsWith = function (str, prefix) {
-      return checkRange(str, prefix, 0);
-    };
-    var endsWith = function (str, suffix) {
-      return checkRange(str, suffix, str.length - suffix.length);
+    var getForcedRootBlock = function (editor) {
+      var block = editor.getParam('forced_root_block', 'p');
+      if (block === false) {
+        return '';
+      } else if (block === true) {
+        return 'p';
+      } else {
+        return block;
+      }
     };
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.dom.TreeWalker');
+    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Delay');
 
-    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Tools');
+    var global$3 = tinymce.util.Tools.resolve('tinymce.util.VK');
 
-    var ATTRIBUTE = domGlobals.Node.ATTRIBUTE_NODE;
-    var CDATA_SECTION = domGlobals.Node.CDATA_SECTION_NODE;
-    var COMMENT = domGlobals.Node.COMMENT_NODE;
-    var DOCUMENT = domGlobals.Node.DOCUMENT_NODE;
-    var DOCUMENT_TYPE = domGlobals.Node.DOCUMENT_TYPE_NODE;
-    var DOCUMENT_FRAGMENT = domGlobals.Node.DOCUMENT_FRAGMENT_NODE;
-    var ELEMENT = domGlobals.Node.ELEMENT_NODE;
-    var TEXT = domGlobals.Node.TEXT_NODE;
-    var PROCESSING_INSTRUCTION = domGlobals.Node.PROCESSING_INSTRUCTION_NODE;
-    var ENTITY_REFERENCE = domGlobals.Node.ENTITY_REFERENCE_NODE;
-    var ENTITY = domGlobals.Node.ENTITY_NODE;
-    var NOTATION = domGlobals.Node.NOTATION_NODE;
+    var zeroWidth = '\uFEFF';
+    var nbsp = '\xA0';
 
-    var isElement = function (node) {
-      return node.nodeType === ELEMENT;
+    var global$2 = tinymce.util.Tools.resolve('tinymce.util.Tools');
+
+    var global$1 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
+
+    var global = tinymce.util.Tools.resolve('tinymce.dom.TextSeeker');
+
+    var point = function (container, offset) {
+      return {
+        container: container,
+        offset: offset
+      };
     };
+
     var isText = function (node) {
-      return node.nodeType === TEXT;
+      return node.nodeType === Node.TEXT_NODE;
     };
+    var cleanEmptyNodes = function (dom, node, isRoot) {
+      if (node && dom.isEmpty(node) && !isRoot(node)) {
+        var parent_1 = node.parentNode;
+        dom.remove(node);
+        cleanEmptyNodes(dom, parent_1, isRoot);
+      }
+    };
+    var deleteRng = function (dom, rng, isRoot, clean) {
+      if (clean === void 0) {
+        clean = true;
+      }
+      var startParent = rng.startContainer.parentNode;
+      var endParent = rng.endContainer.parentNode;
+      rng.deleteContents();
+      if (clean && !isRoot(rng.startContainer)) {
+        if (isText(rng.startContainer) && rng.startContainer.data.length === 0) {
+          dom.remove(rng.startContainer);
+        }
+        if (isText(rng.endContainer) && rng.endContainer.data.length === 0) {
+          dom.remove(rng.endContainer);
+        }
+        cleanEmptyNodes(dom, startParent, isRoot);
+        if (startParent !== endParent) {
+          cleanEmptyNodes(dom, endParent, isRoot);
+        }
+      }
+    };
+    var isBlockFormatName = function (name, formatter) {
+      var formatSet = formatter.get(name);
+      return isArray(formatSet) && head(formatSet).exists(function (format) {
+        return has(format, 'block');
+      });
+    };
+    var isReplacementPattern = function (pattern) {
+      return pattern.start.length === 0;
+    };
+    var getParentBlock = function (editor, rng) {
+      var parentBlockOpt = Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
+      if (getForcedRootBlock(editor) === '') {
+        return parentBlockOpt.orThunk(function () {
+          return Optional.some(editor.getBody());
+        });
+      } else {
+        return parentBlockOpt;
+      }
+    };
+
+    var DOM = global$1.DOM;
+    var alwaysNext = function (startNode) {
+      return function (node) {
+        return startNode === node ? -1 : 0;
+      };
+    };
+    var isBoundary = function (dom) {
+      return function (node) {
+        return dom.isBlock(node) || contains([
+          'BR',
+          'IMG',
+          'HR',
+          'INPUT'
+        ], node.nodeName) || dom.getContentEditable(node) === 'false';
+      };
+    };
+    var textBefore = function (node, offset, rootNode) {
+      if (isText(node) && offset >= 0) {
+        return Optional.some(point(node, offset));
+      } else {
+        var textSeeker = global(DOM);
+        return Optional.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).map(function (prev) {
+          return point(prev.container, prev.container.data.length);
+        });
+      }
+    };
+    var textAfter = function (node, offset, rootNode) {
+      if (isText(node) && offset >= node.length) {
+        return Optional.some(point(node, offset));
+      } else {
+        var textSeeker = global(DOM);
+        return Optional.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).map(function (prev) {
+          return point(prev.container, 0);
+        });
+      }
+    };
+    var scanLeft = function (node, offset, rootNode) {
+      if (!isText(node)) {
+        return Optional.none();
+      }
+      var text = node.textContent;
+      if (offset >= 0 && offset <= text.length) {
+        return Optional.some(point(node, offset));
+      } else {
+        var textSeeker = global(DOM);
+        return Optional.from(textSeeker.backwards(node, offset, alwaysNext(node), rootNode)).bind(function (prev) {
+          var prevText = prev.container.data;
+          return scanLeft(prev.container, offset + prevText.length, rootNode);
+        });
+      }
+    };
+    var scanRight = function (node, offset, rootNode) {
+      if (!isText(node)) {
+        return Optional.none();
+      }
+      var text = node.textContent;
+      if (offset <= text.length) {
+        return Optional.some(point(node, offset));
+      } else {
+        var textSeeker = global(DOM);
+        return Optional.from(textSeeker.forwards(node, offset, alwaysNext(node), rootNode)).bind(function (next) {
+          return scanRight(next.container, offset - text.length, rootNode);
+        });
+      }
+    };
+    var repeatLeft = function (dom, node, offset, process, rootNode) {
+      var search = global(dom, isBoundary(dom));
+      return Optional.from(search.backwards(node, offset, process, rootNode));
+    };
+
     var generatePath = function (root, node, offset) {
-      if (offset < 0 || offset > node.data.length) {
-        return Option.none();
+      if (isText(node) && (offset < 0 || offset > node.data.length)) {
+        return [];
       }
       var p = [offset];
       var current = node;
       while (current !== root && current.parentNode) {
-        var parent = current.parentNode;
-        for (var i = 0; i < parent.childNodes.length; i++) {
-          if (parent.childNodes[i] === current) {
+        var parent_1 = current.parentNode;
+        for (var i = 0; i < parent_1.childNodes.length; i++) {
+          if (parent_1.childNodes[i] === current) {
             p.push(i);
             break;
           }
         }
-        current = parent;
+        current = parent_1;
       }
-      return current === root ? Option.some(p.reverse()) : Option.none();
+      return current === root ? p.reverse() : [];
     };
     var generatePathRange = function (root, startNode, startOffset, endNode, endOffset) {
-      return generatePath(root, startNode, startOffset).bind(function (start) {
-        return generatePath(root, endNode, endOffset).map(function (end) {
-          return {
-            start: start,
-            end: end
-          };
-        });
-      });
+      var start = generatePath(root, startNode, startOffset);
+      var end = generatePath(root, endNode, endOffset);
+      return {
+        start: start,
+        end: end
+      };
     };
     var resolvePath = function (root, path) {
       var nodePath = path.slice();
       var offset = nodePath.pop();
-      return foldl(nodePath, function (optNode, index) {
+      var resolvedNode = foldl(nodePath, function (optNode, index) {
         return optNode.bind(function (node) {
-          return Option.from(node.childNodes[index]);
+          return Optional.from(node.childNodes[index]);
         });
-      }, Option.some(root)).bind(function (node) {
-        if (isText(node) && offset >= 0 && offset <= node.data.length) {
-          return Option.some({
+      }, Optional.some(root));
+      return resolvedNode.bind(function (node) {
+        if (isText(node) && (offset < 0 || offset > node.data.length)) {
+          return Optional.none();
+        } else {
+          return Optional.some({
             node: node,
             offset: offset
           });
         }
-        return Option.none();
       });
     };
     var resolvePathRange = function (root, range) {
@@ -837,175 +937,92 @@ var textpattern = (function (domGlobals) {
         var startNode = _a.node, startOffset = _a.offset;
         return resolvePath(root, range.end).map(function (_a) {
           var endNode = _a.node, endOffset = _a.offset;
-          return {
-            startNode: startNode,
-            startOffset: startOffset,
-            endNode: endNode,
-            endOffset: endOffset
-          };
+          var rng = document.createRange();
+          rng.setStart(startNode, startOffset);
+          rng.setEnd(endNode, endOffset);
+          return rng;
         });
       });
+    };
+    var generatePathRangeFromRange = function (root, range) {
+      return generatePathRange(root, range.startContainer, range.startOffset, range.endContainer, range.endOffset);
     };
 
-    var findPattern = function (patterns, text) {
-      for (var i = 0; i < patterns.length; i++) {
-        var pattern = patterns[i];
-        if (text.indexOf(pattern.start) !== 0) {
-          continue;
-        }
-        if (pattern.end && text.lastIndexOf(pattern.end) !== text.length - pattern.end.length) {
-          continue;
-        }
-        return pattern;
-      }
-    };
-    var textBefore = function (node, offset, block) {
-      if (isText(node) && offset > 0) {
-        return Option.some({
-          node: node,
-          offset: offset
-        });
-      }
-      var startNode;
-      if (offset > 0) {
-        startNode = node.childNodes[offset - 1];
-      } else {
-        for (var current = node; current && current !== block && !startNode; current = current.parentNode) {
-          startNode = current.previousSibling;
-        }
-      }
-      var tw = new global$3(startNode, block);
-      for (var current = tw.current(); current; current = tw.prev()) {
-        if (isText(current) && current.length > 0) {
-          return Option.some({
-            node: current,
-            offset: current.length
+    var stripPattern = function (dom, block, pattern) {
+      var firstTextNode = textAfter(block, 0, block);
+      firstTextNode.each(function (spot) {
+        var node = spot.container;
+        scanRight(node, pattern.start.length, block).each(function (end) {
+          var rng = dom.createRng();
+          rng.setStart(node, 0);
+          rng.setEnd(end.container, end.offset);
+          deleteRng(dom, rng, function (e) {
+            return e === block;
           });
-        }
-      }
-      return Option.none();
-    };
-    var findInlinePatternStart = function (dom, pattern, node, offset, block, requireGap) {
-      if (requireGap === void 0) {
-        requireGap = false;
-      }
-      if (pattern.start.length === 0 && !requireGap) {
-        return Option.some({
-          node: node,
-          offset: offset
-        });
-      }
-      var sameBlockParent = function (spot) {
-        return dom.getParent(spot.node, dom.isBlock) === block;
-      };
-      return textBefore(node, offset, block).filter(sameBlockParent).bind(function (_a) {
-        var node = _a.node, offset = _a.offset;
-        var text = node.data.substring(0, offset);
-        var startPos = text.lastIndexOf(pattern.start);
-        if (startPos === -1) {
-          if (text.indexOf(pattern.end) !== -1) {
-            return Option.none();
-          }
-          return findInlinePatternStart(dom, pattern, node, 0, block, requireGap && text.length === 0);
-        }
-        if (text.indexOf(pattern.end, startPos + pattern.start.length) !== -1) {
-          return Option.none();
-        }
-        if (requireGap && startPos + pattern.start.length === text.length) {
-          return Option.none();
-        }
-        return Option.some({
-          node: node,
-          offset: startPos
         });
       });
     };
-    var findInlinePatternRec = function (dom, patterns, node, offset, block) {
-      return textBefore(node, offset, block).bind(function (_a) {
-        var endNode = _a.node, endOffset = _a.offset;
-        var text = endNode.data.substring(0, endOffset);
-        var _loop_1 = function (i) {
-          var pattern = patterns[i];
-          if (!endsWith(text, pattern.end)) {
-            return 'continue';
+    var applyPattern$1 = function (editor, match) {
+      var dom = editor.dom;
+      var pattern = match.pattern;
+      var rng = resolvePathRange(dom.getRoot(), match.range).getOrDie('Unable to resolve path range');
+      getParentBlock(editor, rng).each(function (block) {
+        if (pattern.type === 'block-format') {
+          if (isBlockFormatName(pattern.format, editor.formatter)) {
+            editor.undoManager.transact(function () {
+              stripPattern(editor.dom, block, pattern);
+              editor.formatter.apply(pattern.format);
+            });
           }
-          var newOffset = endOffset - pattern.end.length;
-          var hasContent = pattern.start.length > 0 && pattern.end.length > 0;
-          var allowInner = hasContent ? Option.some(true) : Option.none();
-          var recursiveMatch = allowInner.bind(function () {
-            var patternsWithoutCurrent = patterns.slice();
-            patternsWithoutCurrent.splice(i, 1);
-            return findInlinePatternRec(dom, patternsWithoutCurrent, endNode, newOffset, block);
-          }).fold(function () {
-            var start = findInlinePatternStart(dom, pattern, endNode, newOffset, block, hasContent);
-            return start.map(function (_a) {
-              var startNode = _a.node, startOffset = _a.offset;
-              var range = generatePathRange(dom.getRoot(), startNode, startOffset, endNode, endOffset).getOrDie('Internal constraint violation');
-              return [{
-                  pattern: pattern,
-                  range: range
-                }];
-            });
-          }, function (areas) {
-            var outermostRange = resolvePathRange(dom.getRoot(), areas[areas.length - 1].range).getOrDie('Internal constraint violation');
-            var start = findInlinePatternStart(dom, pattern, outermostRange.startNode, outermostRange.startOffset, block);
-            return start.map(function (_a) {
-              var startNode = _a.node, startOffset = _a.offset;
-              var range = generatePathRange(dom.getRoot(), startNode, startOffset, endNode, endOffset).getOrDie('Internal constraint violation');
-              return areas.concat([{
-                  pattern: pattern,
-                  range: range
-                }]);
-            });
+        } else if (pattern.type === 'block-command') {
+          editor.undoManager.transact(function () {
+            stripPattern(editor.dom, block, pattern);
+            editor.execCommand(pattern.cmd, false, pattern.value);
           });
-          if (recursiveMatch.isSome()) {
-            return { value: recursiveMatch };
-          }
-        };
-        for (var i = 0; i < patterns.length; i++) {
-          var state_1 = _loop_1(i);
-          if (typeof state_1 === 'object')
-            return state_1.value;
         }
-        return Option.none();
+      });
+      return true;
+    };
+    var findPattern$1 = function (patterns, text) {
+      var nuText = text.replace(nbsp, ' ');
+      return find(patterns, function (pattern) {
+        return text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0;
       });
     };
-    var findNestedInlinePatterns = function (dom, patterns, rng, space) {
-      if (rng.collapsed === false) {
-        return [];
-      }
-      var block = dom.getParent(rng.startContainer, dom.isBlock);
-      return findInlinePatternRec(dom, patterns, rng.startContainer, rng.startOffset - (space ? 1 : 0), block).getOr([]);
+    var findPatterns$1 = function (editor, patterns) {
+      var dom = editor.dom;
+      var rng = editor.selection.getRng();
+      return getParentBlock(editor, rng).filter(function (block) {
+        var forcedRootBlock = getForcedRootBlock(editor);
+        var matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
+        return block !== null && matchesForcedRootBlock;
+      }).bind(function (block) {
+        var blockText = block.textContent;
+        var matchedPattern = findPattern$1(patterns, blockText);
+        return matchedPattern.map(function (pattern) {
+          if (global$2.trim(blockText).length === pattern.start.length) {
+            return [];
+          }
+          return [{
+              pattern: pattern,
+              range: generatePathRange(dom.getRoot(), block, 0, block, 0)
+            }];
+        });
+      }).getOr([]);
     };
-    var findBlockPattern = function (dom, patterns, rng) {
-      var block = dom.getParent(rng.startContainer, dom.isBlock);
-      if (!(dom.is(block, 'p') && isElement(block))) {
-        return Option.none();
+    var applyMatches$1 = function (editor, matches) {
+      if (matches.length === 0) {
+        return;
       }
-      var walker = new global$3(block, block);
-      var node;
-      var firstTextNode;
-      while (node = walker.next()) {
-        if (isText(node)) {
-          firstTextNode = node;
-          break;
-        }
-      }
-      if (!firstTextNode) {
-        return Option.none();
-      }
-      var pattern = findPattern(patterns, firstTextNode.data);
-      if (!pattern) {
-        return Option.none();
-      }
-      if (global$4.trim(block.textContent).length === pattern.start.length) {
-        return Option.none();
-      }
-      return Option.some(pattern);
+      var bookmark = editor.selection.getBookmark();
+      each(matches, function (match) {
+        return applyPattern$1(editor, match);
+      });
+      editor.selection.moveToBookmark(bookmark);
     };
 
     var unique = 0;
-    var generate$1 = function (prefix) {
+    var generate = function (prefix) {
       var date = new Date();
       var time = date.getTime();
       var random = Math.floor(Math.random() * 1000000000);
@@ -1013,181 +1030,272 @@ var textpattern = (function (domGlobals) {
       return prefix + '_' + random + unique + String(time);
     };
 
-    var liftN = function (arr, f) {
-      var r = [];
-      for (var i = 0; i < arr.length; i++) {
-        var x = arr[i];
-        if (x.isSome()) {
-          r.push(x.getOrDie());
-        } else {
-          return Option.none();
-        }
-      }
-      return Option.some(f.apply(null, r));
+    var checkRange = function (str, substr, start) {
+      return substr === '' || str.length >= substr.length && str.substr(start, start + substr.length) === substr;
     };
-    function lift() {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-      var f = args.pop();
-      return liftN(args, f);
-    }
+    var endsWith = function (str, suffix) {
+      return checkRange(str, suffix, str.length - suffix.length);
+    };
 
-    var isCollapsed = function (start, end, root) {
-      var walker = new global$3(start, root);
-      while (walker.next()) {
-        var node = walker.current();
-        if (isText(node) && node.data.length === 0) {
-          continue;
-        }
-        return node === end;
-      }
-      return false;
-    };
-    var applyInlinePatterns = function (editor, areas) {
-      var dom = editor.dom;
-      var newMarker = function (id) {
-        return dom.create('span', {
-          'data-mce-type': 'bookmark',
-          'id': id
-        });
-      };
-      var markerRange = function (ids) {
-        var start = Option.from(dom.select('#' + ids.start)[0]);
-        var end = Option.from(dom.select('#' + ids.end)[0]);
-        return lift(start, end, function (start, end) {
-          var range = dom.createRng();
-          range.setStartAfter(start);
-          if (!isCollapsed(start, end, dom.getRoot())) {
-            range.setEndBefore(end);
-          } else {
-            range.collapse(true);
-          }
-          return range;
-        });
-      };
-      var markerPrefix = generate$1('mce_');
-      var markerIds = map(areas, function (_area, i) {
-        return {
-          start: markerPrefix + '_' + i + '_start',
-          end: markerPrefix + '_' + i + '_end'
-        };
+    var newMarker = function (dom, id) {
+      return dom.create('span', {
+        'data-mce-type': 'bookmark',
+        id: id
       });
-      var cursor = editor.selection.getBookmark();
-      for (var i = areas.length - 1; i >= 0; i--) {
-        var _a = areas[i], pattern = _a.pattern, range = _a.range;
-        var _b = resolvePath(dom.getRoot(), range.end).getOrDie('Failed to resolve range[' + i + '].end'), endNode = _b.node, endOffset = _b.offset;
-        var textOutsideRange = endOffset === 0 ? endNode : endNode.splitText(endOffset);
-        textOutsideRange.parentNode.insertBefore(newMarker(markerIds[i].end), textOutsideRange);
-        if (pattern.start.length > 0) {
-          endNode.deleteData(endOffset - pattern.end.length, pattern.end.length);
-        }
-      }
-      for (var i = 0; i < areas.length; i++) {
-        var _c = areas[i], pattern = _c.pattern, range = _c.range;
-        var _d = resolvePath(dom.getRoot(), range.start).getOrDie('Failed to resolve range.start'), startNode = _d.node, startOffset = _d.offset;
-        var textInsideRange = startOffset === 0 ? startNode : startNode.splitText(startOffset);
-        textInsideRange.parentNode.insertBefore(newMarker(markerIds[i].start), textInsideRange);
-        if (pattern.start.length > 0) {
-          textInsideRange.deleteData(0, pattern.start.length);
-        } else {
-          textInsideRange.deleteData(0, pattern.end.length);
-        }
-      }
-      var _loop_1 = function (i) {
-        var pattern = areas[i].pattern;
-        var optRange = markerRange(markerIds[i]);
-        optRange.each(function (range) {
-          editor.selection.setRng(range);
-          if (pattern.type === 'inline-format') {
-            pattern.format.forEach(function (format) {
-              editor.formatter.apply(format);
-            });
-          } else {
-            editor.execCommand(pattern.cmd, false, pattern.value);
-          }
-        });
-        dom.remove(markerIds[i].start);
-        dom.remove(markerIds[i].end);
-      };
-      for (var i = 0; i < areas.length; i++) {
-        _loop_1(i);
-      }
-      editor.selection.moveToBookmark(cursor);
     };
-    var applyBlockPattern = function (editor, pattern) {
-      var dom = editor.dom;
-      var rng = editor.selection.getRng();
-      var block = dom.getParent(rng.startContainer, dom.isBlock);
-      if (!block || !dom.is(block, 'p') || !isElement(block)) {
-        return;
-      }
-      var walker = new global$3(block, block);
-      var node;
-      var firstTextNode;
-      while (node = walker.next()) {
-        if (isText(node)) {
-          firstTextNode = node;
-          break;
+    var rangeFromMarker = function (dom, marker) {
+      var rng = dom.createRng();
+      rng.setStartAfter(marker.start);
+      rng.setEndBefore(marker.end);
+      return rng;
+    };
+    var createMarker = function (dom, markerPrefix, pathRange) {
+      var rng = resolvePathRange(dom.getRoot(), pathRange).getOrDie('Unable to resolve path range');
+      var startNode = rng.startContainer;
+      var endNode = rng.endContainer;
+      var textEnd = rng.endOffset === 0 ? endNode : endNode.splitText(rng.endOffset);
+      var textStart = rng.startOffset === 0 ? startNode : startNode.splitText(rng.startOffset);
+      return {
+        prefix: markerPrefix,
+        end: textEnd.parentNode.insertBefore(newMarker(dom, markerPrefix + '-end'), textEnd),
+        start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '-start'), textStart)
+      };
+    };
+    var removeMarker = function (dom, marker, isRoot) {
+      cleanEmptyNodes(dom, dom.get(marker.prefix + '-end'), isRoot);
+      cleanEmptyNodes(dom, dom.get(marker.prefix + '-start'), isRoot);
+    };
+
+    var matchesPattern = function (dom, block, patternContent) {
+      return function (element, offset) {
+        var text = element.data;
+        var searchText = text.substring(0, offset);
+        var startEndIndex = searchText.lastIndexOf(patternContent.charAt(patternContent.length - 1));
+        var startIndex = searchText.lastIndexOf(patternContent);
+        if (startIndex !== -1) {
+          return startIndex + patternContent.length;
+        } else if (startEndIndex !== -1) {
+          return startEndIndex + 1;
+        } else {
+          return -1;
         }
-      }
-      if (!firstTextNode) {
-        return;
-      }
-      if (!startsWith(firstTextNode.data, pattern.start)) {
-        return;
-      }
-      if (global$4.trim(block.textContent).length === pattern.start.length) {
-        return;
-      }
-      var cursor = editor.selection.getBookmark();
-      if (pattern.type === 'block-format') {
-        var format = editor.formatter.get(pattern.format);
-        if (format && format[0].block) {
-          editor.undoManager.transact(function () {
-            firstTextNode.deleteData(0, pattern.start.length);
-            editor.selection.select(block);
-            editor.formatter.apply(pattern.format);
+      };
+    };
+    var findPatternStartFromSpot = function (dom, pattern, block, spot) {
+      var startPattern = pattern.start;
+      var startSpot = repeatLeft(dom, spot.container, spot.offset, matchesPattern(dom, block, startPattern), block);
+      return startSpot.bind(function (spot) {
+        if (spot.offset >= startPattern.length) {
+          var rng = dom.createRng();
+          rng.setStart(spot.container, spot.offset - startPattern.length);
+          rng.setEnd(spot.container, spot.offset);
+          return Optional.some(rng);
+        } else {
+          var offset = spot.offset - startPattern.length;
+          return scanLeft(spot.container, offset, block).map(function (nextSpot) {
+            var rng = dom.createRng();
+            rng.setStart(nextSpot.container, nextSpot.offset);
+            rng.setEnd(spot.container, spot.offset);
+            return rng;
+          }).filter(function (rng) {
+            return rng.toString() === startPattern;
+          }).orThunk(function () {
+            return findPatternStartFromSpot(dom, pattern, block, point(spot.container, 0));
           });
         }
-      } else if (pattern.type === 'block-command') {
-        editor.undoManager.transact(function () {
-          firstTextNode.deleteData(0, pattern.start.length);
-          editor.selection.select(block);
-          editor.execCommand(pattern.cmd, false, pattern.value);
-        });
-      }
-      editor.selection.moveToBookmark(cursor);
+      });
     };
-
-    var zeroWidth = function () {
-      return '\uFEFF';
+    var findPatternStart = function (dom, pattern, node, offset, block, requireGap) {
+      if (requireGap === void 0) {
+        requireGap = false;
+      }
+      if (pattern.start.length === 0 && !requireGap) {
+        var rng = dom.createRng();
+        rng.setStart(node, offset);
+        rng.setEnd(node, offset);
+        return Optional.some(rng);
+      }
+      return textBefore(node, offset, block).bind(function (spot) {
+        var start = findPatternStartFromSpot(dom, pattern, block, spot);
+        return start.bind(function (startRange) {
+          if (requireGap) {
+            if (startRange.endContainer === spot.container && startRange.endOffset === spot.offset) {
+              return Optional.none();
+            } else if (spot.offset === 0 && startRange.endContainer.textContent.length === startRange.endOffset) {
+              return Optional.none();
+            }
+          }
+          return Optional.some(startRange);
+        });
+      });
+    };
+    var findPattern = function (editor, block, details) {
+      var dom = editor.dom;
+      var root = dom.getRoot();
+      var pattern = details.pattern;
+      var endNode = details.position.container;
+      var endOffset = details.position.offset;
+      return scanLeft(endNode, endOffset - details.pattern.end.length, block).bind(function (spot) {
+        var endPathRng = generatePathRange(root, spot.container, spot.offset, endNode, endOffset);
+        if (isReplacementPattern(pattern)) {
+          return Optional.some({
+            matches: [{
+                pattern: pattern,
+                startRng: endPathRng,
+                endRng: endPathRng
+              }],
+            position: spot
+          });
+        } else {
+          var resultsOpt = findPatternsRec(editor, details.remainingPatterns, spot.container, spot.offset, block);
+          var results_1 = resultsOpt.getOr({
+            matches: [],
+            position: spot
+          });
+          var pos = results_1.position;
+          var start = findPatternStart(dom, pattern, pos.container, pos.offset, block, resultsOpt.isNone());
+          return start.map(function (startRng) {
+            var startPathRng = generatePathRangeFromRange(root, startRng);
+            return {
+              matches: results_1.matches.concat([{
+                  pattern: pattern,
+                  startRng: startPathRng,
+                  endRng: endPathRng
+                }]),
+              position: point(startRng.startContainer, startRng.startOffset)
+            };
+          });
+        }
+      });
+    };
+    var findPatternsRec = function (editor, patterns, node, offset, block) {
+      var dom = editor.dom;
+      return textBefore(node, offset, dom.getRoot()).bind(function (endSpot) {
+        var rng = dom.createRng();
+        rng.setStart(block, 0);
+        rng.setEnd(node, offset);
+        var text = rng.toString();
+        for (var i = 0; i < patterns.length; i++) {
+          var pattern = patterns[i];
+          if (!endsWith(text, pattern.end)) {
+            continue;
+          }
+          var patternsWithoutCurrent = patterns.slice();
+          patternsWithoutCurrent.splice(i, 1);
+          var result = findPattern(editor, block, {
+            pattern: pattern,
+            remainingPatterns: patternsWithoutCurrent,
+            position: endSpot
+          });
+          if (result.isSome()) {
+            return result;
+          }
+        }
+        return Optional.none();
+      });
+    };
+    var applyPattern = function (editor, pattern, patternRange) {
+      editor.selection.setRng(patternRange);
+      if (pattern.type === 'inline-format') {
+        each(pattern.format, function (format) {
+          editor.formatter.apply(format);
+        });
+      } else {
+        editor.execCommand(pattern.cmd, false, pattern.value);
+      }
+    };
+    var applyReplacementPattern = function (editor, pattern, marker, isRoot) {
+      var markerRange = rangeFromMarker(editor.dom, marker);
+      deleteRng(editor.dom, markerRange, isRoot);
+      applyPattern(editor, pattern, markerRange);
+    };
+    var applyPatternWithContent = function (editor, pattern, startMarker, endMarker, isRoot) {
+      var dom = editor.dom;
+      var markerEndRange = rangeFromMarker(dom, endMarker);
+      var markerStartRange = rangeFromMarker(dom, startMarker);
+      deleteRng(dom, markerStartRange, isRoot);
+      deleteRng(dom, markerEndRange, isRoot);
+      var patternMarker = {
+        prefix: startMarker.prefix,
+        start: startMarker.end,
+        end: endMarker.start
+      };
+      var patternRange = rangeFromMarker(dom, patternMarker);
+      applyPattern(editor, pattern, patternRange);
+    };
+    var addMarkers = function (dom, matches) {
+      var markerPrefix = generate('mce_textpattern');
+      var matchesWithEnds = foldr(matches, function (acc, match) {
+        var endMarker = createMarker(dom, markerPrefix + ('_end' + acc.length), match.endRng);
+        return acc.concat([__assign(__assign({}, match), { endMarker: endMarker })]);
+      }, []);
+      return foldr(matchesWithEnds, function (acc, match) {
+        var idx = matchesWithEnds.length - acc.length - 1;
+        var startMarker = isReplacementPattern(match.pattern) ? match.endMarker : createMarker(dom, markerPrefix + ('_start' + idx), match.startRng);
+        return acc.concat([__assign(__assign({}, match), { startMarker: startMarker })]);
+      }, []);
+    };
+    var findPatterns = function (editor, patterns, space) {
+      var rng = editor.selection.getRng();
+      if (rng.collapsed === false) {
+        return [];
+      }
+      return getParentBlock(editor, rng).bind(function (block) {
+        var offset = rng.startOffset - (space ? 1 : 0);
+        return findPatternsRec(editor, patterns, rng.startContainer, offset, block);
+      }).fold(function () {
+        return [];
+      }, function (result) {
+        return result.matches;
+      });
+    };
+    var applyMatches = function (editor, matches) {
+      if (matches.length === 0) {
+        return;
+      }
+      var dom = editor.dom;
+      var bookmark = editor.selection.getBookmark();
+      var matchesWithMarkers = addMarkers(dom, matches);
+      each(matchesWithMarkers, function (match) {
+        var block = dom.getParent(match.startMarker.start, dom.isBlock);
+        var isRoot = function (node) {
+          return node === block;
+        };
+        if (isReplacementPattern(match.pattern)) {
+          applyReplacementPattern(editor, match.pattern, match.endMarker, isRoot);
+        } else {
+          applyPatternWithContent(editor, match.pattern, match.startMarker, match.endMarker, isRoot);
+        }
+        removeMarker(dom, match.endMarker, isRoot);
+        removeMarker(dom, match.startMarker, isRoot);
+      });
+      editor.selection.moveToBookmark(bookmark);
     };
 
     var handleEnter = function (editor, patternSet) {
-      var inlineAreas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), false);
-      var blockArea = findBlockPattern(editor.dom, patternSet.blockPatterns, editor.selection.getRng());
-      if (editor.selection.isCollapsed() && (inlineAreas.length > 0 || blockArea.isSome())) {
+      if (!editor.selection.isCollapsed()) {
+        return false;
+      }
+      var inlineMatches = findPatterns(editor, patternSet.inlinePatterns, false);
+      var blockMatches = findPatterns$1(editor, patternSet.blockPatterns);
+      if (blockMatches.length > 0 || inlineMatches.length > 0) {
         editor.undoManager.add();
         editor.undoManager.extra(function () {
           editor.execCommand('mceInsertNewLine');
         }, function () {
-          editor.insertContent(zeroWidth());
-          applyInlinePatterns(editor, inlineAreas);
-          blockArea.each(function (pattern) {
-            return applyBlockPattern(editor, pattern);
-          });
+          editor.insertContent(zeroWidth);
+          applyMatches(editor, inlineMatches);
+          applyMatches$1(editor, blockMatches);
           var range = editor.selection.getRng();
-          var block = editor.dom.getParent(range.startContainer, editor.dom.isBlock);
-          var spot = textBefore(range.startContainer, range.startOffset, block);
+          var spot = textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
           editor.execCommand('mceInsertNewLine');
           spot.each(function (s) {
-            if (s.node.data.charAt(s.offset - 1) === zeroWidth()) {
-              s.node.deleteData(s.offset - 1, 1);
-              if (editor.dom.isEmpty(s.node.parentNode)) {
-                editor.dom.remove(s.node.parentNode);
-              }
+            var node = s.container;
+            if (node.data.charAt(s.offset - 1) === zeroWidth) {
+              node.deleteData(s.offset - 1, 1);
+              cleanEmptyNodes(editor.dom, node.parentNode, function (e) {
+                return e === editor.dom.getRoot();
+              });
             }
           });
         });
@@ -1196,10 +1304,10 @@ var textpattern = (function (domGlobals) {
       return false;
     };
     var handleInlineKey = function (editor, patternSet) {
-      var areas = findNestedInlinePatterns(editor.dom, patternSet.inlinePatterns, editor.selection.getRng(), true);
-      if (areas.length > 0) {
+      var inlineMatches = findPatterns(editor, patternSet.inlinePatterns, true);
+      if (inlineMatches.length > 0) {
         editor.undoManager.transact(function () {
-          applyInlinePatterns(editor, areas);
+          applyMatches(editor, inlineMatches);
         });
       }
     };
@@ -1209,22 +1317,17 @@ var textpattern = (function (domGlobals) {
           return true;
         }
       }
+      return false;
     };
     var checkKeyCode = function (codes, event) {
       return checkKeyEvent(codes, event, function (code, event) {
-        return code === event.keyCode && global$2.modifierPressed(event) === false;
+        return code === event.keyCode && global$3.modifierPressed(event) === false;
       });
     };
     var checkCharCode = function (chars, event) {
       return checkKeyEvent(chars, event, function (chr, event) {
         return chr.charCodeAt(0) === event.charCode;
       });
-    };
-    var KeyHandler = {
-      handleEnter: handleEnter,
-      handleInlineKey: handleInlineKey,
-      checkCharCode: checkCharCode,
-      checkKeyCode: checkKeyCode
     };
 
     var setup = function (editor, patternsState) {
@@ -1238,36 +1341,34 @@ var textpattern = (function (domGlobals) {
       ];
       var keyCodes = [32];
       editor.on('keydown', function (e) {
-        if (e.keyCode === 13 && !global$2.modifierPressed(e)) {
-          if (KeyHandler.handleEnter(editor, patternsState.get())) {
+        if (e.keyCode === 13 && !global$3.modifierPressed(e)) {
+          if (handleEnter(editor, patternsState.get())) {
             e.preventDefault();
           }
         }
       }, true);
       editor.on('keyup', function (e) {
-        if (KeyHandler.checkKeyCode(keyCodes, e)) {
-          KeyHandler.handleInlineKey(editor, patternsState.get());
+        if (checkKeyCode(keyCodes, e)) {
+          handleInlineKey(editor, patternsState.get());
         }
       });
       editor.on('keypress', function (e) {
-        if (KeyHandler.checkCharCode(charCodes, e)) {
-          global$1.setEditorTimeout(editor, function () {
-            KeyHandler.handleInlineKey(editor, patternsState.get());
+        if (checkCharCode(charCodes, e)) {
+          global$4.setEditorTimeout(editor, function () {
+            handleInlineKey(editor, patternsState.get());
           });
         }
       });
     };
-    var Keyboard = { setup: setup };
 
-    global.add('textpattern', function (editor) {
-      var patternsState = Cell(getPatternSet(editor.settings));
-      Keyboard.setup(editor, patternsState);
-      return Api.get(patternsState);
-    });
     function Plugin () {
+      global$5.add('textpattern', function (editor) {
+        var patternsState = Cell(getPatternSet(editor));
+        setup(editor, patternsState);
+        return get(patternsState);
+      });
     }
 
-    return Plugin;
+    Plugin();
 
-}(window));
-})();
+}());
