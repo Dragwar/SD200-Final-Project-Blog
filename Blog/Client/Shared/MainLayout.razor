@@ -1,18 +1,42 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
+<FluentDesignSystemProvider @ref="FluentDesignSystemProvider" AccentBaseColor="#464EB8" BaseLayerLuminance="(float)SelectedTheme">
+    <div class="container">
+        <div class="siteheader">
+            <a href="/">Home</a>
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
+        <div class="main">
+            <div class="navigation">
+                <NavMenu />
+            </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+            <div >
+                <main>
+                    <article class="">
+                        <div style="gap: 12px; padding-top: 12px;">
+                            <FluentSwitch @onchange="SwitchDirectionAsync">
+                                <span style="padding-inline-end: 8px;">Direction</span>
+                                <span slot="unchecked-message">ltr</span>
+                                <span slot="checked-message">rtl</span>
+                            </FluentSwitch>
+                            <FluentSwitch @onchange="SwitchTheme" Checked="SelectedTheme is Theme.Light">
+                                <span style="padding-inline-end: 8px;"> Theme</span>
+                                <span slot="checked-message">Dark</span>
+                                <span slot="unchecked-message">Light</span>
+                            </FluentSwitch>
+                        </div>
+                        <ErrorBoundary @ref="ErrorBoundary">
+                            <ChildContent>
+                                @Body
+                            </ChildContent>
+                            <ErrorContent Context="ex">
+                                <p class="error">@ex.Message</p>
+                            </ErrorContent>
+                        </ErrorBoundary>
+                    </article>
+                </main>
+            </div>
+        </div>
+    </div>
+</FluentDesignSystemProvider>

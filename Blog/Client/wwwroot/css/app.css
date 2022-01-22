@@ -1,9 +1,4 @@
-﻿@import url('../mozilla-protocol/core/protocol/css/protocol.min.css');
-@import url('../mozilla-protocol/core/protocol/css/protocol-components.min.css');
-@import 'inter.css';
-@import 'metrepolis.css';
-@import 'zillaslab.css';
-
+﻿
 
 html, body {
     -moz-box-sizing: border-box;
